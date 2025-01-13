@@ -1,5 +1,5 @@
 {
-  "name": "express-typescript-nab",
+  "name": "express-typescript-neb",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
@@ -11,27 +11,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sleepy4k/express-typescript-nab.git"
+    "url": "git+https://github.com/sleepy4k/express-typescript-neb.git"
   },
   "keywords": [
     "express",
     "typescript",
-    "nab"
+    "neb"
   ],
   "author": "sleepy4k",
   "license": "ISC",
   "description": "",
   "bugs": {
-    "url": "https://github.com/sleepy4k/express-typescript-nab/issues"
+    "url": "https://github.com/sleepy4k/express-typescript-neb/issues"
   },
-  "homepage": "https://github.com/sleepy4k/express-typescript-nab#readme",
+  "homepage": "https://github.com/sleepy4k/express-typescript-neb#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "debug": "^4.4.0",
     "dotenv": "^16.4.7",
     "ejs-mate": "^4.0.0",
     "express": "5.0.1",
-    "express-typescript-nab": "file:",
+    "express-typescript-neb": "file:",
     "helmet": "^8.0.0",
     "http-errors": "^2.0.0",
     "morgan": "^1.10.0",

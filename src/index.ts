@@ -5,7 +5,7 @@ import http from 'http';
 /**
  * Get port from environment and store in Express.
  */
-const debug = debugLib('express-typescript-nab:server');
+const debug = debugLib('express-typescript-neb:server');
 
 /**
  * Create HTTP server.
