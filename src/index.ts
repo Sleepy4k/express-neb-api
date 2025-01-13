@@ -20,7 +20,7 @@ const port = app.get('port');
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port);
+server.listen(port, () => console.log(`Server running on ${app.get('host')}:${port}`));
 server.on('error', onError);
 server.on('listening', onListening);
 

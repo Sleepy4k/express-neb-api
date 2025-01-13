@@ -9,10 +9,13 @@ import logger from "morgan";
 import { appConfig } from "./config";
 import { normalizePort } from "./utils/parse";
 import router from "./routes";
+import viewServiceProvider from "./providers/view.provider";
+import generateNonce from "./utils/nonce";
 
 const app: Express = express();
 
 app.engine('ejs', ejsMate);
+app.use(viewServiceProvider);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -36,8 +39,8 @@ app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
-    styleSrc: ["'self'"],
-    scriptSrc: ["'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    scriptSrc: ["'self'", "'unsafe-inline'", `'nonce-${generateNonce()}'`],
     fontSrc: ["'self'"],
     objectSrc: ["'none'"],
     upgradeInsecureRequests: [],
@@ -55,11 +58,17 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   res.locals.error = appConfig.env === 'development' ? err : {};
   res.status(err.status || 500);
 
-  res.render('error', {
-    title: 'Error'
+  // res.render('error', {
+  //   title: 'Error'
+  // });
+
+  res.json({
+    message: err.message,
+    error: err,
   });
 });
 
 app.set('port', normalizePort(appConfig.port));
+app.set('host', appConfig.host);
 
 export default app;

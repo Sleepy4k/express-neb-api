@@ -12,6 +12,15 @@ function normalizePort(val: any): any {
   return false;
 }
 
+function parseHostname(host?: string|null): string {
+  const regex = new RegExp('^(http|https)://', 'i');
+
+  if (!host) return 'https://localhost';
+
+  return regex.test(host) ? host : 'https://' + host;
+}
+
 export {
-  normalizePort
+  normalizePort,
+  parseHostname
 };

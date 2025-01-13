@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="title" content="<%= title + block('subTitle').toString() %>">
+    <meta name="description" content="<%= description %>">
+    <meta name="author" content="Benjamin4k">
+    <meta name="coverage" content="Worldwide">
+    <meta name="distribution" content="Global">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="seb, neb, bypass, seb bypass, neb bypass, seb bypasser, neb bypasser, seb bypass tool, neb bypass tool">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <link rel="canonical" href="<%= baseUrl %>" />
+    <link rel="apple-touch-icon" href="<%= asset('logo.png') %>" />
+    <link rel="icon" type="image/png" href="<%= asset('logo.png') %>" />
+    <link rel="icon" type="image/x-icon" href="<%= asset('logo.png') %>" />
+    <link rel="shortcut icon" type="image/png" href="<%= asset('logo.png') %>" />
+    <link rel="shortcut icon" type="image/x-icon" href="<%= asset('logo.png') %>" />
+
+    <title><%= title + block('subTitle').toString() %></title>
+
+    <meta property="csp-nonce" content="<%= nonce %>">
+
+    <meta property="og:locale" content="en">
+    <meta property="og:url" content="<%= baseUrl %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= title %>">
+    <meta property="og:title" content="<%= title + block('subTitle').toString() %>">
+    <meta property="og:description" content="<%= description %>">
+    <meta property="og:image" content="<%= asset('logo.png') %>">
+    <meta property="og:image:width" content="900">
+    <meta property="og:image:height" content="549">
+
+    <link rel="stylesheet" href="<%= asset('css/aos.css') %>" nonce="<%= nonce %>" />
+    <link rel="stylesheet" href="<%= asset('css/animate.css') %>" nonce="<%= nonce %>" />
+    <link rel="stylesheet" href="<%= asset('css/main.css') %>" nonce="<%= nonce %>" />
+  </head>
+  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    <%- partial('components/navbar') %>
+
+    <%- body %>
+
+    <%- partial('components/loader') %>
+
+    <script src="<%= asset('js/jquery.min.js') %>" nonce="<%= nonce %>"></script>
+    <script src="<%= asset('js/jquery-migrate-3.0.1.min.js') %>" nonce="<%= nonce %>"></script>
+    <script src="<%= asset('js/jquery.stellar.min.js') %>" nonce="<%= nonce %>"></script>
+    <script src="<%= asset('js/bootstrap.min.js') %>" nonce="<%= nonce %>"></script>
+    <script src="<%= asset('js/aos.js') %>" nonce="<%= nonce %>"></script>
+
+    <script src="<%= asset('js/main.js') %>" nonce="<%= nonce %>"></script>
+  </body>
+</html>
