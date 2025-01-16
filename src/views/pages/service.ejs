@@ -1,0 +1,108 @@
+<% layout('layouts/main.layout') %>
+
+<% block('subTitle', 'Service') %>
+
+<% block('addon-style', `
+  <style type="text/css">
+    #json_block {
+      width: 100%;
+      height: 100%;
+      margin: 15px;
+    }
+    #json_data {
+      font-size: 14px;
+      color: #000;
+    }
+  </style>
+`) %>
+
+<section class="ftco-section contact-section ftco-no-pb" id="contact-section">
+  <div class="container">
+    <div class="row justify-content-center mb-5 pb-3">
+      <div class="col-md-7 heading-section text-center">
+        <span class="subheading">Service</span>
+        <h2 class="mb-4">SEB Bypasser</h2>
+        <p>
+          Just input your redeem code and upload your file,
+          then we provide you with the best experience of bypassing the SEB.
+          Your file will be processed and you will get the result in JSON format.
+        </p>
+      </div>
+    </div>
+
+    <div class="row no-gutters block-9 main-box">
+      <div class="col-md-6 order-md-last d-flex">
+        <form action="<%= route('service') %>" class="bg-light p-5 contact-form">
+          <div class="form-group">
+            <input type="text" class="form-control" name="redeem_code" id="redeem_code" placeholder="Your Redeem Code">
+          </div>
+          <div class="form-group">
+            <input type="file" class="form-control" name="file" id="file" placeholder="Upload Your File" accept=".seb">
+          </div>
+
+          <div class="form-group mr-2">
+            <input type="submit" value="Bypass" class="btn btn-primary" />
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-6 d-flex">
+        <div id="map" class="bg-gray" style="overflow: scroll;">
+<!-- Don't change this block due bugged on web ui (so crucial) -->
+          <pre id="json_block">
+<code id="json_data"></code>
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% block('addon-script', `
+  <script>
+    const json_data = document.getElementById('json_data');
+    json_data.innerHTML = JSON.stringify({}, null, 2);
+  </script>
+
+  <script>
+    const form = document.querySelector('.contact-form');
+    const formURL = form.getAttribute('action');
+
+    const redeem_code = document.getElementById('redeem_code');
+    const file = document.getElementById('file');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const redeem_code_value = redeem_code.value;
+      const formData = new FormData();
+      formData.append('file', file.files[0]);
+
+      // Clear the previous data and input
+      json_data.innerHTML = JSON.stringify({}, null, 2);
+      redeem_code.value = null;
+      file.value = null;
+
+      // Make button disabled and change text to loading
+      const submitButton = form.querySelector('input[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.value = 'Loading...';
+
+      const response = await fetch(formURL + '/' + redeem_code_value, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      // Make button enabled and change text to bypass
+      submitButton.disabled = false;
+      submitButton.value = 'Bypass';
+
+      json_data.innerHTML = JSON.stringify(data, null, 2);
+    });
+  </script>
+`) %>

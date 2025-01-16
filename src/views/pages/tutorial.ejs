@@ -1,0 +1,42 @@
+<% layout('layouts/main.layout') %>
+
+<% block('subTitle', 'Tutorial') %>
+
+<section class="ftco-section contact-section ftco-no-pb" id="contact-section">
+  <div class="container">
+    <div class="row justify-content-center mb-5 pb-5">
+      <div class="col-md-7 heading-section text-center">
+        <span class="subheading">Tutorial</span>
+        <h2 class="mb-4">Video Tutorial</h2>
+        <p>
+          Feels confused about how to use our tool? Don't worry, we provide you
+          some video tutorial how to use our tool. Just watch the video and
+          follow the instruction.
+        </p>
+      </div>
+    </div>
+
+    <div class="row d-flex">
+      <% for(var i = 0; i < tutorial_length; i++) { %>
+        <div class="col-md-4 d-flex">
+          <div class="blog-entry justify-content-end">
+            <a href="<%= data[i].video_url %>" class="block-20" style="background-image: url('<%= data[i].thumbnail %>');"></a>
+            <div class="text mt-3 float-right d-block">
+              <h3 class="heading">
+                <%= data[i].title %>
+              </h3>
+              <div class="d-flex align-items-center mt-4 meta">
+                <p class="mb-0">
+                  <a href="<%= data[i].video_url %>" class="btn btn-primary">
+                    Watch Video
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+

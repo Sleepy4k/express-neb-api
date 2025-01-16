@@ -1,4 +1,4 @@
-import app from './app';
+import app from '@/main.js';
 import debugLib from 'debug';
 import http from 'http';
 

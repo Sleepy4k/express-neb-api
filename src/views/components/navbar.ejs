@@ -3,7 +3,7 @@
   id="ftco-navbar"
 >
   <div class="container">
-    <a class="navbar-brand" href="index.html">N<span>EB</span></a>
+    <a class="navbar-brand" href="<%= route() %>">N<span>EB</span></a>
     <button
       class="navbar-toggler js-fh5co-nav-toggle fh5co-nav-toggle"
       type="button"
@@ -13,19 +13,26 @@
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-      <span class="oi oi-menu"></span> Menu
+      <span class="oi oi-menu"></span>
+      Menu
     </button>
 
     <div class="collapse navbar-collapse" id="ftco-nav">
       <ul class="navbar-nav nav ml-auto">
         <li class="nav-item">
-          <a href="#home-section" class="nav-link"><span>Home</span></a>
+          <a href="<%= route() %>" class="nav-link <%= isRouteActive() %>">
+            <span>Home</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a href="#services-section" class="nav-link"><span>Services</span></a>
+          <a href="<%= route('service') %>" class="nav-link <%= isRouteActive('service') %>">
+            <span>Service</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a href="#tutorial-section" class="nav-link"><span>Tutorial</span></a>
+          <a href="<%= route('tutorial') %>" class="nav-link <%= isRouteActive('tutorial') %>">
+            <span>Tutorial</span>
+          </a>
         </li>
       </ul>
     </div>

@@ -2690,7 +2690,11 @@ h3,
 }
 
 .bg-light {
-  background: #f8f9fa !important;
+  background: #edeeee !important;
+}
+
+.bg-gray {
+  background: #bcbcbc !important;
 }
 
 .bg-primary {
@@ -3186,6 +3190,11 @@ h3,
 .form-control:focus,
 .form-control:active {
   border-color: #000000;
+}
+
+.form-control[type="file"] {
+  height: inherit !important;
+  padding: 15px 15px 15px 15px;
 }
 
 textarea.form-control {
@@ -4147,4 +4156,8 @@ textarea.form-control {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -136px;
   }
+}
+
+.main-box {
+  margin-bottom: 5rem;
 }

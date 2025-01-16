@@ -16,12 +16,11 @@
     <meta name="author" content="Benjamin4k">
     <meta name="coverage" content="Worldwide">
     <meta name="distribution" content="Global">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="keywords" content="seb, neb, bypass, seb bypass, neb bypass, seb bypasser, neb bypasser, seb bypass tool, neb bypass tool">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <link rel="canonical" href="<%= baseUrl %>" />
     <link rel="apple-touch-icon" href="<%= asset('logo.ico') %>" />
     <link rel="icon" type="image/png" href="<%= asset('logo.ico') %>" />
     <link rel="icon" type="image/x-icon" href="<%= asset('logo.ico') %>" />
@@ -57,38 +56,13 @@
     <meta property="og:image:width" content="900">
     <meta property="og:image:height" content="549">
 
-    <link rel="stylesheet" href="<%= asset('css/aos.css') %>" nonce="<%= cspNonce %>" />
-    <link rel="stylesheet" href="<%= asset('css/animate.css') %>" nonce="<%= cspNonce %>" />
-    <link rel="stylesheet" href="<%= asset('css/main.css') %>" nonce="<%= cspNonce %>" />
-
-    <% if (isRouteActive() == 'active') { %>
-      <style>
-        .nav-link {
-          color: #ffffff !important;
-        }
-        .nav-link.active {
-          color: #31de79 !important;
-        }
-      </style>
-    <% } %>
+    <link rel="stylesheet" href="<%= asset('css/error.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('css/font.css') %>" nonce="<%= cspNonce %>" />
 
     <%- block('addon-style') %>
   </head>
-  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
-    <%- partial('components/navbar') %>
-
+  <body class="antialiased">
     <%- body %>
-
-    <%- partial('components/loader') %>
-
-    <script src="<%= asset('js/jquery.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/jquery-migrate-3.0.1.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/jquery.stellar.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/bootstrap.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/aos.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/scrollax.min.js') %>" nonce="<%= cspNonce %>"></script>
-
-    <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>"></script>
 
     <%- block('addon-script') %>
   </body>

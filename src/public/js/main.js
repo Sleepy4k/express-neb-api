@@ -24,14 +24,16 @@ AOS.init({
   fullHeight();
 
   // loader
-  var loader = function () {
+  window.addEventListener("load", function () {
+    const loader = document.getElementById("ftco-loader");
+
     setTimeout(function () {
-      if ($("#ftco-loader").length > 0) {
-        $("#ftco-loader").removeClass("show");
-      }
-    }, 1);
-  };
-  loader();
+      loader.classList.remove("show");
+    }, Math.floor(Math.random() * 1) * 1000);
+  });
+
+	// Scrollax
+  $.Scrollax();
 
   // Burger Menu
   var burgerMenu = function () {
@@ -132,4 +134,29 @@ AOS.init({
     });
   };
   scrollWindow();
+
+  const messages = [
+    {
+      message: '%cHold Up!',
+      style: 'color: #5955B2; font-size: 50px; font-weight: bold; text-shadow: 2px 2px black;'
+    },
+    {
+      message: 'If someone tells you to copy/paste something here, you have an 11/10 chance that you are being scammed.',
+      style: ''
+    },
+    {
+      message: '%cPasting anything here could give an attacker access to your account.',
+      style: 'color: #EF0103; font-size: 15px; font-weight: bold;'
+    },
+    {
+      message: 'Unless you really know what you\'re doing, close this page and stay safe.',
+      style: ''
+    },
+    {
+      message: 'If you really understand what you are doing, you should work with us.',
+      style: ''
+    }
+  ];
+
+  messages.forEach(data => console.log(data.message, data.style));
 })(jQuery);

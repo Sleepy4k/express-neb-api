@@ -1,3 +1,10 @@
+/**
+ * Normalize a port into a number, string, or false.
+ *
+ * @param {any} val - The port value
+ *
+ * @returns {any} The normalized port value
+ */
 function normalizePort(val: any): any {
   const port = parseInt(val, 10);
 
@@ -12,6 +19,13 @@ function normalizePort(val: any): any {
   return false;
 }
 
+/**
+ * Parse the hostname
+ *
+ * @param {string|null} host - The hostname
+ *
+ * @returns {string} The parsed hostname
+ */
 function parseHostname(host?: string|null): string {
   const regex = new RegExp('^(http|https)://', 'i');
 
