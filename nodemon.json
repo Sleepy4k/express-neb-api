@@ -1,6 +1,18 @@
 {
-  "watch": ["src", ".env"],
+  "$schema": "https://json.schemastore.org/nodemon.json",
+  "stdin": false,
+  "verbose": true,
+  "exitcrash": false,
+  "exec": "concurrently \"npx tsc --watch -p tsconfig.json\" \"npx tsx -r tsconfig-paths/register ./src/index.ts\"",
   "ext": ".ts",
-  "ignore": ["src/**/*.spec.ts", "src/public/*", "src/views/*"],
-  "exec": "concurrently \"npx tsc --watch\" \"ts-node -r tsconfig-paths/register src/index.ts\""
+  "watch": [
+    "src",
+    ".env"
+  ],
+  "ignore": [
+    "src/**/*.spec.ts",
+    "src/public/*",
+    "src/views/*",
+    "src/storage/*"
+  ]
 }
