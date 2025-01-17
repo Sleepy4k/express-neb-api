@@ -84,7 +84,7 @@ app.use(helmet.contentSecurityPolicy({
     styleSrc: ["'self'", "'unsafe-inline'"],
     scriptSrc: ["'self'", "'unsafe-inline'"],
     fontSrc: ["'self'"],
-    imgSrc: ["'self'", 'data:', 'preview.colorlib.com'],
+    imgSrc: [],
     objectSrc: ["'none'"],
     upgradeInsecureRequests: [],
   }

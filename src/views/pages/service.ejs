@@ -5,8 +5,8 @@
 <% block('addon-style', `
   <style type="text/css">
     #json_block {
-      width: 100%;
-      height: 100%;
+      width: 85%;
+      height: 85%;
       margin: 15px;
     }
     #json_data {
@@ -36,18 +36,29 @@
           <div class="form-group">
             <input type="text" class="form-control" name="redeem_code" id="redeem_code" placeholder="Your Redeem Code">
           </div>
+
+          <div class="form-group">
+            <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Downloaded File Name (Optional)">
+          </div>
+
           <div class="form-group">
             <input type="file" class="form-control" name="file" id="file" placeholder="Upload Your File" accept=".seb">
           </div>
 
-          <div class="form-group mr-2">
-            <input type="submit" value="Bypass" class="btn btn-primary" />
+          <div class="d-flex">
+            <div class="form-group mr-2">
+              <input type="submit" value="Bypass" class="btn btn-primary" />
+            </div>
+
+            <div class="form-group mr-2">
+              <a href="#" class="btn btn-secondary" id="download_json">Download JSON</a>
+            </div>
           </div>
         </form>
       </div>
 
       <div class="col-md-6 d-flex">
-        <div id="map" class="bg-gray" style="overflow: scroll;">
+        <div id="map" class="bg-gray" style="overflow-x: scroll;">
 <!-- Don't change this block due bugged on web ui (so crucial) -->
           <pre id="json_block">
 <code id="json_data"></code>
@@ -103,6 +114,65 @@
       submitButton.value = 'Bypass';
 
       json_data.innerHTML = JSON.stringify(data, null, 2);
+    });
+  </script>
+
+  <script>
+    const download_json = document.getElementById('download_json');
+    const json_block = document.getElementById('json_block');
+
+    download_json.addEventListener('click', () => {
+      const data = json_data.innerText;
+
+      // If there is no data, then return early
+      if (data === '{}') {
+        alert('No data to download');
+        return;
+      }
+
+      const jsonData = JSON.parse(data);
+
+      if (jsonData.data.length === 0) {
+        alert('Data is empty');
+        return;
+      }
+
+      // get file name from input
+      const file_name = document.getElementById('file_name').value || 'NEB Bypasser Result';
+
+      const formattedData = {
+        shortTitle: 'N',
+        title: file_name,
+        version: 2,
+        'headers': []
+      };
+
+      jsonData.data.forEach((item) => {
+        if (item.name.toLowerCase() === 'user-agent') {
+          formattedData.headers.push({
+            enabled: false,
+            name: item.name,
+            value: item.value
+          });
+        } else {
+          formattedData.headers.push({
+            enabled: false,
+            appendMode: false,
+            name: item.name,
+            value: item.value
+          });
+        }
+      });
+
+      const blob = new Blob([JSON.stringify(formattedData)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file_name + '.json';
+      a.click();
+
+      URL.revokeObjectURL(url);
     });
   </script>
 `) %>

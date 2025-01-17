@@ -33,11 +33,18 @@ const storage = multer.diskStorage({
     cb(null, path.join(__basedir, "storage/app"));
   },
   filename: (
-    _req: Request,
+    req: Request,
     file: Express.Multer.File,
     cb: FileNameCallback
   ): void => {
-    cb(null, `bypass-${Date.now()}-${Math.floor(Math.random() * 1000)}-${file.originalname}`);
+    const { redeemCode } = req.params;
+
+    if (!redeemCode) {
+      cb(null, `bypass-${Date.now()}-${Math.floor(Math.random() * 10000)}-${file.originalname}`);
+      return;
+    }
+
+    cb(null, `bypass-${redeemCode}-${Date.now()}-${Math.floor(Math.random() * 10000)}-${file.originalname}`);
   },
 });
 

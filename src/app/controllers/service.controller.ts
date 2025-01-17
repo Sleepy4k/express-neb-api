@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { serviceConfig } from '@config';
 import { Request, Response } from 'express';
 import { SebFile } from '@utils/seb-tools.js';
 import generateUserAgent from '@utils/generate-agent.js';
@@ -19,6 +20,7 @@ const bypass = async (req: Request, res: Response) => {
     res.status(400).send({
       status: 'error',
       message: 'Invalid redeem code',
+      data: [],
     });
     return;
   }
@@ -29,7 +31,8 @@ const bypass = async (req: Request, res: Response) => {
     if (!file) {
       res.status(400).send({
         status: 'error',
-        message: 'File not found',
+        message: 'File not found or invalid file type',
+        data: [],
       });
       return;
     }
@@ -41,6 +44,7 @@ const bypass = async (req: Request, res: Response) => {
         res.status(400).send({
           status: 'error',
           message: 'Error reading file',
+          data: [],
         });
         return;
       }
@@ -50,6 +54,7 @@ const bypass = async (req: Request, res: Response) => {
         res.status(400).send({
           status: 'error',
           message: 'Error parsing SEB file',
+          data: [],
         });
         return;
       }
@@ -58,6 +63,7 @@ const bypass = async (req: Request, res: Response) => {
         res.status(400).send({
           status: 'error',
           message: 'Start URL not found in SEB file',
+          data: [],
         });
         return;
       }
@@ -69,28 +75,50 @@ const bypass = async (req: Request, res: Response) => {
       };
 
       // Append SEB file data to response
-      resData.data?.push({
-        name: 'Referer',
-        value: sebFile.StartUrl
-      });
+      if (serviceConfig.response.showStartUrl) {
+        resData.data?.push({
+          name: 'Referer',
+          value: sebFile.StartUrl
+        });
+      }
 
-      resData.data?.push({
-        name: USER_AGENT_HEADER_NAME,
-        value: generateUserAgent()
-      });
+      if (serviceConfig.response.showUserAgent) {
+        resData.data?.push({
+          name: USER_AGENT_HEADER_NAME,
+          value: generateUserAgent()
+        });
+      }
 
-      resData.data?.push({
-        name: SEB_CKH_HTTP_HEADER_NAME,
-        value: sebFile.getConfigKey(sebFile.StartUrl || '')
-      });
+      if (serviceConfig.response.showConfigHash) {
+        resData.data?.push({
+          name: SEB_CKH_HTTP_HEADER_NAME,
+          value: sebFile.getConfigKey(sebFile.StartUrl || '')
+        });
+      }
+
+      if (serviceConfig.response.showSerializedJson) {
+        resData.data?.push({
+          name: 'Serialized',
+          value: sebFile.SerializedJson
+        });
+      }
+
+      if (serviceConfig.response.showDictionnary) {
+        resData.data?.push({
+          name: 'Dictionary',
+          value: JSON.stringify(sebFile.Dictionnary)
+        });
+      }
 
       res.status(200).send(resData);
 
-      fs.unlink(file.path, (err) => {
-        if (err) {
-          console.log(`Error deleting file: ${err}`);
-        }
-      });
+      if (serviceConfig.file.deleteAfterParse) {
+        fs.unlink(file.path, (err) => {
+          if (err) {
+            console.log(`Error deleting file: ${err}`);
+          }
+        });
+      }
     });
   } catch (error) {
     console.log(error);
@@ -98,6 +126,7 @@ const bypass = async (req: Request, res: Response) => {
     res.status(500).send({
       status: 'error',
       message: 'An error occurred',
+      data: [],
     });
   }
 }
