@@ -46,13 +46,14 @@
       "@handlers/*": ["src/handlers/*"],
       "@constants/*": ["src/constants/*"],
       "@interfaces/*": ["src/interfaces/*"],
+      "@modules/*": ["src/modules/*"],
+      "@enums/*": ["src/enums/*"],
       "@app/*": ["src/app/*"],
       "@controllers/*": ["src/app/controllers/*"],
       "@middleware/*": ["src/app/middleware/*"],
       "@models/*": ["src/app/models/*"],
       "@services/*": ["src/app/services/*"],
       "@providers/*": ["src/app/providers/*"],
-      "@repositories/*": ["src/app/repositories/*"],
       "@types/*": ["src/@types/*"]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
