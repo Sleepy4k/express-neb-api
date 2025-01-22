@@ -1,6 +1,16 @@
 import { appConfig } from "@config";
 import type { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 
+/**
+ * Error handler middleware to catch all errors
+ *
+ * @param {any} err
+ * @param {Request} _req
+ * @param {Response} res
+ * @param {NextFunction} _next
+ *
+ * @returns {void}
+ */
 const errorHandler: ErrorRequestHandler = (
   err: any,
   _req: Request,

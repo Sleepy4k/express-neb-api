@@ -1,25 +1,82 @@
 import fs from 'node:fs';
+import SebFile from '@modules/seb.js';
 import { serviceConfig } from '@config';
 import { Request, Response } from 'express';
-import { SebFile } from '@utils/seb-tools.js';
+import RedeemModel from '@models/redeem.model.js';
 import generateUserAgent from '@utils/generate-agent.js';
 import type { IResData } from '@interfaces/responseField.js';
 import {
+  REFERER,
   USER_AGENT_HEADER_NAME,
+  SEB_RH_HTTP_HEADER_NAME,
   SEB_CKH_HTTP_HEADER_NAME
 } from '@constants/header.js';
 
+/**
+ * The redeem model instance for the service controller
+ *
+ * @type {RedeemModel}
+ */
+const redeemModel: RedeemModel = new RedeemModel();
+
+/**
+ * The form controller for the service controller
+ *
+ * @param {Request} _req - The request
+ * @param {Response} res - The response
+ */
 const form = (_req: Request, res: Response) => {
   res.render('pages/service');
 }
 
+/**
+ * The missing URL controller for the service controller
+ *
+ * @param {Request} _req - The request
+ * @param {Response} res - The response
+ */
+const missUrl = (_req: Request, res: Response) => {
+  res.status(404).send({
+    status: 'error',
+    message: 'Please provide a redeem code (e.g. /bypass/123) and a SEB file to perform the bypass',
+    data: [],
+  });
+}
+
+/**
+ * The bypass controller for the service controller
+ *
+ * @param {Request} req - The request
+ * @param {Response} res - The response
+ */
 const bypass = async (req: Request, res: Response) => {
   const redeemCode = req.params.redeemCode;
 
-  if (redeemCode === '123') {
+  if (!redeemCode || typeof redeemCode !== 'string') {
+    res.status(400).send({
+      status: 'error',
+      message: 'Please provide a redeem code',
+      data: [],
+    });
+    return;
+  }
+
+  const redeem = redeemModel.find(redeemCode);
+
+  if (!redeem) {
     res.status(400).send({
       status: 'error',
       message: 'Invalid redeem code',
+      data: [],
+    });
+    return;
+  }
+
+  // Check if redeem code is already redeemed
+  if (redeem.redeemedAt !== null) {
+    res.status(400).send({
+      status: 'error',
+      message: 'Redeem code already used',
       data: [],
     });
     return;
@@ -77,7 +134,7 @@ const bypass = async (req: Request, res: Response) => {
       // Append SEB file data to response
       if (serviceConfig.response.showStartUrl) {
         resData.data?.push({
-          name: 'Referer',
+          name: REFERER,
           value: sebFile.StartUrl
         });
       }
@@ -86,6 +143,13 @@ const bypass = async (req: Request, res: Response) => {
         resData.data?.push({
           name: USER_AGENT_HEADER_NAME,
           value: generateUserAgent()
+        });
+      }
+
+      if (serviceConfig.response.showRequestHash) {
+        resData.data?.push({
+          name: SEB_RH_HTTP_HEADER_NAME,
+          value: sebFile.RequestHash
         });
       }
 
@@ -112,6 +176,8 @@ const bypass = async (req: Request, res: Response) => {
 
       res.status(200).send(resData);
 
+      redeemModel.redeem(redeemCode);
+
       if (serviceConfig.file.deleteAfterParse) {
         fs.unlink(file.path, (err) => {
           if (err) {
@@ -133,5 +199,6 @@ const bypass = async (req: Request, res: Response) => {
 
 export {
   form,
+  missUrl,
   bypass,
 };

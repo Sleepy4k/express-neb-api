@@ -57,15 +57,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
+ * Check if the current environment is development
+ */
+const isDevMode = appConfig.env === 'development';
+
+/**
  * Setup logger
  */
-app.use(logger(appConfig.env === 'development' ? 'dev' : 'combined'));
+app.use(logger(isDevMode ? 'dev' : 'combined'));
 
 /**
  * Setup CORS
  */
 app.use(cors({
-  origin: appConfig.env === 'development' ? '*' : appConfig.host,
+  origin: isDevMode ? '*' : appConfig.host,
   methods: 'GET, POST, PUT, DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 200,
@@ -81,10 +86,10 @@ app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
-    styleSrc: ["'self'", "'unsafe-inline'"],
-    scriptSrc: ["'self'", "'unsafe-inline'"],
+    styleSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
+    scriptSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
     fontSrc: ["'self'"],
-    imgSrc: [],
+    imgSrc: ["*", "data:"],
     objectSrc: ["'none'"],
     upgradeInsecureRequests: [],
   }

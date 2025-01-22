@@ -6,6 +6,7 @@ import fileUploader from '@middleware/fileUploader.js';
 const router = Router();
 
 router.get('/', sc.form);
+router.post('/', sc.missUrl);
 router.post('/:redeemCode', fileUploader.single('file'), sc.bypass);
 
 export default router;

@@ -4,50 +4,75 @@ import type { Request } from 'express';
 import { fileURLToPath } from "node:url";
 import type {
   DestinationCallback,
-  FileNameCallback
+  FileNameCallback,
+  MulterFile
 } from '@interfaces/multerDiskStorage.js';
 
-const __basedir = path.resolve(fileURLToPath(import.meta.url) + '/../../..');
+/**
+ * Get path to the root directory using dot-to-parent
+ *
+ * @note If file path is changed, this should be updated
+ */
+const dotToParent = '/../../..';
 
+/**
+ * Get the current file path
+ */
+const currPath = fileURLToPath(import.meta.url);
+
+/**
+ * Get the base directory from the current file path and the dot-to-parent
+ */
+const __basedir = path.resolve(currPath + dotToParent);
+
+/**
+ * Filter SEB files only
+ *
+ * @param {Request} _req
+ * @param {Express.Multer.File} file
+ * @param {FileFilterCallback} cb
+ *
+ * @returns {void}
+ */
 const sebFilter = (
   _req: Request,
-  file: Express.Multer.File,
+  file: MulterFile,
   cb: FileFilterCallback
-) => {
-  if (
-    file.originalname.match(/\.(seb)$/) &&
-    file.mimetype === 'application/octet-stream'
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
+): void => {
+  const { originalname, mimetype } = file;
+  const isSEB = originalname.endsWith('.seb');
+  const isOctetStream = mimetype === 'application/octet-stream';
+
+  cb(null, isSEB && isOctetStream);
 };
 
-const storage = multer.diskStorage({
+/**
+ * Setup the storage for the file
+ */
+const diskStorage = multer.diskStorage({
   destination: (
     _req: Request,
-    _file: Express.Multer.File,
+    _file: MulterFile,
     cb: DestinationCallback
   ): void => {
     cb(null, path.join(__basedir, "storage/app"));
   },
   filename: (
     req: Request,
-    file: Express.Multer.File,
+    file: MulterFile,
     cb: FileNameCallback
   ): void => {
     const { redeemCode } = req.params;
+    const uniqueSuffix = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    const fileName = redeemCode ? `bypass-${redeemCode}` : 'bypass';
 
-    if (!redeemCode) {
-      cb(null, `bypass-${Date.now()}-${Math.floor(Math.random() * 10000)}-${file.originalname}`);
-      return;
-    }
-
-    cb(null, `bypass-${redeemCode}-${Date.now()}-${Math.floor(Math.random() * 10000)}-${file.originalname}`);
+    cb(null, `${fileName}-${uniqueSuffix}-${file.originalname}`);
   },
 });
 
-const fileUploader = multer({ storage: storage, fileFilter: sebFilter });
+/**
+ * File uploader middleware
+ */
+const fileUploader = multer({ storage: diskStorage, fileFilter: sebFilter });
 
 export default fileUploader;

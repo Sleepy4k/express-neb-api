@@ -12,6 +12,8 @@ let lastUserAgentIndex = -1;
 
 /**
  * Generate a random user agent
+ *
+ * @returns {string} The generated user agent
  */
 export function generateUserAgent(): string {
   let index = -1;

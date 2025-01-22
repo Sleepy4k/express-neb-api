@@ -5,6 +5,10 @@
 
   RewriteEngine On
 
+  # Disable Powered By Header
+  Header unset X-Powered-By
+  Header always unset X-Powered-By
+
   # Handle Authorization Header
   RewriteCond %{HTTP:Authorization} .
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

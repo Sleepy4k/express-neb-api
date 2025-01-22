@@ -22,7 +22,15 @@ type DestinationCallback = (error: Error | null, destination: string) => void
  */
 type FileNameCallback = (error: Error | null, filename: string) => void
 
+/**
+ * Multer file interface
+ *
+ * @type MulterFile
+ */
+type MulterFile = Express.Multer.File;
+
 export type {
   DestinationCallback,
   FileNameCallback,
+  MulterFile,
 };

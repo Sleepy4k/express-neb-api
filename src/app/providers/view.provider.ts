@@ -3,7 +3,16 @@ import { NextFunction, Request, Response } from 'express';
 import { parseHostname } from '@utils/parse.js';
 import generateNonce from '@utils/nonce.js';
 
-const viewServiceProvider = (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Set up the view service provider for the Express app
+ *
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ *
+ * @returns {void}
+ */
+const viewServiceProvider = (req: Request, res: Response, next: NextFunction): void => {
   res.locals.env = appConfig.env || 'production';
   res.locals.title = appConfig.name || 'Express TypeScript Neb';
   res.locals.description = 'Naka Exam Bypasser, a simple Express.js server that bypasses Safe Exam\'s security measures.';
