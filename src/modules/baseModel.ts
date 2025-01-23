@@ -12,18 +12,24 @@ import {
  * Get path to the root directory using dot-to-parent
  *
  * @note If file path is changed, this should be updated
+ *
+ * @type {string}
  */
-const dotToParent = '/../../storage/cache';
+const dotToParent: string = '/../../storage/cache';
 
 /**
  * Get the current file path
+ *
+ * @type {string}
  */
-const currPath = fileURLToPath(import.meta.url);
+const currPath: string = fileURLToPath(import.meta.url);
 
 /**
  * Get the base directory from the current file path and the dot-to-parent
+ *
+ * @type {string}
  */
-const __basedir = path.resolve(currPath + dotToParent);
+const __basedir: string = path.resolve(currPath + dotToParent);
 
 /**
  * The base model class
@@ -48,19 +54,36 @@ class BaseModel {
   /**
    * The constructor for the BaseModel class
    *
-   * @param {string} filePath - The file path
+   * @param {string} filePath - The file path, e.g. data/users.json
    */
   public constructor(filePath: string) {
     this.data = {};
-    this.filePath = path.join(__basedir, filePath);
-
-    if (!isDirectoryExists(__basedir)) {
-      throw new Error('The directory does not exist');
-    }
+    this.filePath = this.parseFilePath(filePath);
 
     if (!isJsonFileExists(this.filePath)) {
       createJsonFile(this.filePath);
     }
+  }
+
+  /**
+   * Parse the file path
+   *
+   * @param {string} filePath - The file path
+   *
+   * @returns {string} The parsed file path
+   */
+  private parseFilePath(filePath: string): string {
+    if (filePath.charAt(0) !== '/') {
+      filePath = '\\' + filePath;
+    }
+
+    const parsedFilePath = path.join(__basedir, filePath.replace(/\//g, '\\'));
+
+    if (!isDirectoryExists(path.dirname(parsedFilePath))) {
+      throw new Error('The directory does not exist');
+    }
+
+    return parsedFilePath;
   }
 
   /**
