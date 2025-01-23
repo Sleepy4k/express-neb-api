@@ -1,0 +1,32 @@
+<% layout('layouts/main.layout') %>
+
+<% block('addon-style', `
+  <style type="text/css">
+    #home_button {
+      color: #007bff;
+      text-decoration: none;
+      padding: 5px 10px;
+      border: 1px solid #007bff;
+      border-radius: 5px;
+    }
+  </style>
+`) %>
+
+<section class="ftco-section contact-section ftco-no-pb" id="contact-section">
+  <div class="container">
+    <div class="row justify-content-center mb-5 pb-3">
+      <div class="col-md-7 heading-section text-center">
+        <span class="subheading">Admin</span>
+        <h2 class="mb-4">Admin Dashboard</h2>
+        <p>
+          This page is currently under development. Please come back later.
+          <br />
+          or you can go to the <a href="<%= route('') %>" id="home_button">home page</a>.
+          <br />
+          <br />
+          Feel free to contact us if you have any questions. Thank you.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

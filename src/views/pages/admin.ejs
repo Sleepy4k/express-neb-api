@@ -63,9 +63,10 @@
         </div>
       </div>
     </div>
+
+    <span style="display: none;" id="redirectErrorUrl"><%= route() %></span>
   </div>
 </section>
-
 
 <% block('addon-script', `
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
@@ -87,6 +88,33 @@
       "showMethod": "fadeIn",
       "hideMethod": "fadeOut"
     };
+  </script>
+
+  <script>
+    function checkAuth() {
+      const auth = localStorage.getItem('auth');
+      const redirectUrl = document.getElementById('redirectErrorUrl')?.innerText || '';
+
+      if (!auth) {
+        window.location.href = redirectUrl;
+        return;
+      }
+
+      try {
+        const authData = JSON.parse(auth);
+
+        if (authData.role !== 'admin') {
+          window.location.href = redirectUrl;
+          return;
+        }
+
+        toastr.success('Welcome to the Admin Dashboard', 'Admin');
+      } catch (error) {
+        window.location.href = redirectUrl;
+      }
+    }
+
+    checkAuth();
   </script>
 
   <script>
