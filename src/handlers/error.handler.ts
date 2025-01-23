@@ -1,5 +1,10 @@
 import { appConfig } from "@config";
-import type { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import type {
+  Request,
+  Response,
+  NextFunction,
+  ErrorRequestHandler
+} from "express";
 
 /**
  * Error handler middleware to catch all errors

@@ -1,5 +1,9 @@
 import createError from "http-errors";
-import type { NextFunction, Request, Response } from "express";
+import type {
+  Request,
+  Response,
+  NextFunction
+} from "express";
 
 /**
  * Missing handler middleware to catch all missing requests
