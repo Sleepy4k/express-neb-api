@@ -1,7 +1,9 @@
 /**
  * User agents to be used in the requests
+ *
+ * @type {string[]}
  */
-const USER_AGENTS = [
+const USER_AGENTS: string[] = [
   "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 SEB/3.7.0 (x64)",
   "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 SEB/3.7.0 (x64)",
   "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 SEB/3.7.0 (x64)",
