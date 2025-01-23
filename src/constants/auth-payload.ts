@@ -1,9 +1,9 @@
 /**
- * The login payload
+ * The login payload - BenjaminOnTop123
  *
  * @type {string}
  */
-const LOGIN_PAYLOAD: string = 'f98476f48659a897c2066f4089a42bab378ed0dbc9637f6317fadeb5c56a3282';
+const LOGIN_PAYLOAD: string = 'e3a20c78e5550390667b0db751f771bad624a38d353c9babf977e69e4bc6cb39';
 
 export {
   LOGIN_PAYLOAD

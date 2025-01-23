@@ -19,7 +19,7 @@
   <div class="container">
     <div class="row justify-content-center mb-5 pb-3">
       <div class="col-md-7 heading-section text-center">
-        <form action="<%= route('awikwok/generate') %>" class="bg-light p-5 contact-form">
+        <form action="<%= route('dashboard/generate') %>" class="bg-light p-5 contact-form">
           <div class="form-group">
             <input type="text" class="form-control" name="name" id="name" placeholder="Name of User" />
           </div>
@@ -30,7 +30,7 @@
             </div>
 
             <div class="form-group mr-2">
-              <span style="display: none;" id="findRoute"><%= route('awikwok/list') %></span>
+              <span style="display: none;" id="findRoute"><%= route('dashboard/list') %></span>
               <a href="#" class="btn btn-secondary" id="find_code">Find Generated Code</a>
             </div>
           </div>
@@ -103,7 +103,7 @@
       try {
         const authData = JSON.parse(auth);
 
-        if (authData.role !== 'admin') {
+        if (authData.name.toLowerCase() !== 'artkana30') {
           window.location.href = redirectUrl;
           return;
         }
