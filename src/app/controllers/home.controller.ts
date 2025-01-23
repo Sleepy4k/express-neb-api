@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { appConfig } from '@config';
+import type { Request, Response } from 'express';
 
 /**
  * Home controller to render the home page

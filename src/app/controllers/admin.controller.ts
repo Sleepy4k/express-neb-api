@@ -1,16 +1,38 @@
-import { Request, Response } from 'express';
+import { sha256 } from '@utils/encryption.js';
+import type { Request, Response } from 'express';
 import RedeemModel from '@models/redeem.model.js';
+import { nameToRedeemCode } from '@utils/parse.js';
 import { RedeemStatus } from '@enums/redeemStatus.js';
+import { LOGIN_PAYLOAD } from '@constants/auth-payload.js';
 
+/**
+ * The redeem model instance
+ *
+ * @type {RedeemModel}
+ */
 const redeemModel: RedeemModel = new RedeemModel();
 
 /**
  * Home controller to render the home page
  *
- * @param {Request} _req
+ * @param {Request} req
  * @param {Response} res
  */
-const home = (_req: Request, res: Response) => {
+const home = (req: Request, res: Response) => {
+  const { payload } = req.query
+
+  if (typeof payload !== 'string' || payload === '') {
+    res.render('pages/guest');
+    return;
+  }
+
+  const encryptedPayload = payload ? sha256(payload) : '';
+
+  if (encryptedPayload !== LOGIN_PAYLOAD) {
+    res.render('pages/guest');
+    return;
+  }
+
   res.render('pages/admin');
 }
 
@@ -32,21 +54,16 @@ const registerRedeemCode = (req: Request, res: Response) => {
     return;
   }
 
-  const rand = Math.floor(Math.random() * 1000);
-  const reversedName = name.split('').reverse().join('').replaceAll(' ', '-');
+  const redeemByUser = redeemModel.findByName(name) || [];
+  const increment = redeemByUser.length + 1;
+  const redeemCode = `${nameToRedeemCode(name)}-${increment}`;
 
-  const redeemByUser = redeemModel.findByName(name);
-  const redeemByUserLength = redeemByUser ? redeemByUser.length : 0;
-  const increment = redeemByUserLength > 0 ? redeemByUserLength + 1 : 1;
-
-  const { code } = redeemModel.create(`${rand}-${reversedName}-${increment}`, name);
+  const { code } = redeemModel.create(redeemCode, name);
 
   res.send({
     status: 'success',
     message: 'Redeem code registered',
-    data: {
-      redeem_code: code
-    },
+    data: { redeem_code: code },
   });
 }
 

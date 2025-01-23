@@ -13,7 +13,7 @@ class RedeemModel extends BaseModel {
    * The constructor for the RedeemModel class
    */
   public constructor() {
-    super('/redeem.json');
+    super('redeem.json');
   }
 
   /**

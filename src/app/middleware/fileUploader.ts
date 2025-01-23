@@ -3,9 +3,9 @@ import multer, { FileFilterCallback } from "multer";
 import type { Request } from 'express';
 import { fileURLToPath } from "node:url";
 import type {
-  DestinationCallback,
+  MulterFile,
   FileNameCallback,
-  MulterFile
+  DestinationCallback
 } from '@interfaces/multerDiskStorage.js';
 
 /**
@@ -63,10 +63,11 @@ const diskStorage = multer.diskStorage({
     cb: FileNameCallback
   ): void => {
     const { redeemCode } = req.params;
-    const uniqueSuffix = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-    const fileName = redeemCode ? `bypass-${redeemCode}` : 'bypass';
+    const uniqueSuffix = `${Math.floor(Math.random() * 10000)}`;
+    const prefixName = redeemCode ? `bypass-${redeemCode}` : 'bypass';
+    const fileName = `${file.originalname.replaceAll(' ', '-')}`;
 
-    cb(null, `${fileName}-${uniqueSuffix}-${file.originalname}`);
+    cb(null, `${prefixName}-${uniqueSuffix}-${fileName}`);
   },
 });
 

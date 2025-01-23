@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import SebFile from '@modules/seb.js';
 import { serviceConfig } from '@config';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import RedeemModel from '@models/redeem.model.js';
+import { defaultEncoder } from '@constants/encoder.js';
 import generateUserAgent from '@utils/generate-agent.js';
 import type { IResData } from '@interfaces/responseField.js';
 import {
@@ -94,7 +95,7 @@ const bypass = async (req: Request, res: Response) => {
       return;
     }
 
-    fs.readFile(file.path, 'utf8', async (err, data) => {
+    fs.readFile(file.path, defaultEncoder, async (err, data) => {
       if (err) {
         console.log(err);
 
@@ -132,47 +133,20 @@ const bypass = async (req: Request, res: Response) => {
       };
 
       // Append SEB file data to response
-      if (serviceConfig.response.showStartUrl) {
-        resData.data?.push({
-          name: REFERER,
-          value: sebFile.StartUrl
-        });
-      }
+      const responseFields = [
+        { condition: serviceConfig.response.showStartUrl, name: REFERER, value: sebFile.StartUrl },
+        { condition: serviceConfig.response.showUserAgent, name: USER_AGENT_HEADER_NAME, value: generateUserAgent() },
+        { condition: serviceConfig.response.showRequestHash, name: SEB_RH_HTTP_HEADER_NAME, value: sebFile.RequestHash },
+        { condition: serviceConfig.response.showConfigHash, name: SEB_CKH_HTTP_HEADER_NAME, value: sebFile.getConfigKey(sebFile.StartUrl || '') },
+        { condition: serviceConfig.response.showSerializedJson, name: 'Serialized', value: sebFile.SerializedJson },
+        { condition: serviceConfig.response.showDictionnary, name: 'Dictionary', value: JSON.stringify(sebFile.Dictionnary) }
+      ];
 
-      if (serviceConfig.response.showUserAgent) {
-        resData.data?.push({
-          name: USER_AGENT_HEADER_NAME,
-          value: generateUserAgent()
-        });
-      }
-
-      if (serviceConfig.response.showRequestHash) {
-        resData.data?.push({
-          name: SEB_RH_HTTP_HEADER_NAME,
-          value: sebFile.RequestHash
-        });
-      }
-
-      if (serviceConfig.response.showConfigHash) {
-        resData.data?.push({
-          name: SEB_CKH_HTTP_HEADER_NAME,
-          value: sebFile.getConfigKey(sebFile.StartUrl || '')
-        });
-      }
-
-      if (serviceConfig.response.showSerializedJson) {
-        resData.data?.push({
-          name: 'Serialized',
-          value: sebFile.SerializedJson
-        });
-      }
-
-      if (serviceConfig.response.showDictionnary) {
-        resData.data?.push({
-          name: 'Dictionary',
-          value: JSON.stringify(sebFile.Dictionnary)
-        });
-      }
+      responseFields.forEach(field => {
+        if (field.condition) {
+          resData.data?.push({ name: field.name, value: field.value });
+        }
+      });
 
       res.status(200).send(resData);
 
