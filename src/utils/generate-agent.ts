@@ -2,21 +2,25 @@ import { USER_AGENTS } from "@constants/user-agents.js";
 
 /**
  * Number of user agents
+ *
+ * @type {number}
  */
-const USER_AGENTS_COUNT = USER_AGENTS.length;
+const USER_AGENTS_COUNT: number = USER_AGENTS.length;
 
 /**
  * Last user agent index
+ *
+ * @type {number}
  */
-let lastUserAgentIndex = -1;
+let lastUserAgentIndex: number = -1;
 
 /**
  * Generate a random user agent
  *
  * @returns {string} The generated user agent
  */
-export function generateUserAgent(): string {
-  let index = -1;
+const generateUserAgent = (): string => {
+  let index: number = -1;
 
   do {
     index = Math.floor(Math.random() * USER_AGENTS_COUNT);

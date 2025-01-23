@@ -10,7 +10,7 @@ import CryptoES from 'crypto-es';
  * @example
  * sha256('data'); // => '3d3fxxxxxx'
  */
-function sha256(data: string): string {
+const sha256 = (data: string): string => {
   return CryptoES.SHA256(data).toString(CryptoES.enc.Hex);
 }
 

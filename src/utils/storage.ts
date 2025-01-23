@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { defaultEncoder } from '@constants/encoder.js';
 
 /**
  * Check if a JSON file exists
@@ -21,8 +22,8 @@ const isJsonFileExists = (filePath: string): boolean => {
 const isDirectoryExists = (directoryPath: string): boolean => {
   const isExists = fs.existsSync(directoryPath);
 
-  // if the directory does not exist, create it
   try {
+    // if the directory does not exist, create it
     if (!isExists) {
       fs.mkdirSync(directoryPath, { recursive: true });
     }
@@ -42,7 +43,7 @@ const isDirectoryExists = (directoryPath: string): boolean => {
  * @returns {void}
  */
 const createJsonFile = (filePath: string): void => {
-  fs.writeFileSync(filePath, '{}', 'utf8');
+  fs.writeFileSync(filePath, '{}', defaultEncoder);
 }
 
 /**
@@ -58,7 +59,7 @@ const readJsonFileSync = (
   encoding?: BufferEncoding
 ): Record<string, unknown> => {
   if (typeof encoding === 'undefined' || encoding === null) {
-    encoding = 'utf8';
+    encoding = defaultEncoder;
   }
 
   const data = fs.readFileSync(filePath, encoding);
@@ -78,7 +79,7 @@ const readJsonFileAsync = (
   encoding?: BufferEncoding
 ): Promise<Record<string, unknown>> => {
   if (typeof encoding === 'undefined' || encoding === null) {
-    encoding = 'utf8';
+    encoding = defaultEncoder;
   }
 
   return new Promise((resolve, reject) => {
@@ -111,7 +112,7 @@ const writeJsonFileSync = (
   encoding?: BufferEncoding
 ): void => {
   if (typeof encoding === 'undefined' || encoding === null) {
-    encoding = 'utf8';
+    encoding = defaultEncoder;
   }
 
   const stringifiedData = JSON.stringify(data, null, 2);
@@ -134,7 +135,7 @@ const writeJsonFileAsync = (
   encoding?: BufferEncoding
 ): Promise<void> => {
   if (typeof encoding === 'undefined' || encoding === null) {
-    encoding = 'utf8';
+    encoding = defaultEncoder;
   }
 
   const stringifiedData = JSON.stringify(data, null, 2);

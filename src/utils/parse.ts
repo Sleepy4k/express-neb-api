@@ -6,13 +6,20 @@ import type {
 } from '@interfaces/xmlFile.js';
 
 /**
+ * The regex to check if the hostname is a URL
+ *
+ * @type {RegExp}
+ */
+const regex: RegExp = new RegExp('^(http|https)://', 'i');
+
+/**
  * Normalize a port into a number, string, or false.
  *
  * @param {any} val - The port value
  *
  * @returns {any} The normalized port value
  */
-function normalizePort(val: any): any {
+const normalizePort = (val: any): any => {
   const port = parseInt(val, 10);
 
   if (isNaN(port)) return val;
@@ -28,9 +35,7 @@ function normalizePort(val: any): any {
  *
  * @returns {string} The parsed hostname
  */
-function parseHostname(host?: string|null): string {
-  const regex = new RegExp('^(http|https)://', 'i');
-
+const parseHostname = (host?: string|null): string => {
   if (!host) return 'https://localhost';
 
   return regex.test(host) ? host : 'https://' + host;
@@ -43,7 +48,7 @@ function parseHostname(host?: string|null): string {
  *
  * @returns {XMLValue} The processed XML value
  */
-function processXMLValue(node: Node): XMLValue {
+const processXMLValue = (node: Node): XMLValue => {
   switch (node.nodeName) {
   case 'true':
     return true;
@@ -72,7 +77,7 @@ function processXMLValue(node: Node): XMLValue {
  *
  * @returns {XMLValue[]} The XML value array
  */
-function handleXMLValArray(node: Node): XMLValue[] {
+const handleXMLValArray = (node: Node): XMLValue[] => {
   return Array.from(node.childNodes)
     .filter(childNode => childNode.nodeType === Node.ELEMENT_NODE)
     .map(childNode => processXMLValue(childNode))
@@ -86,7 +91,7 @@ function handleXMLValArray(node: Node): XMLValue[] {
  *
  * @returns {XMLDictionary} The XML value dictionary
  */
-function handleXMLValDict(node: Node): XMLDictionary {
+const handleXMLValDict = (node: Node): XMLDictionary => {
   const nestedDict: XMLDictionary = {};
   let nestedKey: string | null = null;
 
@@ -116,7 +121,7 @@ function handleXMLValDict(node: Node): XMLDictionary {
  *
  * @returns {XMLDictionary|undefined} The parsed XML dictionary
  */
-function parseXMLString(htmlString: string): XMLDictionary|undefined {
+const parseXMLString = (htmlString: string): XMLDictionary|undefined => {
   let currentKey: string | null = null;
 
   /**
@@ -172,7 +177,7 @@ function parseXMLString(htmlString: string): XMLDictionary|undefined {
  *
  * @returns {string} The serialized XML string
  */
-function serialize(dictionary: XMLDictionary): string {
+const serialize = (dictionary: XMLDictionary): string => {
   /**
    * Serialize a value into a string based on its type
    *
@@ -236,9 +241,33 @@ function serialize(dictionary: XMLDictionary): string {
   return serialize(dictionary);
 }
 
+/**
+ * Convert a name to a redeem code
+ *
+ * @param {string} name - The name
+ *
+ * @returns {string} The redeem code
+ */
+const nameToRedeemCode = (name: string): string => {
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const year = currentDate.getFullYear();
+
+  const reversedName = name
+    .toLowerCase()
+    .split('')
+    .reverse()
+    .join('')
+    .replace(/\s+/g, '-');
+
+  return `${day}${month}${year}-${reversedName}`;
+}
+
 export {
   normalizePort,
   parseHostname,
   parseXMLString,
-  serialize
+  serialize,
+  nameToRedeemCode
 };
