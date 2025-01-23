@@ -42,6 +42,12 @@ Go to the project directory
 cd express-typescript-neb
 ~~~
 
+Copy /env.example into .env
+
+~~~bash
+cp .env.example .env
+~~~
+
 Install node dependencies
 
 ~~~bash
