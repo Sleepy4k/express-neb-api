@@ -9,17 +9,34 @@ import logger from "morgan";
 import { fileURLToPath } from 'node:url';
 import minifyHTML from 'express-minify-html-2';
 
-import { appConfig } from "@config";
-import { normalizePort } from "@utils/parse.js";
 import router from "@routes";
-import viewServiceProvider from "@providers/view.provider.js";
+import { normalizePort } from "@utils/parse.js";
 import errorHandler from "@handlers/error.handler.js";
 import missingHandler from "@handlers/missing.handler.js";
+import appServiceProvider from "@providers/app.provider.js";
+import viewServiceProvider from "@providers/view.provider.js";
+import {
+  appConfig,
+  cspConfig,
+  minifyConfig,
+  rateLimitConfig
+} from "@config";
 
 /**
  * Express instance
  */
 const app: Express = express();
+
+/**
+ * Set port and host into Express instance
+ */
+app.set('host', appConfig.host);
+app.set('port', normalizePort(appConfig.port));
+
+/**
+ * Set up the app service provider
+ */
+app.use(appServiceProvider);
 
 /**
  * Get the directory name of the current module
@@ -37,17 +54,7 @@ app.set('views', path.join(__dirname, 'views'));
 /**
  * Minify the response
  */
-app.use(minifyHTML({
-  override: true,
-  exceptionUrls: false,
-  htmlMinifier: {
-    removeComments: true,
-    collapseWhitespace: true,
-    collapseBooleanAttributes: true,
-    removeAttributeQuotes: false,
-    removeEmptyAttributes: false,
-  },
-}));
+app.use(minifyHTML(minifyConfig));
 
 /**
  * Setup middlewares
@@ -82,18 +89,8 @@ app.use(cors({
 app.use(helmet());
 app.use(helmet.xssFilter());
 app.use(helmet.xXssProtection());
+app.use(helmet.contentSecurityPolicy(cspConfig));
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    styleSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
-    scriptSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
-    fontSrc: ["'self'"],
-    imgSrc: ["*", "data:"],
-    objectSrc: ["'none'"],
-    upgradeInsecureRequests: [],
-  }
-}));
 
 // The Global Limiter Problem on Proxies, uncomment this if you are using a proxy
 // app.set('trust proxy', 1 /* number of proxies between user and server */)
@@ -101,14 +98,7 @@ app.use(helmet.contentSecurityPolicy({
 /**
  * Rate limiter
  */
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests from this IP, please try again after an hour',
-  standardHeaders: 'draft-8',
-  legacyHeaders: true,
-  // skip: (req: Request) => req.url === '/'
-}));
+app.use(rateLimit(rateLimitConfig));
 
 /**
  * Routes initialization
@@ -124,11 +114,5 @@ app.use(missingHandler);
  * Set error handler
  */
 app.use(errorHandler);
-
-/**
- * Set port and host into Express instance
- */
-app.set('port', normalizePort(appConfig.port));
-app.set('host', appConfig.host);
 
 export default app;
