@@ -18,15 +18,21 @@ lagging or overload
 simple as possible
 - Many tutorial based on out recommendation 3rd party tools
 
+### Admin Dashboard
+
+- Find registered redeem code based on username
+- Generate redeem code based on username
+- Highly secure auth method with different method from convensional method
+
 ## Tech Stack
 
 **Frontend:** EJS
 
 **Backend:** Express.JS
 
-**Database:** -
+**Database:** JSON File
 
-**Authentication:** -
+**Authentication:** Non Convensional
 
 ## Run Locally
 
