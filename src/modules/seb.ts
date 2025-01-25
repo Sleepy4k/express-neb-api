@@ -7,6 +7,11 @@ import type {
   XMLDictionary
 } from '@interfaces/xmlFile.js';
 
+/**
+ * The SEB file class
+ *
+ * @class SebFile
+ */
 class SebFile {
   /**
    * The XML dictionary
@@ -105,8 +110,7 @@ class SebFile {
    */
   private static getStartUrl(dictionnary: XMLDictionary): string|undefined {
     const startUrl = dictionnary["startURL"];
-    const isDataString = typeof startUrl === "string";
-    if (!isDataString) return undefined;
+    if (typeof startUrl !== "string") return undefined;
 
     return startUrl;
   }
