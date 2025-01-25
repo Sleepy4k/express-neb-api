@@ -6,6 +6,13 @@ import type {
 } from "express";
 
 /**
+ * Error instance for missing requests
+ *
+ * @type {Error}
+ */
+const errorInstance: Error = createError(404, "Your request couldn't be found!");
+
+/**
  * Missing handler middleware to catch all missing requests
  *
  * @param {Request} _req
@@ -18,8 +25,8 @@ const missingHandler = (
   _req: Request,
   _res: Response,
   next: NextFunction
-) => {
-  next(createError(404, "Your request couldn't be found!"));
+): void => {
+  next(errorInstance);
 }
 
 export default missingHandler;

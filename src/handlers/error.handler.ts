@@ -28,18 +28,19 @@ const errorHandler: ErrorRequestHandler = (
   res.status(err.status || 500);
 
   res.render("pages/error", function(err: any, html: any) {
-    if (err) {
-      res.send({
-        status: "error",
-        message: "An error occurred! Missing view directory?",
-        data: {
-          message: res.locals.message,
-          error: res.locals.error
-        }
-      });
-    } else {
+    if (!err || err === null) {
       res.send(html);
+      return;
     }
+
+    res.send({
+      status: "error",
+      message: "An error occurred! Missing view directory?",
+      data: {
+        message: res.locals.message,
+        error: res.locals.error
+      }
+    });
   });
 }
 
