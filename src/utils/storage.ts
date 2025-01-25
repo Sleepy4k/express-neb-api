@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { isValueNullOrUndefined } from './parse.js';
 import { defaultEncoder } from '@constants/encoder.js';
 
 /**
@@ -58,12 +59,12 @@ const readJsonFileSync = (
   filePath: string,
   encoding?: BufferEncoding
 ): Record<string, unknown> => {
-  if (typeof encoding === 'undefined' || encoding === null) {
+  if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
 
   const data = fs.readFileSync(filePath, encoding);
-  return JSON.parse(data);
+  return JSON.parse(data as BufferEncoding);
 }
 
 /**
@@ -78,7 +79,7 @@ const readJsonFileAsync = (
   filePath: string,
   encoding?: BufferEncoding
 ): Promise<Record<string, unknown>> => {
-  if (typeof encoding === 'undefined' || encoding === null) {
+  if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
 
@@ -89,7 +90,7 @@ const readJsonFileAsync = (
         return;
       }
       try {
-        resolve(JSON.parse(data));
+        resolve(JSON.parse(data as BufferEncoding));
       } catch (e) {
         reject(e);
       }
@@ -111,7 +112,7 @@ const writeJsonFileSync = (
   data: Record<string, unknown>,
   encoding?: BufferEncoding
 ): void => {
-  if (typeof encoding === 'undefined' || encoding === null) {
+  if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
 
@@ -134,14 +135,18 @@ const writeJsonFileAsync = (
   data: Record<string, unknown>,
   encoding?: BufferEncoding
 ): Promise<void> => {
-  if (typeof encoding === 'undefined' || encoding === null) {
+  if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
 
   const stringifiedData = JSON.stringify(data, null, 2);
 
   return new Promise((resolve, reject) => {
-    fs.writeFile(filePath, stringifiedData, encoding, (err) => {
+    fs.writeFile(
+      filePath,
+      stringifiedData,
+      encoding as BufferEncoding,
+    (err) => {
       if (err) {
         reject(err);
         return;

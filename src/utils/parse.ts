@@ -13,6 +13,20 @@ import type {
 const regex: RegExp = new RegExp('^(http|https)://', 'i');
 
 /**
+ * Check if a value is null or undefined
+ *
+ * @param {any} value - The value to check
+ *
+ * @returns {boolean} True if the value is null or undefined, false otherwise
+ */
+const isValueNullOrUndefined = (value: any): boolean => {
+  return value === null
+    || value === undefined
+    || typeof value === 'undefined'
+    || (typeof value === 'string' && value.trim() === '');
+}
+
+/**
  * Normalize a port into a number, string, or false.
  *
  * @param {any} val - The port value
@@ -265,6 +279,7 @@ const nameToRedeemCode = (name: string): string => {
 }
 
 export {
+  isValueNullOrUndefined,
   normalizePort,
   parseHostname,
   parseXMLString,
