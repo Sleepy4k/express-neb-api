@@ -1,17 +1,13 @@
-import fs from 'node:fs';
-import SebFile from '@modules/seb.js';
-import { serviceConfig } from '@config';
-import type { Request, Response } from 'express';
-import RedeemModel from '@models/redeem.model.js';
-import { defaultEncoder } from '@constants/encoder.js';
-import generateUserAgent from '@utils/generate-agent.js';
-import type { IResData } from '@interfaces/responseField.js';
-import {
-  REFERER,
-  USER_AGENT_HEADER_NAME,
-  SEB_RH_HTTP_HEADER_NAME,
-  SEB_CKH_HTTP_HEADER_NAME
-} from '@constants/header.js';
+import type { IResData } from "@interfaces/responseField.js";
+import type { Request, Response } from "express";
+
+import { serviceConfig } from "@config";
+import { defaultEncoder } from "@constants/encoder.js";
+import { REFERER, SEB_CKH_HTTP_HEADER_NAME, SEB_RH_HTTP_HEADER_NAME, USER_AGENT_HEADER_NAME } from "@constants/header.js";
+import RedeemModel from "@models/redeem.model.js";
+import SebFile from "@modules/seb.js";
+import generateUserAgent from "@utils/generate-agent.js";
+import fs from "node:fs";
 
 /**
  * The redeem model instance for the service controller
@@ -27,8 +23,8 @@ const redeemModel: RedeemModel = new RedeemModel();
  * @param {Response} res - The response
  */
 const form = (_req: Request, res: Response) => {
-  res.render('pages/service');
-}
+  res.render("pages/service");
+};
 
 /**
  * The missing URL controller for the service controller
@@ -38,11 +34,11 @@ const form = (_req: Request, res: Response) => {
  */
 const missUrl = (_req: Request, res: Response) => {
   res.status(404).send({
-    status: 'error',
-    message: 'Please provide a redeem code (e.g. /bypass/123) and a SEB file to perform the bypass',
     data: [],
+    message: "Please provide a redeem code (e.g. /bypass/123) and a SEB file to perform the bypass",
+    status: "error",
   });
-}
+};
 
 /**
  * The bypass controller for the service controller
@@ -53,11 +49,11 @@ const missUrl = (_req: Request, res: Response) => {
 const bypass = async (req: Request, res: Response) => {
   const redeemCode = req.params.redeemCode;
 
-  if (!redeemCode || typeof redeemCode !== 'string') {
+  if (!redeemCode || typeof redeemCode !== "string") {
     res.status(400).send({
-      status: 'error',
-      message: 'Please provide a redeem code',
       data: [],
+      message: "Please provide a redeem code",
+      status: "error",
     });
     return;
   }
@@ -66,9 +62,9 @@ const bypass = async (req: Request, res: Response) => {
 
   if (!redeem) {
     res.status(400).send({
-      status: 'error',
-      message: 'Invalid redeem code',
       data: [],
+      message: "Invalid redeem code",
+      status: "error",
     });
     return;
   }
@@ -76,9 +72,9 @@ const bypass = async (req: Request, res: Response) => {
   // Check if redeem code is already redeemed
   if (redeem.redeemedAt !== null) {
     res.status(400).send({
-      status: 'error',
-      message: 'Redeem code already used',
       data: [],
+      message: "Redeem code already used",
+      status: "error",
     });
     return;
   }
@@ -88,48 +84,51 @@ const bypass = async (req: Request, res: Response) => {
 
     if (!file) {
       res.status(400).send({
-        status: 'error',
-        message: 'File not found or invalid file type',
         data: [],
+        message: "File not found or invalid file type",
+        status: "error",
       });
       return;
     }
 
-    fs.readFile(file.path, defaultEncoder, async (err, data) => {
-      if (err) {
-        console.log(err);
-
-        res.status(400).send({
-          status: 'error',
-          message: 'Error reading file',
-          data: [],
+    const readFileAsync = (path: string, encoding: BufferEncoding): Promise<string> => {
+      return new Promise((resolve, reject) => {
+        fs.readFile(path, encoding, (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
         });
-        return;
-      }
+      });
+    };
 
-      const sebFile = await SebFile.createInstance(data);
+    try {
+      const data = await readFileAsync(file.path, defaultEncoder);
+      const sebFile = SebFile.createInstance(data);
+
       if (!sebFile) {
         res.status(400).send({
-          status: 'error',
-          message: 'Error parsing SEB file',
           data: [],
+          message: "Error parsing SEB file",
+          status: "error",
         });
         return;
       }
 
-      if (!sebFile.StartUrl || sebFile.StartUrl === '') {
+      if (!sebFile.StartUrl || sebFile.StartUrl === "") {
         res.status(400).send({
-          status: 'error',
-          message: 'Start URL not found in SEB file',
           data: [],
+          message: "Start URL not found in SEB file",
+          status: "error",
         });
         return;
       }
 
       const resData: IResData = {
-        status: 'success',
-        message: 'SEB configuration file successfully bypassed',
         data: [],
+        message: "SEB configuration file successfully bypassed",
+        status: "success",
       };
 
       // Append SEB file data to response
@@ -137,12 +136,12 @@ const bypass = async (req: Request, res: Response) => {
         { condition: serviceConfig.response.showStartUrl, name: REFERER, value: sebFile.StartUrl },
         { condition: serviceConfig.response.showUserAgent, name: USER_AGENT_HEADER_NAME, value: generateUserAgent() },
         { condition: serviceConfig.response.showRequestHash, name: SEB_RH_HTTP_HEADER_NAME, value: sebFile.RequestHash },
-        { condition: serviceConfig.response.showConfigHash, name: SEB_CKH_HTTP_HEADER_NAME, value: sebFile.getConfigKey(sebFile.StartUrl || '') },
-        { condition: serviceConfig.response.showSerializedJson, name: 'Serialized', value: sebFile.SerializedJson },
-        { condition: serviceConfig.response.showDictionnary, name: 'Dictionary', value: JSON.stringify(sebFile.Dictionnary) }
+        { condition: serviceConfig.response.showConfigHash, name: SEB_CKH_HTTP_HEADER_NAME, value: sebFile.getConfigKey(sebFile.StartUrl || "") },
+        { condition: serviceConfig.response.showSerializedJson, name: "Serialized", value: sebFile.SerializedJson },
+        { condition: serviceConfig.response.showDictionnary, name: "Dictionary", value: JSON.stringify(sebFile.Dictionnary) },
       ];
 
-      responseFields.forEach(field => {
+      responseFields.forEach((field) => {
         if (field.condition) {
           resData.data?.push({ name: field.name, value: field.value });
         }
@@ -153,26 +152,32 @@ const bypass = async (req: Request, res: Response) => {
       redeemModel.redeem(redeemCode);
 
       if (serviceConfig.file.deleteAfterParse) {
-        fs.unlink(file.path, (err) => {
+        fs.unlink(file.path, (err: NodeJS.ErrnoException | null) => {
           if (err) {
-            console.log(`Error deleting file: ${err}`);
+            console.log(`Error deleting file: ${err.message}`);
           }
         });
       }
-    });
+
+      return;
+    } catch (err) {
+      console.log(err);
+
+      res.status(400).send({
+        data: [],
+        message: "Error reading file",
+        status: "error",
+      });
+    }
   } catch (error) {
     console.log(error);
 
     res.status(500).send({
-      status: 'error',
-      message: 'An error occurred',
       data: [],
+      message: "An error occurred",
+      status: "error",
     });
   }
-}
-
-export {
-  form,
-  missUrl,
-  bypass,
 };
+
+export { bypass, form, missUrl };

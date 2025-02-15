@@ -1,34 +1,21 @@
 /**
  * Website Referer Header constants for the SEB HTTP headers
- *
- * @type {string}
  */
-const REFERER: string = "Referer";
+const REFERER = "Referer";
 
 /**
  * User Agent Header constants for the SEB HTTP headers
- *
- * @type {string}
  */
-const USER_AGENT_HEADER_NAME: string = "User-Agent";
+const USER_AGENT_HEADER_NAME = "User-Agent";
 
 /**
  * SEB Request Hash Header constants for the SEB HTTP headers
- *
- * @type {string}
  */
-const SEB_RH_HTTP_HEADER_NAME: string = "X-SafeExamBrowser-RequestHash";
+const SEB_RH_HTTP_HEADER_NAME = "X-SafeExamBrowser-RequestHash";
 
 /**
  * SEB Config Key Hash Header constants for the SEB HTTP headers
- *
- * @type {string}
  */
-const SEB_CKH_HTTP_HEADER_NAME: string = "X-SafeExamBrowser-ConfigKeyHash";
+const SEB_CKH_HTTP_HEADER_NAME = "X-SafeExamBrowser-ConfigKeyHash";
 
-export {
-  REFERER,
-  USER_AGENT_HEADER_NAME,
-  SEB_RH_HTTP_HEADER_NAME,
-  SEB_CKH_HTTP_HEADER_NAME,
-};
+export { REFERER, SEB_CKH_HTTP_HEADER_NAME, SEB_RH_HTTP_HEADER_NAME, USER_AGENT_HEADER_NAME };

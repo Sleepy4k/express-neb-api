@@ -1,16 +1,16 @@
-declare module 'express-minify-html-2' {
-  import { RequestHandler } from 'express';
+declare module "express-minify-html-2" {
+  import { RequestHandler } from "express";
 
   interface MinifyOptions {
-    override: boolean;
     exceptionUrls: boolean;
     htmlMinifier: {
-      removeComments: boolean;
-      collapseWhitespace: boolean;
       collapseBooleanAttributes: boolean;
+      collapseWhitespace: boolean;
       removeAttributeQuotes: boolean;
+      removeComments: boolean;
       removeEmptyAttributes: boolean;
     };
+    override: boolean;
   }
 
   function minifyHTML(options: MinifyOptions): RequestHandler;

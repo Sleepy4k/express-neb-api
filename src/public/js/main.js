@@ -27,12 +27,15 @@ AOS.init({
   window.addEventListener("load", function () {
     const loader = document.getElementById("ftco-loader");
 
-    setTimeout(function () {
-      loader.classList.remove("show");
-    }, Math.floor(Math.random() * 1) * 1000);
+    setTimeout(
+      function () {
+        loader.classList.remove("show");
+      },
+      Math.floor(Math.random() * 1) * 1000,
+    );
   });
 
-	// Scrollax
+  // Scrollax
   $.Scrollax();
 
   // Burger Menu
@@ -62,7 +65,7 @@ AOS.init({
         500,
         function () {
           // window.location.hash = href;
-        }
+        },
       );
     });
   };
@@ -88,7 +91,7 @@ AOS.init({
       // $this.find('.dropdown-menu').removeClass('animated-fast fadeInUp show');
       $this.find(".dropdown-menu").removeClass("show");
       // }, 100);
-    }
+    },
   );
 
   $("#dropdown04").on("show.bs.dropdown", function () {
@@ -137,26 +140,26 @@ AOS.init({
 
   const messages = [
     {
-      message: '%cHold Up!',
-      style: 'color: #5955B2; font-size: 50px; font-weight: bold; text-shadow: 2px 2px black;'
+      message: "%cHold Up!",
+      style: "color: #5955B2; font-size: 50px; font-weight: bold; text-shadow: 2px 2px black;",
     },
     {
-      message: 'If someone tells you to copy/paste something here, you have an 11/10 chance that you are being scammed.',
-      style: ''
+      message: "If someone tells you to copy/paste something here, you have an 11/10 chance that you are being scammed.",
+      style: "",
     },
     {
-      message: '%cPasting anything here could give an attacker access to your account.',
-      style: 'color: #EF0103; font-size: 15px; font-weight: bold;'
+      message: "%cPasting anything here could give an attacker access to your account.",
+      style: "color: #EF0103; font-size: 15px; font-weight: bold;",
     },
     {
-      message: 'Unless you really know what you\'re doing, close this page and stay safe.',
-      style: ''
+      message: "Unless you really know what you're doing, close this page and stay safe.",
+      style: "",
     },
     {
-      message: 'If you really understand what you are doing, you should work with us.',
-      style: ''
-    }
+      message: "If you really understand what you are doing, you should work with us.",
+      style: "",
+    },
   ];
 
-  messages.forEach(data => console.log(data.message, data.style));
+  messages.forEach((data) => console.log(data.message, data.style));
 })(jQuery);

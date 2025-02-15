@@ -1,17 +1,4 @@
 /**
- * Interface for response field
- *
- * @interface IResField
- *
- * @property {string} name - The name of the field
- * @property {string|undefined} value - The value of the field
- */
-interface IResField {
-  name: string;
-  value?: string|undefined;
-}
-
-/**
  * Interface for response data
  *
  * @interface IResData
@@ -21,12 +8,22 @@ interface IResField {
  * @property {IResField[]|undefined} data - The data of the response
  */
 interface IResData {
-  status?: string|undefined;
-  message?: string|undefined;
-  data?: IResField[]|undefined;
+  data?: IResField[] | undefined;
+  message?: string | undefined;
+  status?: string | undefined;
 }
 
-export type {
-  IResField,
-  IResData,
-};
+/**
+ * Interface for response field
+ *
+ * @interface IResField
+ *
+ * @property {string} name - The name of the field
+ * @property {string|undefined} value - The value of the field
+ */
+interface IResField {
+  name: string;
+  value?: string | undefined;
+}
+
+export type { IResData, IResField };

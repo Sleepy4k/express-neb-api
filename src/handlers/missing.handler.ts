@@ -1,9 +1,6 @@
+import type { NextFunction, Request, Response } from "express";
+
 import createError from "http-errors";
-import type {
-  Request,
-  Response,
-  NextFunction
-} from "express";
 
 /**
  * Error instance for missing requests
@@ -21,12 +18,8 @@ const errorInstance: Error = createError(404, "Your request couldn't be found!")
  *
  * @returns {void}
  */
-const missingHandler = (
-  _req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+const missingHandler = (_req: Request, _res: Response, next: NextFunction): void => {
   next(errorInstance);
-}
+};
 
 export default missingHandler;

@@ -3,8 +3,6 @@
  *
  * @type {BufferEncoding}
  */
-const defaultEncoder: BufferEncoding = 'utf8';
+const defaultEncoder: BufferEncoding = "utf8";
 
-export {
-  defaultEncoder
-};
+export { defaultEncoder };

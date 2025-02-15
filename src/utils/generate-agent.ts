@@ -9,10 +9,8 @@ const USER_AGENTS_COUNT: number = USER_AGENTS.length;
 
 /**
  * Last user agent index
- *
- * @type {number}
  */
-let lastUserAgentIndex: number = -1;
+let lastUserAgentIndex = -1;
 
 /**
  * Generate a random user agent
@@ -20,7 +18,7 @@ let lastUserAgentIndex: number = -1;
  * @returns {string} The generated user agent
  */
 const generateUserAgent = (): string => {
-  let index: number = -1;
+  let index = -1;
 
   do {
     index = Math.floor(Math.random() * USER_AGENTS_COUNT);
@@ -29,9 +27,10 @@ const generateUserAgent = (): string => {
       lastUserAgentIndex = index;
       break;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
   } while (true);
 
   return USER_AGENTS[index];
-}
+};
 
 export default generateUserAgent;

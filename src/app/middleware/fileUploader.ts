@@ -1,19 +1,16 @@
-import path from 'node:path';
+import type { DestinationCallback, FileNameCallback, MulterFile } from "@interfaces/multerDiskStorage.js";
+import type { Request } from "express";
+
 import multer, { FileFilterCallback } from "multer";
-import type { Request } from 'express';
+import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type {
-  MulterFile,
-  FileNameCallback,
-  DestinationCallback
-} from '@interfaces/multerDiskStorage.js';
 
 /**
  * Get path to the root directory using dot-to-parent
  *
  * @note If file path is changed, this should be updated
  */
-const dotToParent = '/../../..';
+const dotToParent = "/../../..";
 
 /**
  * Get the current file path
@@ -34,14 +31,10 @@ const __basedir = path.resolve(currPath + dotToParent);
  *
  * @returns {void}
  */
-const sebFilter = (
-  _req: Request,
-  file: MulterFile,
-  cb: FileFilterCallback
-): void => {
-  const { originalname, mimetype } = file;
-  const isSEB = originalname.endsWith('.seb');
-  const isOctetStream = mimetype === 'application/octet-stream';
+const sebFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback): void => {
+  const { mimetype, originalname } = file;
+  const isSEB = originalname.endsWith(".seb");
+  const isOctetStream = mimetype === "application/octet-stream";
 
   cb(null, isSEB && isOctetStream);
 };
@@ -50,22 +43,14 @@ const sebFilter = (
  * Setup the storage for the file
  */
 const diskStorage = multer.diskStorage({
-  destination: (
-    _req: Request,
-    _file: MulterFile,
-    cb: DestinationCallback
-  ): void => {
+  destination: (_req: Request, _file: MulterFile, cb: DestinationCallback): void => {
     cb(null, path.join(__basedir, "storage/app"));
   },
-  filename: (
-    req: Request,
-    file: MulterFile,
-    cb: FileNameCallback
-  ): void => {
+  filename: (req: Request, file: MulterFile, cb: FileNameCallback): void => {
     const { redeemCode } = req.params;
-    const uniqueSuffix = `${Math.floor(Math.random() * 10000)}`;
-    const prefixName = redeemCode ? `bypass-${redeemCode}` : 'bypass';
-    const fileName = `${file.originalname.replaceAll(' ', '-')}`;
+    const uniqueSuffix = Math.floor(Math.random() * 10000).toString();
+    const prefixName = redeemCode ? `bypass-${redeemCode}` : "bypass";
+    const fileName = file.originalname.replaceAll(" ", "-");
 
     cb(null, `${prefixName}-${uniqueSuffix}-${fileName}`);
   },
@@ -74,6 +59,6 @@ const diskStorage = multer.diskStorage({
 /**
  * File uploader middleware
  */
-const fileUploader = multer({ storage: diskStorage, fileFilter: sebFilter });
+const fileUploader = multer({ fileFilter: sebFilter, storage: diskStorage });
 
 export default fileUploader;

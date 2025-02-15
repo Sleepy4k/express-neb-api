@@ -1,11 +1,11 @@
 export const minifyConfig = {
-  override: true,
   exceptionUrls: false,
   htmlMinifier: {
-    removeComments: true,
-    collapseWhitespace: true,
     collapseBooleanAttributes: true,
+    collapseWhitespace: true,
     removeAttributeQuotes: false,
+    removeComments: true,
     removeEmptyAttributes: false,
   },
+  override: true,
 };

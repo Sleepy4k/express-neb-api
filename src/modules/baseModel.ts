@@ -1,12 +1,6 @@
+import { createJsonFile, isDirectoryExists, isJsonFileExists, readJsonFileSync, writeJsonFileSync } from "@utils/storage.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  isJsonFileExists,
-  isDirectoryExists,
-  createJsonFile,
-  readJsonFileSync,
-  writeJsonFileSync
-} from "@utils/storage.js";
 
 /**
  * Get path to the root directory using dot-to-parent
@@ -15,7 +9,7 @@ import {
  *
  * @type {string}
  */
-const dotToParent: string = '/../../storage/cache';
+const dotToParent = "/../../storage/cache";
 
 /**
  * Get the current file path
@@ -38,18 +32,18 @@ const __basedir: string = path.resolve(currPath + dotToParent);
  */
 class BaseModel {
   /**
-   * The file path
-   *
-   * @type {string}
-   */
-  protected readonly filePath: string;
-
-  /**
    * The data
    *
    * @type {Record<string, unknown>}
    */
   protected data: Record<string, unknown>;
+
+  /**
+   * The file path
+   *
+   * @type {string}
+   */
+  protected readonly filePath: string;
 
   /**
    * The constructor for the BaseModel class
@@ -63,27 +57,6 @@ class BaseModel {
     if (!isJsonFileExists(this.filePath)) {
       createJsonFile(this.filePath);
     }
-  }
-
-  /**
-   * Parse the file path
-   *
-   * @param {string} filePath - The file path
-   *
-   * @returns {string} The parsed file path
-   */
-  private parseFilePath(filePath: string): string {
-    if (filePath.charAt(0) !== '/') {
-      filePath = '\\' + filePath;
-    }
-
-    const parsedFilePath = path.join(__basedir, filePath.replace(/\//g, '\\'));
-
-    if (!isDirectoryExists(path.dirname(parsedFilePath))) {
-      throw new Error('The directory does not exist');
-    }
-
-    return parsedFilePath;
   }
 
   /**
@@ -107,6 +80,27 @@ class BaseModel {
    */
   public saveData(): void {
     writeJsonFileSync(this.filePath, this.data);
+  }
+
+  /**
+   * Parse the file path
+   *
+   * @param {string} filePath - The file path
+   *
+   * @returns {string} The parsed file path
+   */
+  private parseFilePath(filePath: string): string {
+    if (!filePath.startsWith("/")) {
+      filePath = "\\" + filePath;
+    }
+
+    const parsedFilePath = path.join(__basedir, filePath.replace(/\//g, "\\"));
+
+    if (!isDirectoryExists(path.dirname(parsedFilePath))) {
+      throw new Error("The directory does not exist");
+    }
+
+    return parsedFilePath;
   }
 }
 

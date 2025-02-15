@@ -1,4 +1,4 @@
-import type { RedeemStatus } from '@enums/redeemStatus.js';
+import type { RedeemStatus } from "@enums/redeemStatus.js";
 
 /**
  * Redeem Data interface for data type Redeem Data
@@ -13,10 +13,8 @@ import type { RedeemStatus } from '@enums/redeemStatus.js';
 interface RedeemData {
   code: string;
   name: string;
+  redeemedAt: null | string;
   status: RedeemStatus;
-  redeemedAt: string|null;
 }
 
-export type {
-  RedeemData,
-};
+export type { RedeemData };

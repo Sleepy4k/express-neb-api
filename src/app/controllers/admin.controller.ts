@@ -1,9 +1,16 @@
-import { sha256 } from '@utils/encryption.js';
-import type { Request, Response } from 'express';
-import RedeemModel from '@models/redeem.model.js';
-import { nameToRedeemCode } from '@utils/parse.js';
-import { RedeemStatus } from '@enums/redeemStatus.js';
-import { LOGIN_PAYLOAD } from '@constants/auth-payload.js';
+import type { Request, Response } from "express";
+
+import { LOGIN_PAYLOAD } from "@constants/auth-payload.js";
+import { RedeemStatus } from "@enums/redeemStatus.js";
+import RedeemModel from "@models/redeem.model.js";
+import { sha256 } from "@utils/encryption.js";
+import { nameToRedeemCode } from "@utils/parse.js";
+
+interface RegisterRedeemCodeRequest extends Request {
+  body: {
+    name: string;
+  };
+}
 
 /**
  * The redeem model instance
@@ -19,22 +26,22 @@ const redeemModel: RedeemModel = new RedeemModel();
  * @param {Response} res
  */
 const home = (req: Request, res: Response) => {
-  const { payload } = req.query
+  const { payload } = req.query;
 
-  if (typeof payload !== 'string' || payload === '') {
-    res.render('pages/guest');
+  if (typeof payload !== "string" || payload === "") {
+    res.render("pages/guest");
     return;
   }
 
-  const encryptedPayload = payload ? sha256(payload) : '';
+  const encryptedPayload = payload ? sha256(payload) : "";
 
   if (encryptedPayload !== LOGIN_PAYLOAD) {
-    res.render('pages/guest');
+    res.render("pages/guest");
     return;
   }
 
-  res.render('pages/admin');
-}
+  res.render("pages/admin");
+};
 
 /**
  * Register redeem code controller
@@ -42,30 +49,30 @@ const home = (req: Request, res: Response) => {
  * @param {Request} req
  * @param {Response} res
  */
-const registerRedeemCode = (req: Request, res: Response) => {
-  const { name } = req.body
+const registerRedeemCode = (req: RegisterRedeemCodeRequest, res: Response) => {
+  const { name } = req.body;
 
-  if (!name || typeof name !== 'string') {
+  if (!name || typeof name !== "string") {
     res.status(400).send({
-      status: 'error',
-      message: 'Please provide a user name',
       data: [],
+      message: "Please provide a user name",
+      status: "error",
     });
     return;
   }
 
-  const redeemByUser = redeemModel.findByName(name) || [];
+  const redeemByUser = redeemModel.findByName(name) ?? [];
   const increment = redeemByUser.length + 1;
-  const redeemCode = `${nameToRedeemCode(name)}-${increment}`;
+  const redeemCode = `${nameToRedeemCode(name)}-${increment.toString()}`;
 
   const { code } = redeemModel.create(redeemCode, name);
 
   res.send({
-    status: 'success',
-    message: 'Redeem code registered',
     data: { redeem_code: code },
+    message: "Redeem code registered",
+    status: "success",
   });
-}
+};
 
 /**
  * Find list redeem code controller
@@ -76,27 +83,22 @@ const registerRedeemCode = (req: Request, res: Response) => {
 const findListRedeemCode = (req: Request, res: Response) => {
   const name = req.params.name;
 
-  if (!name || typeof name !== 'string') {
+  if (!name || typeof name !== "string") {
     res.status(400).send({
-      status: 'error',
-      message: 'Please provide a user name',
       data: [],
+      message: "Please provide a user name",
+      status: "error",
     });
     return;
   }
 
-  const redeemByUser = redeemModel.findByName(name)
-    ?.filter((redeem) => redeem.status === RedeemStatus.PENDING);
+  const redeemByUser = redeemModel.findByName(name)?.filter((redeem) => redeem.status === RedeemStatus.PENDING);
 
   res.send({
-    status: 'success',
-    message: 'List redeem code',
     data: redeemByUser,
+    message: "List redeem code",
+    status: "success",
   });
-}
-
-export {
-  home,
-  registerRedeemCode,
-  findListRedeemCode
 };
+
+export { findListRedeemCode, home, registerRedeemCode };

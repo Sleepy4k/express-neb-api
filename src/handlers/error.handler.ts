@@ -1,10 +1,6 @@
+import type { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+
 import { appConfig } from "@config";
-import type {
-  Request,
-  Response,
-  NextFunction,
-  ErrorRequestHandler
-} from "express";
 
 /**
  * Error handler middleware to catch all errors
@@ -17,31 +13,37 @@ import type {
  * @returns {void}
  */
 const errorHandler: ErrorRequestHandler = (
-  err: any,
+  err: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
-) => {
-  res.locals.message = err.message;
-  res.locals.error = appConfig.env === 'development' ? err : {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction,
+): void => {
+  const error = err as { message?: string; status?: number };
+  const isDevMode = appConfig.env === "development";
 
-  res.status(err.status || 500);
+  res.locals.error = isDevMode ? error : {};
+  res.locals.message = error.message ?? "An error occurred!";
+  res.locals.status = error.status ?? 500;
 
-  res.render("pages/error", function(err: any, html: any) {
-    if (!err || err === null) {
+  res.status(error.status ?? 500);
+
+  res.render("pages/error", function (err: Error | null, html: string) {
+    if (!err) {
       res.send(html);
       return;
     }
 
     res.send({
-      status: "error",
-      message: "An error occurred! Missing view directory?",
       data: {
-        message: res.locals.message,
-        error: res.locals.error
-      }
+        error: isDevMode ? error : {},
+        message: res.locals.message as string,
+        status: res.locals.status as number,
+      },
+      message: "An error occurred! Missing view directory?",
+      status: "error",
     });
   });
-}
+};
 
 export default errorHandler;

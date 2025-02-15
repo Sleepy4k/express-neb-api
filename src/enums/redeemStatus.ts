@@ -9,10 +9,8 @@
  * @property {string} REDEEMED - The redeemed status
  */
 enum RedeemStatus {
-  PENDING = 'pending',
-  REDEEMED = 'redeemed',
+  PENDING = "pending",
+  REDEEMED = "redeemed",
 }
 
-export {
-  RedeemStatus,
-};
+export { RedeemStatus };

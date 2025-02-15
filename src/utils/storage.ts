@@ -1,6 +1,7 @@
-import fs from 'node:fs';
-import { isValueNullOrUndefined } from './parse.js';
-import { defaultEncoder } from '@constants/encoder.js';
+import { defaultEncoder } from "@constants/encoder.js";
+import fs from "node:fs";
+
+import { isValueNullOrUndefined } from "./parse.js";
 
 /**
  * Check if a JSON file exists
@@ -11,7 +12,7 @@ import { defaultEncoder } from '@constants/encoder.js';
  */
 const isJsonFileExists = (filePath: string): boolean => {
   return fs.existsSync(filePath);
-}
+};
 
 /**
  * Check if a directory exists
@@ -31,10 +32,10 @@ const isDirectoryExists = (directoryPath: string): boolean => {
 
     return true;
   } catch (error) {
-    console.error('Error creating directory:', error);
+    console.error("Error creating directory:", error);
     return false;
   }
-}
+};
 
 /**
  * Create a JSON file
@@ -44,8 +45,8 @@ const isDirectoryExists = (directoryPath: string): boolean => {
  * @returns {void}
  */
 const createJsonFile = (filePath: string): void => {
-  fs.writeFileSync(filePath, '{}', defaultEncoder);
-}
+  fs.writeFileSync(filePath, "{}", defaultEncoder);
+};
 
 /**
  * Read a JSON file synchronously
@@ -55,17 +56,15 @@ const createJsonFile = (filePath: string): void => {
  *
  * @returns {Record<string, unknown>} The JSON data
  */
-const readJsonFileSync = (
-  filePath: string,
-  encoding?: BufferEncoding
-): Record<string, unknown> => {
+const readJsonFileSync = (filePath: string, encoding?: BufferEncoding): Record<string, unknown> => {
   if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
 
   const data = fs.readFileSync(filePath, encoding);
-  return JSON.parse(data as BufferEncoding);
-}
+
+  return JSON.parse(data as BufferEncoding) as Record<string, unknown>;
+};
 
 /**
  * Read a JSON file asynchronously
@@ -75,10 +74,7 @@ const readJsonFileSync = (
  *
  * @returns {Promise<Record<string, unknown>>} The JSON data
  */
-const readJsonFileAsync = (
-  filePath: string,
-  encoding?: BufferEncoding
-): Promise<Record<string, unknown>> => {
+const readJsonFileAsync = (filePath: string, encoding?: BufferEncoding): Promise<Record<string, unknown>> => {
   if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
@@ -90,13 +86,13 @@ const readJsonFileAsync = (
         return;
       }
       try {
-        resolve(JSON.parse(data as BufferEncoding));
+        resolve(JSON.parse(data.toString()) as Record<string, unknown>);
       } catch (e) {
-        reject(e);
+        reject(new Error(e as string));
       }
     });
   });
-}
+};
 
 /**
  * Write a JSON file synchronously
@@ -107,11 +103,7 @@ const readJsonFileAsync = (
  *
  * @returns {void}
  */
-const writeJsonFileSync = (
-  filePath: string,
-  data: Record<string, unknown>,
-  encoding?: BufferEncoding
-): void => {
+const writeJsonFileSync = (filePath: string, data: Record<string, unknown>, encoding?: BufferEncoding): void => {
   if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
@@ -119,7 +111,7 @@ const writeJsonFileSync = (
   const stringifiedData = JSON.stringify(data, null, 2);
 
   fs.writeFileSync(filePath, stringifiedData, encoding);
-}
+};
 
 /**
  * Write a JSON file asynchronously
@@ -130,11 +122,7 @@ const writeJsonFileSync = (
  *
  * @returns {Promise<void>} The promise
  */
-const writeJsonFileAsync = (
-  filePath: string,
-  data: Record<string, unknown>,
-  encoding?: BufferEncoding
-): Promise<void> => {
+const writeJsonFileAsync = (filePath: string, data: Record<string, unknown>, encoding?: BufferEncoding): Promise<void> => {
   if (isValueNullOrUndefined(encoding)) {
     encoding = defaultEncoder;
   }
@@ -145,23 +133,17 @@ const writeJsonFileAsync = (
     fs.writeFile(
       filePath,
       stringifiedData,
-      encoding as BufferEncoding,
-    (err) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve();
-    });
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      encoding!,
+      (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      },
+    );
   });
-}
-
-export {
-  isJsonFileExists,
-  createJsonFile,
-  isDirectoryExists,
-  readJsonFileSync,
-  readJsonFileAsync,
-  writeJsonFileSync,
-  writeJsonFileAsync,
 };
+
+export { createJsonFile, isDirectoryExists, isJsonFileExists, readJsonFileAsync, readJsonFileSync, writeJsonFileAsync, writeJsonFileSync };

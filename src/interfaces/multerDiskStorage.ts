@@ -8,7 +8,7 @@
  *
  * @returns {void}
  */
-type DestinationCallback = (error: Error | null, destination: string) => void
+type DestinationCallback = (error: Error | null, destination: string) => void;
 
 /**
  * Multer disk storage interface for filename callback
@@ -20,7 +20,7 @@ type DestinationCallback = (error: Error | null, destination: string) => void
  *
  * @returns {void}
  */
-type FileNameCallback = (error: Error | null, filename: string) => void
+type FileNameCallback = (error: Error | null, filename: string) => void;
 
 /**
  * Multer file interface
@@ -29,8 +29,4 @@ type FileNameCallback = (error: Error | null, filename: string) => void
  */
 type MulterFile = Express.Multer.File;
 
-export type {
-  DestinationCallback,
-  FileNameCallback,
-  MulterFile,
-};
+export type { DestinationCallback, FileNameCallback, MulterFile };

@@ -1,30 +1,24 @@
-import { Node } from './dom.js';
-import { DOMParser } from '@xmldom/xmldom';
-import type {
-  XMLValue,
-  XMLDictionary
-} from '@interfaces/xmlFile.js';
+import type { XMLDictionary, XMLValue } from "@interfaces/xmlFile.js";
+
+import { DOMParser } from "@xmldom/xmldom";
+
+import { Node } from "./dom.js";
 
 /**
  * The regex to check if the hostname is a URL
- *
- * @type {RegExp}
  */
-const regex: RegExp = new RegExp('^(http|https)://', 'i');
+const regex = new RegExp("^(http|https)://", "i");
 
 /**
  * Check if a value is null or undefined
  *
- * @param {any} value - The value to check
+ * @param {unknown} value - The value to check
  *
  * @returns {boolean} True if the value is null or undefined, false otherwise
  */
-const isValueNullOrUndefined = (value: any): boolean => {
-  return value === null
-    || value === undefined
-    || typeof value === 'undefined'
-    || (typeof value === 'string' && value.trim() === '');
-}
+const isValueNullOrUndefined = (value: unknown): boolean => {
+  return value === null || value === undefined || typeof value === "undefined" || (typeof value === "string" && value.trim() === "");
+};
 
 /**
  * Normalize a port into a number, string, or false.
@@ -33,14 +27,14 @@ const isValueNullOrUndefined = (value: any): boolean => {
  *
  * @returns {any} The normalized port value
  */
-const normalizePort = (val: any): any => {
-  const port = parseInt(val, 10);
+const normalizePort = (val: number | string): false | number | string => {
+  const port = parseInt(val.toString(), 10);
 
   if (isNaN(port)) return val;
   if (port >= 0) return port;
 
   return false;
-}
+};
 
 /**
  * Parse the hostname
@@ -49,11 +43,11 @@ const normalizePort = (val: any): any => {
  *
  * @returns {string} The parsed hostname
  */
-const parseHostname = (host?: string|null): string => {
-  if (!host) return 'https://localhost';
+const parseHostname = (host?: null | string): string => {
+  if (!host) return "https://localhost";
 
-  return regex.test(host) ? host : 'https://' + host;
-}
+  return regex.test(host) ? host : "https://" + host;
+};
 
 /**
  * Process the XML value
@@ -64,25 +58,25 @@ const parseHostname = (host?: string|null): string => {
  */
 const processXMLValue = (node: Node): XMLValue => {
   switch (node.nodeName) {
-  case 'true':
-    return true;
-  case 'false':
-    return false;
-  case 'integer':
-    return parseInt(node.textContent || '0', 10);
-  case 'string':
-  case 'data':
-    return node.textContent?.trim() || '';
-  case 'real':
-    return parseFloat(node.textContent || '0');
-  case 'array':
-    return handleXMLValArray(node);
-  case 'dict':
-    return handleXMLValDict(node);
-  default:
-    return undefined;
+    case "array":
+      return handleXMLValArray(node);
+    case "data":
+    case "string":
+      return node.textContent?.trim() ?? "";
+    case "dict":
+      return handleXMLValDict(node);
+    case "false":
+      return false;
+    case "integer":
+      return parseInt(node.textContent ?? "0", 10);
+    case "real":
+      return parseFloat(node.textContent ?? "0");
+    case "true":
+      return true;
+    default:
+      return undefined;
   }
-}
+};
 
 /**
  * Handle an XML value array
@@ -93,10 +87,10 @@ const processXMLValue = (node: Node): XMLValue => {
  */
 const handleXMLValArray = (node: Node): XMLValue[] => {
   return Array.from(node.childNodes)
-    .filter(childNode => childNode.nodeType === Node.ELEMENT_NODE)
-    .map(childNode => processXMLValue(childNode))
-    .filter(value => value !== undefined) as XMLValue[];
-}
+    .filter((childNode) => childNode.nodeType === Node.ELEMENT_NODE)
+    .map((childNode) => processXMLValue(childNode))
+    .filter((value) => value !== undefined) as XMLValue[];
+};
 
 /**
  * Handle an XML value dictionary
@@ -107,13 +101,13 @@ const handleXMLValArray = (node: Node): XMLValue[] => {
  */
 const handleXMLValDict = (node: Node): XMLDictionary => {
   const nestedDict: XMLDictionary = {};
-  let nestedKey: string | null = null;
+  let nestedKey: null | string = null;
 
-  Array.from(node.childNodes).forEach(childNode => {
+  Array.from(node.childNodes).forEach((childNode) => {
     if (childNode.nodeType !== Node.ELEMENT_NODE) return;
 
-    if (childNode.nodeName === 'key') {
-      nestedKey = childNode.textContent || null;
+    if (childNode.nodeName === "key") {
+      nestedKey = childNode.textContent ?? null;
       return;
     }
 
@@ -126,7 +120,7 @@ const handleXMLValDict = (node: Node): XMLDictionary => {
   });
 
   return nestedDict;
-}
+};
 
 /**
  * Parse an XML string into a dictionary
@@ -135,8 +129,8 @@ const handleXMLValDict = (node: Node): XMLDictionary => {
  *
  * @returns {XMLDictionary|undefined} The parsed XML dictionary
  */
-const parseXMLString = (htmlString: string): XMLDictionary|undefined => {
-  let currentKey: string | null = null;
+const parseXMLString = (htmlString: string): undefined | XMLDictionary => {
+  let currentKey: null | string = null;
 
   /**
    * Handle a node in the XML
@@ -149,13 +143,15 @@ const parseXMLString = (htmlString: string): XMLDictionary|undefined => {
   function handleNode(node: Node, dict: XMLDictionary): void {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
 
-    if (node.nodeName === 'key') {
-      currentKey = node.textContent || null;
+    if (node.nodeName === "key") {
+      currentKey = node.textContent ?? null;
       return;
     }
 
     if (!currentKey) {
-      Array.from(node.childNodes).forEach(childNode => handleNode(childNode, dict));
+      Array.from(node.childNodes).forEach((childNode) => {
+        handleNode(childNode, dict);
+      });
       return;
     }
 
@@ -169,20 +165,22 @@ const parseXMLString = (htmlString: string): XMLDictionary|undefined => {
 
   try {
     const dictionary: XMLDictionary = {};
-    const doc = parser.parseFromString(htmlString, 'text/xml');
+    const doc = parser.parseFromString(htmlString, "text/xml");
 
-    const dicts = doc.getElementsByTagName('dict');
+    const dicts = doc.getElementsByTagName("dict");
     if (dicts.length > 0) {
       const dict = dicts[0];
-      Array.from(dict.childNodes).forEach(currentNode => handleNode(currentNode as unknown as Node, dictionary));
+      Array.from(dict.childNodes).forEach((currentNode) => {
+        handleNode(currentNode as unknown as Node, dictionary);
+      });
     }
 
     return dictionary;
   } catch (e) {
-    console.error('Error parsing XML:', e);
+    console.error("Error parsing XML:", e);
     return;
   }
-}
+};
 
 /**
  * Serialize an XML dictionary into a string
@@ -203,14 +201,14 @@ const serialize = (dictionary: XMLDictionary): string => {
     if (Array.isArray(value)) {
       return _serializeList(value);
     } else if (value instanceof Uint8Array) {
-      return `"${btoa(String.fromCharCode(...value))}"`;
+      return `"${btoa(String.fromCharCode(...new Uint8Array(value)))}"`;
     } else if (value instanceof Date) {
       return `"${value.toISOString()}"`;
-    } else if (value && typeof value === 'object') {
-      return serialize(value as XMLDictionary);
-    } else if (typeof value === 'boolean' || typeof value === 'number') {
+    } else if (value && typeof value === "object") {
+      return serialize(value);
+    } else if (typeof value === "boolean" || typeof value === "number") {
       return value.toString();
-    } else if (typeof value === 'string') {
+    } else if (typeof value === "string") {
       return `"${value}"`;
     } else {
       return '""';
@@ -225,7 +223,7 @@ const serialize = (dictionary: XMLDictionary): string => {
    * @returns {string} The serialized list
    */
   function _serializeList(list: XMLValue[]): string {
-    return '[' + list.map(_serialize).join(',') + ']';
+    return "[" + list.map(_serialize).join(",") + "]";
   }
 
   /**
@@ -237,23 +235,23 @@ const serialize = (dictionary: XMLDictionary): string => {
    */
   function serialize(obj: XMLDictionary): string {
     const result = Object.keys(obj)
-      .sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
-      .filter(key => {
+      .sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }))
+      .filter((key) => {
         const value = obj[key];
-        const isOriginator = key.toLowerCase() === 'originatorversion';
-        const isObject = value && typeof value === 'object' && !Array.isArray(value);
+        const isOriginator = key.toLowerCase() === "originatorversion";
+        const isObject = value && typeof value === "object" && !Array.isArray(value);
         const isEmpty = value && Object.keys(value).length === 0;
 
         return !isOriginator && (!isObject || !isEmpty);
       })
-      .map(key => `"${key}":${_serialize(obj[key])}`)
-      .join(',');
+      .map((key) => `"${key}":${_serialize(obj[key])}`)
+      .join(",");
 
     return `{${result}}`;
   }
 
   return serialize(dictionary);
-}
+};
 
 /**
  * Convert a name to a redeem code
@@ -264,25 +262,13 @@ const serialize = (dictionary: XMLDictionary): string => {
  */
 const nameToRedeemCode = (name: string): string => {
   const currentDate = new Date();
-  const day = String(currentDate.getDate()).padStart(2, '0');
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  const year = currentDate.getFullYear();
+  const day: string = String(currentDate.getDate()).padStart(2, "0");
+  const month: string = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const year: string = currentDate.getFullYear().toString();
 
-  const reversedName = name
-    .toLowerCase()
-    .split('')
-    .reverse()
-    .join('')
-    .replace(/\s+/g, '-');
+  const reversedName = name.toLowerCase().split("").reverse().join("").replace(/\s+/g, "-");
 
   return `${day}${month}${year}-${reversedName}`;
-}
-
-export {
-  isValueNullOrUndefined,
-  normalizePort,
-  parseHostname,
-  parseXMLString,
-  serialize,
-  nameToRedeemCode
 };
+
+export { isValueNullOrUndefined, nameToRedeemCode, normalizePort, parseHostname, parseXMLString, serialize };

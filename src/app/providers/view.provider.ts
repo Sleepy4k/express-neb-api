@@ -1,9 +1,10 @@
-import generateNonce from '@utils/nonce.js';
-import type {
-  Request,
-  Response,
-  NextFunction
-} from 'express';
+import type { NextFunction, Request, Response } from "express";
+
+import { appConfig } from "@config";
+import generateNonce from "@utils/nonce.js";
+import { parseHostname } from "@utils/parse.js";
+
+const baseUrl = `${parseHostname(appConfig.host)}:${appConfig.port.toString()}`;
 
 /**
  * Set up the view service provider for the Express app
@@ -14,23 +15,19 @@ import type {
  *
  * @returns {void}
  */
-const viewServiceProvider = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
+const viewServiceProvider = (req: Request, res: Response, next: NextFunction): void => {
   res.locals.cspNonce = generateNonce();
-  res.locals.asset = (path?: string) => `${res.locals.baseUrl}/${path || ''}`;
-  res.locals.route = (path?: string) => `${res.locals.baseUrl}/${path || ''}`;
+  res.locals.baseUrl = baseUrl;
+  res.locals.asset = (path?: string) => `${baseUrl}/${path ?? ""}`;
+  res.locals.route = (path?: string) => `${baseUrl}/${path ?? ""}`;
   res.locals.isRouteActive = (route?: string) => {
-    const currPath = req.baseUrl.split('/')[1];
+    const currPath = req.path === "/" ? "" : req.path.slice(1);
+    if (!route && currPath === "") return "active";
 
-    if (!route && currPath === '') return 'active';
-
-    return currPath === route ? 'active' : '';
-  }
+    return currPath === route ? "active" : "";
+  };
 
   next();
-}
+};
 
 export default viewServiceProvider;

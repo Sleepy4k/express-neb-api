@@ -1,5 +1,5 @@
-import { DOMWindow } from 'jsdom';
-import { JSDOM } from 'jsdom';
+import { DOMWindow } from "jsdom";
+import { JSDOM } from "jsdom";
 
 /**
  * Node class from JSDOM to get the window object.
@@ -8,6 +8,4 @@ import { JSDOM } from 'jsdom';
  */
 const Node: DOMWindow["Node"] = new JSDOM().window.Node;
 
-export {
-  Node,
-};
+export { Node };

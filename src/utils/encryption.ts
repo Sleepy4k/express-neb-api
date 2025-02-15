@@ -1,4 +1,4 @@
-import CryptoES from 'crypto-es';
+import CryptoES from "crypto-es";
 
 /**
  * Hashes the given data using the SHA-256 algorithm.
@@ -12,8 +12,6 @@ import CryptoES from 'crypto-es';
  */
 const sha256 = (data: string): string => {
   return CryptoES.SHA256(data).toString(CryptoES.enc.Hex);
-}
-
-export {
-  sha256,
 };
+
+export { sha256 };
