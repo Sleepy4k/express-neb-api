@@ -1,3 +1,4 @@
+import { appConfig } from "@/config/app.config.js";
 import { createJsonFile, isDirectoryExists, isJsonFileExists, readJsonFileSync, writeJsonFileSync } from "@utils/storage.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -6,8 +7,6 @@ import { fileURLToPath } from "node:url";
  * Get path to the root directory using dot-to-parent
  *
  * @note If file path is changed, this should be updated
- *
- * @type {string}
  */
 const dotToParent = "/../../storage/cache";
 
@@ -94,7 +93,14 @@ class BaseModel {
       filePath = "\\" + filePath;
     }
 
-    const parsedFilePath = path.join(__basedir, filePath.replace(/\//g, "\\"));
+    let parsedFilePath: string;
+    const isVercelMode = appConfig.vercelMode;
+
+    if (!isVercelMode) {
+      parsedFilePath = path.join(__basedir, filePath.replace(/\//g, "\\"));
+    } else {
+      parsedFilePath = `/tmp/${filePath}`;
+    }
 
     if (!isDirectoryExists(path.dirname(parsedFilePath))) {
       throw new Error("The directory does not exist");

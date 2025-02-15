@@ -1,6 +1,7 @@
 import type { DestinationCallback, FileNameCallback, MulterFile } from "@interfaces/multerDiskStorage.js";
 import type { Request } from "express";
 
+import { appConfig } from "@/config/app.config.js";
 import multer, { FileFilterCallback } from "multer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -44,7 +45,15 @@ const sebFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback): voi
  */
 const diskStorage = multer.diskStorage({
   destination: (_req: Request, _file: MulterFile, cb: DestinationCallback): void => {
-    cb(null, path.join(__basedir, "storage/app"));
+    let pathToStorage: string;
+
+    if (appConfig.vercelMode) {
+      pathToStorage = "/tmp";
+    } else {
+      pathToStorage = path.join(__basedir, "storage/app");
+    }
+
+    cb(null, pathToStorage);
   },
   filename: (req: Request, file: MulterFile, cb: FileNameCallback): void => {
     const { redeemCode } = req.params;

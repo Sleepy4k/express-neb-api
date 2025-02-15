@@ -4,8 +4,6 @@ import { appConfig } from "@config";
 import generateNonce from "@utils/nonce.js";
 import { parseHostname } from "@utils/parse.js";
 
-const baseUrl = `${parseHostname(appConfig.host)}:${appConfig.port.toString()}`;
-
 /**
  * Set up the view service provider for the Express app
  *
@@ -16,6 +14,14 @@ const baseUrl = `${parseHostname(appConfig.host)}:${appConfig.port.toString()}`;
  * @returns {void}
  */
 const viewServiceProvider = (req: Request, res: Response, next: NextFunction): void => {
+  let baseUrl: string;
+
+  if (appConfig.vercelMode) {
+    baseUrl = parseHostname(appConfig.host);
+  } else {
+    baseUrl = `${parseHostname(appConfig.host)}:${appConfig.port.toString()}`;
+  }
+
   res.locals.cspNonce = generateNonce();
   res.locals.baseUrl = baseUrl;
   res.locals.asset = (path?: string) => `${baseUrl}/${path ?? ""}`;
