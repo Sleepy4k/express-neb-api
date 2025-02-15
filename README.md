@@ -10,12 +10,12 @@ as main language, we provide the best experience ever of bypassing the exam.
 - User can submit their exam's config and get the result fast as possible
 - Download or Save As feature for better experience of bypassing the exam
 - Redeem code, we want to make sure each user had best experience not for
-lagging or overload
+  lagging or overload
 
 ### Tutorial
 
 - On leading user how to use our tools, we provide video tutorial with
-simple as possible
+  simple as possible
 - Many tutorial based on out recommendation 3rd party tools
 
 ### Admin Dashboard
@@ -38,40 +38,40 @@ simple as possible
 
 Clone the project
 
-~~~bash
+```bash
 git clone https://github.com/Sleepy4k/express-typescript-neb.git
-~~~
+```
 
 Go to the project directory
 
-~~~bash
+```bash
 cd express-typescript-neb
-~~~
+```
 
 Copy /env.example into .env
 
-~~~bash
+```bash
 cp .env.example .env
-~~~
+```
 
 Install node dependencies
 
-~~~bash
+```bash
 npm install
-~~~
+```
 
 Or, if you are in production mode run this command
 (don't forget to built it first)
 
-~~~bash
+```bash
 npm install --production
-~~~
+```
 
 Start the server
 
-~~~bash
+```bash
 npm run dev
-~~~
+```
 
 ## Environment Variables
 
