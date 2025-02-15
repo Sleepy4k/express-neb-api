@@ -34,3 +34,8 @@ yarn-error.*
 
 # Logs file
 logs/
+
+# Vercel
+.vercel
+
+.vercel
