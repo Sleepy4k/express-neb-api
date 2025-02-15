@@ -5,14 +5,6 @@
   "exitcrash": false,
   "exec": "concurrently \"npx tsc --watch -p tsconfig.json\" \"npx tsx -r tsconfig-paths/register ./src/index.ts\"",
   "ext": ".ts",
-  "watch": [
-    "src",
-    ".env"
-  ],
-  "ignore": [
-    "src/**/*.spec.ts",
-    "src/public/*",
-    "src/views/*",
-    "src/storage/*"
-  ]
+  "watch": ["src", ".env"],
+  "ignore": ["src/**/*.spec.ts", "src/public/*", "src/views/*", "src/storage/*"]
 }
