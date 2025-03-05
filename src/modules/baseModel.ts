@@ -1,4 +1,3 @@
-import { appConfig } from "@/config/app.config.js";
 import { createJsonFile, isDirectoryExists, isJsonFileExists, readJsonFileSync, writeJsonFileSync } from "@utils/storage.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -93,14 +92,7 @@ class BaseModel {
       filePath = "\\" + filePath;
     }
 
-    let parsedFilePath: string;
-    const isVercelMode = appConfig.vercelMode;
-
-    if (!isVercelMode) {
-      parsedFilePath = path.join(__basedir, filePath.replace(/\//g, "\\"));
-    } else {
-      parsedFilePath = `/tmp/${filePath}`;
-    }
+    const parsedFilePath = path.join(__basedir, filePath.replace(/\//g, "\\"));
 
     if (!isDirectoryExists(path.dirname(parsedFilePath))) {
       throw new Error("The directory does not exist");
