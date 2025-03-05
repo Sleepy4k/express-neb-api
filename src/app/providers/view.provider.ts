@@ -16,7 +16,7 @@ import { parseHostname } from "@utils/parse.js";
 const viewServiceProvider = (req: Request, res: Response, next: NextFunction): void => {
   let baseUrl: string;
 
-  if (appConfig.vercelMode) {
+  if (appConfig.env == "production") {
     baseUrl = parseHostname(appConfig.host);
   } else {
     baseUrl = `${parseHostname(appConfig.host)}:${appConfig.port.toString()}`;
