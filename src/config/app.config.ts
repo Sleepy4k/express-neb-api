@@ -7,5 +7,4 @@ export const appConfig = {
   host: process.env.APP_HOST ?? "http://localhost",
   name: process.env.APP_NAME ?? "My App",
   port: process.env.APP_PORT ?? 3000,
-  vercelMode: process.env.APP_VERCEL_MODE ?? false,
 };
