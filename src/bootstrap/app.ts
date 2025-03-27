@@ -1,8 +1,8 @@
 import type { Express } from "express";
 
 import { appConfig, cspConfig, minifyConfig, rateLimitConfig } from "@config";
-import errorHandler from "@handlers/error.handler.js";
-import missingHandler from "@handlers/missing.handler.js";
+import applicationErrorHandler from "@middleware/applicationError.js";
+import routeMissingHandler from "@middleware/routeMissing.js";
 import appServiceProvider from "@providers/app.provider.js";
 import viewServiceProvider from "@providers/view.provider.js";
 import router from "@routes";
@@ -36,7 +36,7 @@ app.use(appServiceProvider);
 /**
  * Get the directory name of the current module
  */
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url)) + "/..";
 
 /**
  * View engine setup
@@ -61,7 +61,7 @@ app.use(express.static(path.join(__dirname, "public")));
 /**
  * Check if the current environment is development
  */
-const isDevMode = appConfig.env === "development";
+const isDevMode = appConfig.env === "development" || appConfig.env === "local";
 
 /**
  * Setup logger
@@ -105,11 +105,11 @@ app.use("/", router);
 /**
  * Catch 404 and forward to error handler
  */
-app.use(missingHandler);
+app.use(applicationErrorHandler);
 
 /**
  * Set error handler
  */
-app.use(errorHandler);
+app.use(routeMissingHandler);
 
 export default app;

@@ -1,7 +1,7 @@
-import * as ac from "@controllers/admin.controller.js";
-import * as hc from "@controllers/home.controller.js";
-import * as sc from "@controllers/service.controller.js";
-import * as tc from "@controllers/tutorial.controller.js";
+import * as ac from "@controllers/web/admin.controller.js";
+import * as hc from "@controllers/web/home.controller.js";
+import * as sc from "@controllers/web/service.controller.js";
+import * as tc from "@controllers/web/tutorial.controller.js";
 import fileUploader from "@middleware/fileUploader.js";
 import { Router } from "express";
 

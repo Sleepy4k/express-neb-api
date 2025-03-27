@@ -12,7 +12,7 @@ import { appConfig } from "@config";
  *
  * @returns {void}
  */
-const errorHandler: ErrorRequestHandler = (
+const applicationErrorHandler: ErrorRequestHandler = (
   err: unknown,
   _req: Request,
   res: Response,
@@ -20,7 +20,7 @@ const errorHandler: ErrorRequestHandler = (
   _next: NextFunction,
 ): void => {
   const error = err as { message?: string; status?: number };
-  const isDevMode = appConfig.env === "development";
+  const isDevMode = appConfig.env === "development" || appConfig.env === "local";
 
   res.locals.error = isDevMode ? error : {};
   res.locals.message = error.message ?? "An error occurred!";
@@ -46,4 +46,4 @@ const errorHandler: ErrorRequestHandler = (
   });
 };
 
-export default errorHandler;
+export default applicationErrorHandler;

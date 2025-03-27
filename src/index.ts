@@ -1,4 +1,6 @@
-import app from "@/main.js";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import app from "@bootstrap/app.js";
 import debugLib from "debug";
 import http from "http";
 
@@ -10,20 +12,19 @@ const debug = debugLib("express-typescript-neb:server");
 /**
  * Create HTTP server.
  */
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-const server = http.createServer(app);
+const server = http.createServer(app as http.RequestListener);
 
 /**
  * Get port from environment and store in Express.
  */
-const port: false | number | string = app.get("port") as false | number | string;
+const port: boolean | number | string = (app.get("port") as boolean | number | string) || false;
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, () => {
   if (port !== false) {
-    console.log(`Server running on ${app.get("host") as string}:${port.toString()}`);
+    console.log(`Server running on ${(app.get("host") as string) || "127.0.0.1"}:${port.toString()}`);
   } else {
     console.error("Invalid port value");
   }

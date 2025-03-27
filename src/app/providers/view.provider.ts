@@ -1,6 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { appConfig } from "@config";
 import generateNonce from "@utils/nonce.js";
 import { parseHostname } from "@utils/parse.js";
 
@@ -14,13 +13,7 @@ import { parseHostname } from "@utils/parse.js";
  * @returns {void}
  */
 const viewServiceProvider = (req: Request, res: Response, next: NextFunction): void => {
-  let baseUrl: string;
-
-  if (appConfig.env == "production") {
-    baseUrl = parseHostname(appConfig.host);
-  } else {
-    baseUrl = `${parseHostname(appConfig.host)}:${appConfig.port.toString()}`;
-  }
+  const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
 
   res.locals.cspNonce = generateNonce();
   res.locals.baseUrl = baseUrl;

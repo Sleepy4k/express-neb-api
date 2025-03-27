@@ -1,7 +1,6 @@
 import { defaultEncoder } from "@constants/encoder.js";
+import { isValueNullOrUndefined } from "@utils/parse.js";
 import fs from "node:fs";
-
-import { isValueNullOrUndefined } from "./parse.js";
 
 /**
  * Check if a JSON file exists
@@ -57,13 +56,11 @@ const createJsonFile = (filePath: string): void => {
  * @returns {Record<string, unknown>} The JSON data
  */
 const readJsonFileSync = (filePath: string, encoding?: BufferEncoding): Record<string, unknown> => {
-  if (isValueNullOrUndefined(encoding)) {
-    encoding = defaultEncoder;
-  }
+  if (isValueNullOrUndefined(encoding)) encoding = defaultEncoder;
 
-  const data = fs.readFileSync(filePath, encoding);
+  const data = fs.readFileSync(filePath, encoding) as BufferEncoding;
 
-  return JSON.parse(data as BufferEncoding) as Record<string, unknown>;
+  return JSON.parse(data) as Record<string, unknown>;
 };
 
 /**
@@ -75,9 +72,7 @@ const readJsonFileSync = (filePath: string, encoding?: BufferEncoding): Record<s
  * @returns {Promise<Record<string, unknown>>} The JSON data
  */
 const readJsonFileAsync = (filePath: string, encoding?: BufferEncoding): Promise<Record<string, unknown>> => {
-  if (isValueNullOrUndefined(encoding)) {
-    encoding = defaultEncoder;
-  }
+  if (isValueNullOrUndefined(encoding)) encoding = defaultEncoder;
 
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, encoding, (err, data) => {
@@ -104,9 +99,7 @@ const readJsonFileAsync = (filePath: string, encoding?: BufferEncoding): Promise
  * @returns {void}
  */
 const writeJsonFileSync = (filePath: string, data: Record<string, unknown>, encoding?: BufferEncoding): void => {
-  if (isValueNullOrUndefined(encoding)) {
-    encoding = defaultEncoder;
-  }
+  if (isValueNullOrUndefined(encoding)) encoding = defaultEncoder;
 
   const stringifiedData = JSON.stringify(data, null, 2);
 
@@ -123,9 +116,7 @@ const writeJsonFileSync = (filePath: string, data: Record<string, unknown>, enco
  * @returns {Promise<void>} The promise
  */
 const writeJsonFileAsync = (filePath: string, data: Record<string, unknown>, encoding?: BufferEncoding): Promise<void> => {
-  if (isValueNullOrUndefined(encoding)) {
-    encoding = defaultEncoder;
-  }
+  if (isValueNullOrUndefined(encoding)) encoding = defaultEncoder;
 
   const stringifiedData = JSON.stringify(data, null, 2);
 

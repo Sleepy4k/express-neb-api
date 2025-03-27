@@ -1,8 +1,7 @@
 import type { XMLDictionary, XMLValue } from "@interfaces/xmlFile.js";
 
+import { Node } from "@utils/dom.js";
 import { DOMParser } from "@xmldom/xmldom";
-
-import { Node } from "./dom.js";
 
 /**
  * The regex to check if the hostname is a URL
