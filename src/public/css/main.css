@@ -88,12 +88,107 @@ body {
 /* Services Pages */
 
 .services {
-  padding: 100px 0;
-  height: 70vh;
+  padding: 60px 0;
 }
-.services .container {
-  padding: 0 20px;
+
+.section-title {
+  font-weight: 700;
+  color: #2d3436;
+  margin-bottom: 15px;
+  position: relative;
 }
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10px;
+  width: 60px;
+  height: 4px;
+  background: #6c5ce7;
+  border-radius: 2px;
+}
+
+.cheat-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin-bottom: 25px;
+  border: none;
+  background-color: white;
+  height: 100%;
+}
+
+.cheat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.cheat-card-header {
+  color: white;
+  padding: 15px 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cheat-card-body {
+  padding: 20px;
+}
+
+.cheat-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cheat-item:last-child {
+  border-bottom: none;
+}
+
+.cheat-name {
+  font-weight: 500;
+  color: #2d3436;
+}
+
+.cheat-shortcut {
+  background-color: #f1f1f1;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* FAQ */
+.faq {
+  padding: 60px 0;
+  background-color: #f8f9fa;
+}
+
+.accordion-button {
+  font-weight: 500;
+  padding: 1rem 1.25rem;
+}
+
+.accordion-button:not(.collapsed) {
+  color: white;
+  background-color: #6c5ce7;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0,0,0,.125);
+}
+
+.accordion-body {
+  padding: 1.25rem;
+}
+
 
 .tutorial {
   padding: 100px 0;
