@@ -126,7 +126,7 @@ class SebFile {
    *
    * @returns {string} The configuration key
    */
-  public getConfigKey(url: string) {
+  public getConfigKey(url: string): string {
     return sha256(url + this.ConfigHash);
   }
 }
