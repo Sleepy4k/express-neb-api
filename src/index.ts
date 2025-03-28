@@ -1,8 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import app from "@bootstrap/app.js";
+import App from "@bootstrap/app.js";
 import debugLib from "debug";
 import http from "http";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+/**
+ * Get the directory name of the current module
+ */
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Create Express server
+ */
+const app = new App(__dirname).instance
 
 /**
  * Get port from environment and store in Express.
