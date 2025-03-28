@@ -5,18 +5,18 @@ import * as tc from "@controllers/web/tutorial.controller.js";
 import fileUploader from "@middleware/fileUploader.js";
 import { Router } from "express";
 
-const router = Router();
+const webRouter = Router();
 
-router.get("/", hc.home);
+webRouter.get("/", hc.home);
 
-router.get("/service", sc.form);
-router.post("/service", sc.missUrl);
-router.post("/service/:redeemCode", fileUploader.single("file"), sc.bypass);
+webRouter.get("/service", sc.form);
+webRouter.post("/service", sc.missUrl);
+webRouter.post("/service/:redeemCode", fileUploader.single("file"), sc.bypass);
 
-router.get("/tutorial", tc.home);
+webRouter.get("/tutorial", tc.home);
 
-router.get("/dashboard", ac.home);
-router.post("/dashboard/generate", ac.registerRedeemCode);
-router.get("/dashboard/list/:name", ac.findListRedeemCode);
+webRouter.get("/dashboard", ac.home);
+webRouter.post("/dashboard/generate", ac.registerRedeemCode);
+webRouter.get("/dashboard/list/:name", ac.findListRedeemCode);
 
-export default router;
+export default webRouter;

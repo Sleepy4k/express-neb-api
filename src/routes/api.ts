@@ -1,8 +1,8 @@
 import * as hc from "@controllers/api/home.controller.js";
 import { Router } from "express";
 
-const router = Router();
+const apiRouter = Router();
 
-router.get("/", hc.home);
+apiRouter.get("/", hc.home);
 
-export default router;
+export default apiRouter;
