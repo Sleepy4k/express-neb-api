@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { appConfig } from "@config";
+import { appConfig } from "@config/app.config.js";
 
 /**
  * Set up the app service provider for the Express app

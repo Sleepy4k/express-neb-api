@@ -1,6 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
 
-import generateNonce from "@utils/nonce.js";
 import { parseHostname } from "@utils/parse.js";
 
 /**
@@ -15,7 +14,7 @@ import { parseHostname } from "@utils/parse.js";
 const viewServiceProvider = (req: Request, res: Response, next: NextFunction): void => {
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
 
-  res.locals.cspNonce = generateNonce();
+  res.locals.cspNonce = req.app.get("cspNonce") as string || "";
   res.locals.baseUrl = baseUrl;
   res.locals.asset = (path?: string) => `${baseUrl}/${path ?? ""}`;
   res.locals.route = (path?: string) => `${baseUrl}/${path ?? ""}`;
