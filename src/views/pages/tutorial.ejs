@@ -2,43 +2,75 @@
 
 <% block('subTitle', 'Tutorial') %>
 
-<section class="ftco-section contact-section ftco-no-pb" id="contact-section">
-  <div class="container">
-    <div class="row justify-content-center mb-5 pb-5">
-      <div class="col-md-7 heading-section text-center">
-        <span class="subheading">Tutorial</span>
-        <h2 class="mb-4">Video Tutorial</h2>
-        <p>
-          Feels confused about how to use our tool? Don't worry, we provide you
-          some video tutorial how to use our tool. Just watch the video and
-          follow the instruction.
-        </p>
-      </div>
-    </div>
+<% const cspNonceToken = cspNonce; %>
+<% const serviceCssAsset = asset('css/addon/tutorial.css'); %>
 
-    <div class="row d-flex">
-      <% for(var i = 0; i < tutorial_length; i++) { %>
-        <div class="col-md-4 d-flex">
-          <div class="blog-entry justify-content-end">
-            <a href="<%= data[i].video_url %>" target="_blank" rel="noopener" class="block-20" style="background-image: url('<%= data[i].thumbnail %>');"></a>
-            <div class="text mt-3 float-right d-block">
-              <h3 class="heading">
-                <%= data[i].title %>
-              </h3>
-              <p>
-                <%= data[i].description %>
-              </p>
-              <div class="d-flex align-items-center mt-4 meta">
-                <p class="mb-0">
-                  <a href="<%= data[i].video_url %>" target="_blank" rel="noopener" class="btn btn-primary">
-                    Watch Video
-                  </a>
-                </p>
-              </div>
-            </div>
+<% block('addon-style', `
+  <link rel="stylesheet" href="${serviceCssAsset}" nonce="${cspNonceToken}" />
+`) %>
+
+<div class="tutorial">
+  <div class="container text-center faq-title">
+    <h2>Frequently Asked Questions</h2>
+    <p>Have questions? We have answers! Check out our FAQ section below.</p>
+  </div>
+  <div class="container">
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item border-0 shadow-sm mb-3">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button bg-primary text-white rounded"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseOne"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+          >
+            <strong>What is NEB?</strong>
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body bg-light faqBox">
+            NEB is a platform designed to help students with their online exams and assignments by providing fast and reliable answers.
           </div>
         </div>
-      <% } %>
+      </div>
+      <div class="accordion-item border-0 shadow-sm mb-3">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button bg-primary text-white rounded"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseTwo"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            <strong>Is it free to use?</strong>
+          </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body bg-light faqBox">Yes! All our services are completely free to use with no hidden fees.</div>
+        </div>
+      </div>
+      <div class="accordion-item border-0 shadow-sm mb-3">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button bg-primary text-white rounded"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseThree"
+            aria-expanded="false"
+            aria-controls="collapseThree"
+          >
+            <strong>How does it work?</strong>
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body bg-light faqBox">
+            Simply select the service you need, provide your redeem code and get your answers in seconds.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</section>
-
+</div>

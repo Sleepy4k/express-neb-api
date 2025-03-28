@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 
     <% if (block('subTitle').toString()) { %>
-      <meta name="title" content="<%= block('subTitle').toString() %> • <%= title %>">
+      <meta name="title" content="<%= title %> - <%= block('subTitle').toString() %>">
     <% } else { %>
       <meta name="title" content="<%= title %>">
     <% } %>
@@ -29,7 +29,7 @@
 
     <% if (block('subTitle').toString()) { %>
       <title>
-        <%= block('subTitle').toString() %> • <%= title %>
+        <%= title %> - <%= block('subTitle').toString() %>
       </title>
     <% } else { %>
       <title><%= title %></title>
@@ -43,7 +43,7 @@
     <meta property="og:site_name" content="<%= title %>">
 
     <% if (block('subTitle').toString()) { %>
-      <meta property="og:title" content="<%= block('subTitle').toString() %> • <%= title %>">
+      <meta property="og:title" content="<%= title %> - <%= block('subTitle').toString() %>">
     <% } else { %>
       <meta property="og:title" content="<%= title %>">
     <% } %>

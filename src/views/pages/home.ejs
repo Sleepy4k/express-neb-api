@@ -1,38 +1,110 @@
 <% layout('layouts/main.layout') %>
 
-<section id="home-section" class="hero">
-  <h3 class="vr"><%= app_name %></h3>
-  <div class="home-slider js-fullheight owl-carousel">
-    <div class="slider-item js-fullheight">
-      <div class="container-fluid p-0">
-        <div
-          class="row d-flex no-gutters slider-text js-fullheight align-items-center justify-content-end"
-        >
-          <div
-            class="one-third order-md-last img js-fullheight"
-            style="background-image: url(./images/laptop-hero.jpg)"
-          >
-            <div class="overlay"></div>
-          </div>
-          <div class="one-forth d-flex js-fullheight align-items-center">
-            <div class="text">
-              <span class="subheading">Welcome to the NEB</span>
-              <h1 class="mb-4 mt-3">
-                <span>Your</span> Personal SEB <span>Bypasser</span> Tool
-              </h1>
-              <p>
-                Had you ever thought of bypassing the SEB? Well, now you can
-                with the help of our tool. We provide you with the best
-                experience of bypassing the SEB.
-              </p>
+<% const cspNonceToken = cspNonce; %>
+<% const homeCssAsset = asset('css/addon/home.css'); %>
 
-              <a href="<%= route('service') %>" class="btn btn-primary px-5 py-3 mt-3">
-                Get Started
-              </a>
-            </div>
+<% block('addon-style', `
+  <link rel="stylesheet" href="${homeCssAsset}" nonce="${cspNonceToken}" />
+`) %>
+
+<% const startedRoute = route('service'); %>
+
+<% block('hero', `
+  <div class="hero">
+    <h1>
+      Your Personal <br />
+      <strong>Exam Bypasser Tool</strong>
+    </h1>
+    <p>
+      Say goodbye to all the stress caused by taking exams! Our powerful tools provide answers to all your online assignments within seconds. Fast, safe
+      and free.
+    </p>
+    <a href="${startedRoute}" class="btn btn-primary mt-3">Get Started</a>
+  </div>
+`) %>
+
+<div class="service">
+  <div class="container text-center my-5">
+    <h2>Our Services</h2>
+    <p>We offer a variety of services to help you with your online exams and assignments.</p>
+    <div class="row mt-4 service-cards">
+      <div class="card text-center">
+        <a href="<%= route('service/seb') %>" class="contentService">
+          <div class="d-flex justify-content-center">
+            <img src="<%= asset('logo.ico') %>" class="card-img-top" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Safe Exam Browser</h3>
+            <p class="card-text">Bypass the proctoring and free to switch between browser</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="faq">
+  <div class="container text-center faq-title">
+    <h2>Frequently Asked Questions</h2>
+    <p>Have questions? We have answers! Check out our FAQ section below.</p>
+  </div>
+  <div class="container">
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item border-0 shadow-sm mb-3">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button bg-primary text-white rounded"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseOne"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+          >
+            <strong>What is NEB?</strong>
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body bg-light faqBox">
+            NEB is a platform designed to help students with their online exams and assignments by providing fast and reliable answers.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item border-0 shadow-sm mb-3">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button bg-primary text-white rounded"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseTwo"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            <strong>Is it free to use?</strong>
+          </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body bg-light faqBox">Yes! All our services are completely free to use with no hidden fees.</div>
+        </div>
+      </div>
+      <div class="accordion-item border-0 shadow-sm mb-3">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button bg-primary text-white rounded"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseThree"
+            aria-expanded="false"
+            aria-controls="collapseThree"
+          >
+            <strong>How does it work?</strong>
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body bg-light faqBox">
+            Simply select the service you need, provide your redeem code and get your answers in seconds.
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 
     <% if (block('subTitle').toString()) { %>
-      <meta name="title" content="<%= block('subTitle').toString() %> • <%= title %>">
+      <meta name="title" content="<%= title %> - <%= block('subTitle').toString() %>">
     <% } else { %>
       <meta name="title" content="<%= title %>">
     <% } %>
@@ -30,7 +30,7 @@
 
     <% if (block('subTitle').toString()) { %>
       <title>
-        <%= block('subTitle').toString() %> • <%= title %>
+        <%= title %> - <%= block('subTitle').toString() %>
       </title>
     <% } else { %>
       <title><%= title %></title>
@@ -44,7 +44,7 @@
     <meta property="og:site_name" content="<%= title %>">
 
     <% if (block('subTitle').toString()) { %>
-      <meta property="og:title" content="<%= block('subTitle').toString() %> • <%= title %>">
+      <meta property="og:title" content="<%= title %> - <%= block('subTitle').toString() %>">
     <% } else { %>
       <meta property="og:title" content="<%= title %>">
     <% } %>
@@ -57,38 +57,33 @@
     <meta property="og:image:width" content="900">
     <meta property="og:image:height" content="549">
 
-    <link rel="stylesheet" href="<%= asset('css/aos.css') %>" nonce="<%= cspNonce %>" />
-    <link rel="stylesheet" href="<%= asset('css/animate.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('vendor/css/bootstrap.min.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('vendor/css/bootstrap-icons.min.css') %>" nonce="<%= cspNonce %>" />
     <link rel="stylesheet" href="<%= asset('css/main.css') %>" nonce="<%= cspNonce %>" />
-
-    <% if (isRouteActive() == 'active') { %>
-      <style>
-        .nav-link {
-          color: #ffffff !important;
-        }
-        .nav-link.active {
-          color: #31de79 !important;
-        }
-      </style>
-    <% } %>
 
     <%- block('addon-style') %>
   </head>
-  <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
-    <%- partial('components/navbar') %>
+  <body>
+    <% if (isRouteActive() == 'active') { %>
+      <div class="title">
+        <%- partial('components/navbar') %>
+        <%- block('hero') %>
+      </div>
+    <% } else { %>
+      <%- partial('components/navbar') %>
+    <% } %>
 
     <%- body %>
 
-    <%- partial('components/loader') %>
+    <%- partial('components/footer') %>
 
-    <script src="<%= asset('js/jquery.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/jquery-migrate-3.0.1.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/jquery.stellar.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/bootstrap.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/aos.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('js/scrollax.min.js') %>" nonce="<%= cspNonce %>"></script>
+    <script src="<%= asset('vendor/js/bootstrap.bundle.min.js') %>" nonce="<%= cspNonce %>"></script>
 
     <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>"></script>
+
+    <script nonce="<%= cspNonce %>">
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
     <%- block('addon-script') %>
   </body>
