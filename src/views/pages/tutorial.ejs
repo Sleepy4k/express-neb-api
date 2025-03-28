@@ -10,67 +10,82 @@
 `) %>
 
 <div class="tutorial">
-  <div class="container text-center faq-title">
-    <h2>Frequently Asked Questions</h2>
-    <p>Have questions? We have answers! Check out our FAQ section below.</p>
-  </div>
-  <div class="container">
-    <div class="accordion" id="accordionExample">
-      <div class="accordion-item border-0 shadow-sm mb-3">
-        <h2 class="accordion-header">
-          <button
-            class="accordion-button bg-primary text-white rounded"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseOne"
-            aria-expanded="true"
-            aria-controls="collapseOne"
-          >
-            <strong>What is NEB?</strong>
-          </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-          <div class="accordion-body bg-light faqBox">
-            NEB is a platform designed to help students with their online exams and assignments by providing fast and reliable answers.
+  <div class="container text-center my-5">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="mb-5">Have questions? We have answers! Check out our FAQ section below.</p>
+
+      <div class="row justify-content-center">
+          <div class="col-lg-8">
+              <div class="accordion" id="faqAccordion">
+                  <!-- FAQ Item 1 -->
+                  <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+                      <h2 class="accordion-header">
+                          <button class="accordion-button collapsed bg-primary text-white" type="button"
+                                  data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                  aria-expanded="false" aria-controls="collapseOne">
+                              <strong>What is NEB?</strong>
+                          </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse"
+                           data-bs-parent="#faqAccordion">
+                          <div class="accordion-body bg-light">
+                              NEB is a platform designed to help students with their online exams and assignments by providing fast and reliable answers.
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- FAQ Item 2 -->
+                  <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+                      <h2 class="accordion-header">
+                          <button class="accordion-button collapsed bg-primary text-white" type="button"
+                                  data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                  aria-expanded="false" aria-controls="collapseTwo">
+                              <strong>Is it free to use?</strong>
+                          </button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse"
+                           data-bs-parent="#faqAccordion">
+                          <div class="accordion-body bg-light">
+                              Yes! All our services are completely free to use with no hidden fees.
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- FAQ Item 3 -->
+                  <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+                      <h2 class="accordion-header">
+                          <button class="accordion-button collapsed bg-primary text-white" type="button"
+                                  data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                  aria-expanded="false" aria-controls="collapseThree">
+                              <strong>How does it work?</strong>
+                          </button>
+                      </h2>
+                      <div id="collapseThree" class="accordion-collapse collapse"
+                           data-bs-parent="#faqAccordion">
+                          <div class="accordion-body bg-light">
+                              Simply select the service you need, provide your redeem code and get your answers in seconds.
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- FAQ Item 4 (additional example) -->
+                  <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+                      <h2 class="accordion-header">
+                          <button class="accordion-button collapsed bg-primary text-white" type="button"
+                                  data-bs-toggle="collapse" data-bs-target="#collapseFour"
+                                  aria-expanded="false" aria-controls="collapseFour">
+                              <strong>Is this service safe to use?</strong>
+                          </button>
+                      </h2>
+                      <div id="collapseFour" class="accordion-collapse collapse"
+                           data-bs-parent="#faqAccordion">
+                          <div class="accordion-body bg-light">
+                              Absolutely! We prioritize your privacy and security. All data is encrypted and we don't store personal information.
+                          </div>
+                      </div>
+                  </div>
+              </div>
           </div>
-        </div>
       </div>
-      <div class="accordion-item border-0 shadow-sm mb-3">
-        <h2 class="accordion-header">
-          <button
-            class="accordion-button bg-primary text-white rounded"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseTwo"
-            aria-expanded="false"
-            aria-controls="collapseTwo"
-          >
-            <strong>Is it free to use?</strong>
-          </button>
-        </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-          <div class="accordion-body bg-light faqBox">Yes! All our services are completely free to use with no hidden fees.</div>
-        </div>
-      </div>
-      <div class="accordion-item border-0 shadow-sm mb-3">
-        <h2 class="accordion-header">
-          <button
-            class="accordion-button bg-primary text-white rounded"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseThree"
-            aria-expanded="false"
-            aria-controls="collapseThree"
-          >
-            <strong>How does it work?</strong>
-          </button>
-        </h2>
-        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-          <div class="accordion-body bg-light faqBox">
-            Simply select the service you need, provide your redeem code and get your answers in seconds.
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
