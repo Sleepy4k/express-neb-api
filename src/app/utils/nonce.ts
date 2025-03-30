@@ -1,4 +1,4 @@
-import CryptoJS from 'crypto-es'
+import CryptoJS from "crypto-es";
 
 /**
  * Generate a nonce based on the app name

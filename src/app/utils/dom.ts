@@ -1,5 +1,4 @@
-import { DOMWindow } from "jsdom";
-import { JSDOM } from "jsdom";
+import { type DOMWindow, JSDOM } from "jsdom";
 
 /**
  * Node class from JSDOM to get the window object.

@@ -14,6 +14,7 @@ const appServiceProvider = (_req: Request, res: Response, next: NextFunction): v
   res.locals.env = appConfig.env || "production";
   res.locals.title = appConfig.name || "Express TypeScript Neb";
   res.locals.description = "Naka Exam Bypasser, a simple Express.js server that bypasses Safe Exam's security measures.";
+  res.locals.currentYear = new Date().getFullYear();
 
   next();
 };

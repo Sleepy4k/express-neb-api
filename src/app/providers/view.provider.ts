@@ -14,8 +14,9 @@ import { parseHostname } from "@utils/parse.js";
 const viewServiceProvider = (req: Request, res: Response, next: NextFunction): void => {
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
 
-  res.locals.cspNonce = req.app.get("cspNonce") as string || "";
   res.locals.baseUrl = baseUrl;
+  res.locals.isLoggedIn = req.session.user?.email ?? false;
+  res.locals.cspNonce = (req.app.get("cspNonce") as string) || "";
   res.locals.asset = (path?: string) => `${baseUrl}/${path ?? ""}`;
   res.locals.route = (path?: string) => `${baseUrl}/${path ?? ""}`;
   res.locals.isRouteActive = (route?: string) => {

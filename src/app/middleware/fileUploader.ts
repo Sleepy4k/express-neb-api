@@ -1,7 +1,7 @@
 import type { DestinationCallback, FileNameCallback, MulterFile } from "@interfaces/multerDiskStorage.js";
-import type { Request } from "express";
 
-import multer, { FileFilterCallback } from "multer";
+import { type Request } from "express";
+import multer, { type FileFilterCallback } from "multer";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 

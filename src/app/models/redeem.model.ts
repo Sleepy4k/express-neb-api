@@ -1,6 +1,5 @@
-import type { RedeemData } from "@interfaces/redeemData.js";
-
 import { RedeemStatus } from "@enums/redeemStatus.js";
+import { type RedeemData } from "@interfaces/redeemData.js";
 import BaseModel from "@modules/baseModel.js";
 
 /**

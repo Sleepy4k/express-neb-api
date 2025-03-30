@@ -1,4 +1,4 @@
-import type { RedeemStatus } from "@enums/redeemStatus.js";
+import { type RedeemStatus } from "@enums/redeemStatus.js";
 
 /**
  * Redeem Data interface for data type Redeem Data
