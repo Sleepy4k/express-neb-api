@@ -43,6 +43,10 @@ body {
   font-weight: bold;
   margin-left: 15px;
 }
+.navbar-burger {
+  border: none;
+  font-size: 1.5rem;
+}
 
 .service {
   padding: 50px 0;
@@ -99,7 +103,7 @@ body {
 }
 
 .section-title::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -114,7 +118,9 @@ body {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   margin-bottom: 25px;
   border: none;
   background-color: white;
@@ -182,13 +188,12 @@ body {
 
 .accordion-button:focus {
   box-shadow: none;
-  border-color: rgba(0,0,0,.125);
+  border-color: rgba(0, 0, 0, 0.125);
 }
 
 .accordion-body {
   padding: 1.25rem;
 }
-
 
 .tutorial {
   padding: 100px 0;
