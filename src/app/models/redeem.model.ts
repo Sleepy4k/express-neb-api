@@ -17,18 +17,36 @@ class RedeemModel extends BaseModel {
   }
 
   /**
+   * Find the redeem data by name
+   *
+   * @param {string} name - The name
+   *
+   * @returns {number} The redeem data
+   */
+  public countByName(name: string): number {
+    this.loadData();
+
+    const redeemData = Object.values(this.data)
+      .filter((redeem) => (redeem as RedeemData).name === name) as RedeemData[];
+
+    return redeemData.length;
+  }
+
+  /**
    * Create the redeem data
    *
    * @param {string} code - The code
    * @param {string} name - The name
+   * @param {string} description - The description
    *
    * @returns {RedeemData} The redeem data
    */
-  public create(code: string, name: string): RedeemData {
+  public create(code: string, name: string, description: string): RedeemData {
     this.loadData();
 
     const redeemData: RedeemData = {
       code,
+      description,
       name,
       redeemedAt: null,
       status: RedeemStatus.PENDING,

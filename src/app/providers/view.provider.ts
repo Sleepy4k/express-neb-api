@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
+import { RoleType } from "@enums/roleType.js";
 import { parseHostname } from "@utils/parse.js";
 
 /**
@@ -16,6 +17,8 @@ const viewServiceProvider = (req: Request, res: Response, next: NextFunction): v
 
   res.locals.baseUrl = baseUrl;
   res.locals.isLoggedIn = req.session.user?.email ?? false;
+  res.locals.user = req.session.user ?? null;
+  res.locals.isAdmin = req.session.user?.role === RoleType.ADMIN;
   res.locals.cspNonce = (req.app.get("cspNonce") as string) || "";
   res.locals.asset = (path?: string) => `${baseUrl}/${path ?? ""}`;
   res.locals.route = (path?: string) => `${baseUrl}/${path ?? ""}`;

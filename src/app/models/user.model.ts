@@ -22,6 +22,17 @@ class UserModel extends BaseModel {
   }
 
   /**
+   * Get the total number of users
+   *
+   * @returns {number}
+   */
+  public count(): number {
+    this.loadData();
+
+    return Object.keys(this.data).length;
+  }
+
+  /**
    * Create the user data
    *
    * @param {string} email - The email

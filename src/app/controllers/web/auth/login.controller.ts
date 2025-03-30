@@ -6,10 +6,15 @@ import UserModel from "@models/user.model.js";
 import { sha256 } from "@utils/encryption.js";
 import { parseHostname } from "@utils/parse.js";
 
+/**
+ * The user model instance for the login controller
+ *
+ * @type {UserModel}
+ */
 const userModel: UserModel = new UserModel();
 
 /**
- * Home controller to render the home page
+ * Login controller to render the home page
  *
  * @param {Request} _req
  * @param {Response} res
@@ -19,7 +24,7 @@ const form = (_req: Request, res: Response) => {
 };
 
 /**
- * Home controller to render the home page
+ * Login controller to process the login form
  *
  * @param {Request} req
  * @param {Response} res
@@ -91,7 +96,7 @@ const process = (req: Request, res: Response) => {
   req.session.user = {
     email: userData.email,
     password: userData.password,
-    role: userData.role,
+    role: userRole === RoleType.USER ? RoleType.USER : userData.role,
   };
 
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
