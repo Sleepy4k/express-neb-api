@@ -26,8 +26,7 @@ class RedeemModel extends BaseModel {
   public countByName(name: string): number {
     this.loadData();
 
-    const redeemData = Object.values(this.data)
-      .filter((redeem) => (redeem as RedeemData).name === name) as RedeemData[];
+    const redeemData = Object.values(this.data).filter((redeem) => (redeem as RedeemData).name === name) as RedeemData[];
 
     return redeemData.length;
   }

@@ -51,7 +51,7 @@ const process = (req: Request, res: Response) => {
     }
     const totalUserRedeemCode = redeemModel.countByName(name);
     const uniqueSuffix = Math.floor(Math.random() * 10000).toString();
-    const redeemCode = `${nameToRedeemCode(name.split('@')[0])}-${uniqueSuffix}-${totalUserRedeemCode.toString()}`;
+    const redeemCode = `${nameToRedeemCode(name.split("@")[0])}-${uniqueSuffix}-${totalUserRedeemCode.toString()}`;
     const token = redeemModel.create(redeemCode, name, description);
 
     res.status(200).send({

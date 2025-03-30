@@ -265,7 +265,38 @@ const nameToRedeemCode = (name: string): string => {
   const month: string = String(currentDate.getMonth() + 1).padStart(2, "0");
   const year: string = currentDate.getFullYear().toString();
 
-  const sensitiveCharacters = [" ", "-", "_", ".", ",", ":", ";", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "=", "{", "}", "[", "]", "|", "\\", "/", "<", ">", "?", "~"];
+  const sensitiveCharacters = [
+    " ",
+    "-",
+    "_",
+    ".",
+    ",",
+    ":",
+    ";",
+    "!",
+    "@",
+    "#",
+    "$",
+    "%",
+    "^",
+    "&",
+    "*",
+    "(",
+    ")",
+    "+",
+    "=",
+    "{",
+    "}",
+    "[",
+    "]",
+    "|",
+    "\\",
+    "/",
+    "<",
+    ">",
+    "?",
+    "~",
+  ];
   const regex = new RegExp(`[${sensitiveCharacters.join("")}]`, "g");
   name = name.replace(regex, ""); // Remove sensitive characters
 
