@@ -18,3 +18,8 @@ eslint.config.js
 .prettierrc.js
 prettier.config.js
 jest.config.js
+**/.git
+**/.svn
+**/.hg
+**/.svg
+**/vendor
