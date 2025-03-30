@@ -1,0 +1,32 @@
+<% layout('layouts/dashboard.layout') %>
+
+<% block('subTitle', 'Dashboard') %>
+
+<div class="dashboard-welcome">
+  <h2>Welcome to <%= title %></h2>
+  <div class="quick-stats">
+    <div class="stat-card">
+      <i class="fas fa-key"></i>
+      <h3><%= totalTokens %></h3>
+      <p>Tokens Generated</p>
+    </div>
+
+    <div class="stat-card">
+      <i class="fas fa-circle-xmark"></i>
+      <h3><%= totalRedeemed %></h3>
+      <p>Tokens Redeemed</p>
+    </div>
+
+    <div class="stat-card">
+      <i class="fas fa-check-circle"></i>
+      <h3><%= totalNotRedeemed %></h3>
+      <p>Tokens Available</p>
+    </div>
+
+    <div class="stat-card">
+      <i class="fas fa-users"></i>
+      <h3><%= totalUsers %></h3>
+      <p>Total Users</p>
+    </div>
+  </div>
+</div>

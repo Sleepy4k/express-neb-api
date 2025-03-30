@@ -1,13 +1,8 @@
 <% layout('layouts/main.layout') %>
 
-<% const cspNonceToken = cspNonce; %>
-<% const homeCssAsset = asset('css/addon/home.css'); %>
-
 <% block('addon-style', `
-  <link rel="stylesheet" href="${homeCssAsset}" nonce="${cspNonceToken}" />
+  <link rel="stylesheet" href="${asset('css/addon/home.css')}" nonce="${cspNonce}" />
 `) %>
-
-<% const startedRoute = route('service'); %>
 
 <% block('hero', `
   <div class="hero">
@@ -19,7 +14,7 @@
       Say goodbye to all the stress caused by taking exams! Our powerful tools provide answers to all your online assignments within seconds. Fast, safe
       and free.
     </p>
-    <a href="${startedRoute}" class="btn btn-primary mt-3">Get Started</a>
+    <a href="${route('service')}" class="btn btn-primary mt-3">Get Started</a>
   </div>
 `) %>
 

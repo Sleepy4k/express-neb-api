@@ -65,16 +65,16 @@
   <body>
     <% if (isRouteActive() == 'active') { %>
       <div class="title">
-        <%- partial('components/navbar') %>
+        <%- partial('components/landing/navbar') %>
         <%- block('hero') %>
       </div>
     <% } else { %>
-      <%- partial('components/navbar') %>
+      <%- partial('components/landing/navbar') %>
     <% } %>
 
     <%- body %>
 
-    <%- partial('components/footer') %>
+    <%- partial('components/landing/footer') %>
 
     <script src="<%= asset('vendor/bootstrap/js/bootstrap.bundle.min.js') %>" nonce="<%= cspNonce %>"></script>
 

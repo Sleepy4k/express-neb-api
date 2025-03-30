@@ -2,8 +2,6 @@
 
 <% block('subTitle', 'Sign In') %>
 
-<% const cspNonceToken = cspNonce; %>
-
 <div class="login-container">
   <div class="login-card">
     <div class="login-header">
@@ -46,7 +44,7 @@
 <% const formActionRoute = route('login'); %>
 
 <% block('addon-script', `
-  <script nonce="${cspNonceToken}">
+  <script nonce="${cspNonce}">
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
 
@@ -61,7 +59,7 @@
 `) %>
 
 <% block('addon-script', `
-  <script nonce="${cspNonceToken}">
+  <script nonce="${cspNonce}">
     const form = document.getElementById('signin-form');
     const submitButton = form.querySelector('button[type="submit"]');
     const searchParams = new URLSearchParams(window.location.search);
@@ -99,7 +97,11 @@
         if (response.ok) {
           const data = await response.json();
           toastr.success(data.message, 'Sign In');
-          window.location.href = data.data.redirect_url;
+          toastr.info('Redirecting...', 'Logout');
+          setTimeout(() => {
+            toastr.clear();
+            window.location.href = data.data.redirect_url;
+          }, 750);
         } else {
           const errorData = await response.json();
           toastr.error(errorData.message, 'Sign In');

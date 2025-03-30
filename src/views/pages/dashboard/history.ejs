@@ -1,0 +1,28 @@
+<% layout('layouts/dashboard.layout') %>
+
+<h2 class="section-title"><i class="fas fa-history"></i> Token History</h2>
+
+<div class="token-table-container">
+  <table class="token-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Redeemed At</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% tokens.forEach((token)=>{ %>
+        <tr>
+          <td class="token-code"><%= token.code %></td>
+          <td><%= token.name %></td>
+          <td><%= token.description %></td>
+          <td class="timestamp"><%= token.redeemedAt %></td>
+          <td><span class="status-badge status-<%= token.status %>"><%= token.status %></span></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

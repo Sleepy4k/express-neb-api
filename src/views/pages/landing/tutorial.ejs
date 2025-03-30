@@ -2,11 +2,8 @@
 
 <% block('subTitle', 'Tutorial') %>
 
-<% const cspNonceToken = cspNonce; %>
-<% const serviceCssAsset = asset('css/addon/tutorial.css'); %>
-
 <% block('addon-style', `
-  <link rel="stylesheet" href="${serviceCssAsset}" nonce="${cspNonceToken}" />
+  <link rel="stylesheet" href="${asset('css/addon/tutorial.css')}" nonce="${cspNonce}" />
 `) %>
 
 <div class="tutorial">

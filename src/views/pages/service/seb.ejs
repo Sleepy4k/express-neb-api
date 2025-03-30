@@ -2,13 +2,9 @@
 
 <% block('subTitle', 'Safe Exam Browser') %>
 
-<% const cspNonceToken = cspNonce; %>
-<% const sebCssAsset = asset('css/addon/seb.css'); %>
-<% const toastrCssAsset = asset('vendor/toastr/css/toastr.min.css'); %>
-
 <% block('addon-style', `
-  <link rel="stylesheet" href="${toastrCssAsset}" nonce="${cspNonceToken}" />
-  <link rel="stylesheet" href="${sebCssAsset}" nonce="${cspNonceToken}" />
+  <link rel="stylesheet" href="${asset('vendor/toastr/css/toastr.min.css')}" nonce="${cspNonce}" />
+  <link rel="stylesheet" href="${asset('css/addon/seb.css')}" nonce="${cspNonce}" />
 `) %>
 
 <div class="services text-center my-5">
@@ -36,13 +32,10 @@
   </div>
 </div>
 
-<% const JqueryJsAsset = asset('vendor/jquery/jquery-3.7.1.min.js'); %>
-<% const toastrJsAsset = asset('vendor/toastr/js/toastr.min.js'); %>
-
 <% block('addon-script', `
-  <script src="${JqueryJsAsset}" nonce="${cspNonceToken}"></script>
-  <script src="${toastrJsAsset}" nonce="${cspNonceToken}"></script>
-  <script nonce="${cspNonceToken}">
+  <script src="${asset('vendor/jquery/jquery-3.7.1.min.js')}" nonce="${cspNonce}"></script>
+  <script src="${asset('vendor/toastr/js/toastr.min.js')}" nonce="${cspNonce}"></script>
+  <script nonce="${cspNonce}">
     toastr.options = {
       "closeButton": true,
       "debug": false,
@@ -64,7 +57,7 @@
 `) %>
 
 <% block('addon-script', `
-  <script nonce="${cspNonceToken}">
+  <script nonce="${cspNonce}">
     function showResult(data) {
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = '';
@@ -93,10 +86,8 @@
   </script>
 `) %>
 
-<% const formActionRoute = route('service/seb'); %>
-
 <% block('addon-script', `
-  <script nonce="${cspNonceToken}">
+  <script nonce="${cspNonce}">
     const form = document.getElementById('service-form');
     const submitButton = form.querySelector('button[type="submit"]');
 
@@ -121,7 +112,7 @@
       toastr.info('Processing your request...', 'Service');
 
       try {
-        const response = await fetch("${formActionRoute}/" + redeemCode, {
+        const response = await fetch("${route('service/seb')}/" + redeemCode, {
           method: 'POST',
           body: formData,
           headers: {
