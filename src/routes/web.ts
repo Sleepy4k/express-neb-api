@@ -1,5 +1,9 @@
 import * as loginController from "@controllers/web/auth/login.controller.js";
+import * as logoutController from "@controllers/web/auth/logout.controller.js";
+import * as dashboardController from "@controllers/web/dashboard/dashboard.controller.js";
 import * as generateController from "@controllers/web/dashboard/generate.controller.js";
+import * as historyController from "@controllers/web/dashboard/history.controller.js";
+import * as tokenController from "@controllers/web/dashboard/token.controller.js";
 import * as homeController from "@controllers/web/landing/home.controller.js";
 import * as serviceController from "@controllers/web/landing/service.controller.js";
 import * as tutorialController from "@controllers/web/landing/tutorial.controller.js";
@@ -14,6 +18,7 @@ webRouter.get("/", homeController.home);
 
 webRouter.get("/login", loginController.form);
 webRouter.post("/login", loginController.process);
+webRouter.post("/logout", authenticationHandler, logoutController.process);
 
 webRouter.get("/service", serviceController.home);
 
@@ -23,6 +28,10 @@ webRouter.post("/service/seb/:redeemCode", fileUploader.single("file"), sebContr
 
 webRouter.get("/tutorial", tutorialController.home);
 
-webRouter.get("/dashboard", authenticationHandler, generateController.home);
+webRouter.get("/dashboard", authenticationHandler, dashboardController.home);
+webRouter.get("/dashboard/generate", authenticationHandler, generateController.home);
+webRouter.post("/dashboard/generate", authenticationHandler, generateController.process);
+webRouter.get("/dashboard/history", authenticationHandler, historyController.home);
+webRouter.get("/dashboard/token", authenticationHandler, tokenController.home);
 
 export default webRouter;
