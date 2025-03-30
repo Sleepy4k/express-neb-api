@@ -1,5 +1,4 @@
-import type { XMLDictionary } from "@interfaces/xmlFile.js";
-
+import { type XMLDictionary } from "@interfaces/xmlFile.js";
 import { sha256 } from "@utils/encryption.js";
 import { parseXMLString, serialize } from "@utils/parse.js";
 
