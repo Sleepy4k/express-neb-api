@@ -1,0 +1,117 @@
+<% layout('layouts/auth.layout') %>
+
+<% block('subTitle', 'Sign In') %>
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <a href="<%= route() %>" class="btn-back btn-back-header">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <h3><i class="bi bi-shield-lock me-2"></i>Sign In</h3>
+      <p class="mb-0">
+        Sign in to your NEB account to access the admin dashboard.
+      </p>
+    </div>
+
+    <div class="login-body">
+      <form id="signin-form" action="#" method="POST">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input type="email" class="form-control" id="email" placeholder="admin@neb.com" required />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" class="form-control" id="password" placeholder="***************" required />
+            <span class="input-group-text password-toggle" id="togglePassword">
+              <i class="bi bi-eye"></i>
+            </span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-login btn-primary mb-3">Sign In</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<% const formActionRoute = route('login'); %>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.querySelector('i').classList.toggle('bi-eye');
+      this.querySelector('i').classList.toggle('bi-eye-slash');
+      passwordInput.placeholder = type === 'password' ? '***************' : 'your password';
+    });
+  </script>
+`) %>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
+    const form = document.getElementById('signin-form');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const searchParams = new URLSearchParams(window.location.search);
+    const currentUrlQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        toastr.error('Please fill in all fields.', 'Sign In');
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.value = 'Loading...';
+
+      toastr.info('Processing your request...', 'Sign In');
+
+      try {
+        const response = await fetch("${formActionRoute}" + currentUrlQuery, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: email,
+            password: password
+          }),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          toastr.success(data.message, 'Sign In');
+          toastr.info('Redirecting...', 'Logout');
+          setTimeout(() => {
+            toastr.clear();
+            window.location.href = data.data.redirect_url;
+          }, 750);
+        } else {
+          const errorData = await response.json();
+          toastr.error(errorData.message, 'Sign In');
+        }
+      } catch (error) {
+        toastr.error('An error occurred while signing in.', 'Sign In');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.value = 'Sign In';
+      }
+    });
+  </script>
+`) %>

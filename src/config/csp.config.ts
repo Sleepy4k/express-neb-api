@@ -12,7 +12,7 @@ export const cspConfig = {
     blockAllMixedContent: [],
     connectSrc: ["'self'"],
     scriptSrc: ["'self'", "'strict-dynamic'"],
-    styleSrc: ["'self'", "'strict-dynamic'", "'unsafe-inline'"],
+    styleSrc: ["'self'", "'strict-dynamic'"],
     upgradeInsecureRequests: [],
   },
 };

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <% if (block('subTitle').toString()) { %>
+      <meta name="title" content="<%= title %> - <%= block('subTitle').toString() %>">
+    <% } else { %>
+      <meta name="title" content="<%= title %>">
+    <% } %>
+
+    <% if (typeof description !== 'undefined') { %>
+      <meta name="description" content="<%= description %>">
+    <% } %>
+
+    <meta name="author" content="Benjamin4k">
+    <meta name="coverage" content="Worldwide">
+    <meta name="distribution" content="Global">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="seb, neb, bypass, seb bypass, neb bypass, seb bypasser, neb bypasser, seb bypass tool, neb bypass tool">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <link rel="canonical" href="<%= baseUrl %>" />
+    <link rel="apple-touch-icon" href="<%= asset('logo.ico') %>" />
+    <link rel="icon" type="image/png" href="<%= asset('logo.ico') %>" />
+    <link rel="icon" type="image/x-icon" href="<%= asset('logo.ico') %>" />
+    <link rel="shortcut icon" type="image/png" href="<%= asset('logo.ico') %>" />
+    <link rel="shortcut icon" type="image/x-icon" href="<%= asset('logo.ico') %>" />
+
+    <% if (block('subTitle').toString()) { %>
+      <title>
+        <%= title %> - <%= block('subTitle').toString() %>
+      </title>
+    <% } else { %>
+      <title><%= title %></title>
+    <% } %>
+
+    <meta property="csp-nonce" content="<%= cspNonce %>">
+
+    <meta property="og:locale" content="en">
+    <meta property="og:url" content="<%= baseUrl %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= title %>">
+
+    <% if (block('subTitle').toString()) { %>
+      <meta property="og:title" content="<%= title %> - <%= block('subTitle').toString() %>">
+    <% } else { %>
+      <meta property="og:title" content="<%= title %>">
+    <% } %>
+
+    <% if (typeof description !== 'undefined') { %>
+      <meta property="og:description" content="<%= description %>">
+    <% } %>
+
+    <meta property="og:image" content="<%= asset('logo.ico') %>">
+    <meta property="og:image:width" content="900">
+    <meta property="og:image:height" content="549">
+
+    <link rel="stylesheet" href="<%= asset('vendor/fontawesome/css/all.min.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('vendor/toastr/css/toastr.min.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('css/dashboard.css') %>" nonce="<%= cspNonce %>" />
+
+    <%- block('addon-style') %>
+  </head>
+  <body>
+    <div class="container">
+      <div class="dashboard">
+        <%- partial('components/dashboard/sidebar') %>
+
+        <div class="main-content">
+          <%- body %>
+        </div>
+      </div>
+    </div>
+
+    <script src="<%= asset('vendor/jquery/jquery-3.7.1.min.js') %>" nonce="<%= cspNonce %>"></script>
+    <script src="<%= asset('vendor/toastr/js/toastr.min.js') %>" nonce="<%= cspNonce %>"></script>
+    <script nonce="<%= cspNonce %>">
+      toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      };
+    </script>
+
+    <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>"></script>
+
+    <script nonce="<%= cspNonce %>">
+      const logoutAnchor = document.getElementById('logout-button');
+      if (logoutAnchor) {
+        logoutAnchor.addEventListener('click', async (event) => {
+          event.preventDefault();
+
+          const confirmation = confirm('Are you sure you want to log out?');
+          if (!confirmation) return;
+
+          logoutAnchor.disabled = true;
+
+          const response = await fetch("<%= route('logout') %>", {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            toastr.success(data.message, 'Logout');
+            toastr.info('Redirecting...', 'Logout');
+            setTimeout(() => {
+              toastr.clear();
+              window.location.href = data.data.redirect_url;
+            }, 750);
+          } else {
+            const errorData = await response.json();
+            toastr.error(errorData.message, 'Logout');
+          }
+
+          logoutAnchor.disabled = false;
+        });
+      }
+    </script>
+
+    <%- block('addon-script') %>
+  </body>
+</html>

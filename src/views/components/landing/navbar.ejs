@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent p-3 fixed-top">
+  <div class="container bg-light">
+    <a class="navbar-brand text-primary" href="<%= route() %>">NEB<span class="text-dark"></span></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-burger">&#9776;</span>
+    </button>
+    <div class="collapse navbar-collapse p-3 rounded" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link <%= isRouteActive() %>" href="<%= route() %>">Home</a></li>
+        <li class="nav-item"><a class="nav-link <%= isRouteActive('service') %>" href="<%= route('service') %>">Services</a></li>
+        <li class="nav-item"><a class="nav-link <%= isRouteActive('tutorial') %>" href="<%= route('tutorial') %>">Tutorial</a></li>
+
+        <% if (isLoggedIn) { %>
+          <li class="nav-item d-lg-none"><a class="nav-link <%= isRouteActive('dashboard') %>" href="<%= route('dashboard') %>">Dashboard</a></li>
+        <% } else { %>
+          <li class="nav-item d-lg-none"><a class="nav-link <%= isRouteActive('login') %>" href="<%= route('login') %>">Login</a></li>
+        <% } %>
+      </ul>
+      <div class="d-flex d-none d-lg-block">
+        <% if (isLoggedIn) { %>
+          <a href="<%= route('dashboard') %>" class="btn btn-primary">Dashboard</a>
+        <% } else { %>
+          <a href="<%= route('login') %>" class="btn btn-primary">Login</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

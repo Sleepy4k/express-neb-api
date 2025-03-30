@@ -1,0 +1,139 @@
+<% layout('layouts/main.layout') %>
+
+<% block('subTitle', 'Safe Exam Browser') %>
+
+<% block('addon-style', `
+  <link rel="stylesheet" href="${asset('vendor/toastr/css/toastr.min.css')}" nonce="${cspNonce}" />
+  <link rel="stylesheet" href="${asset('css/addon/seb.css')}" nonce="${cspNonce}" />
+`) %>
+
+<div class="services text-center my-5">
+  <div class="container text-center faq-title">
+    <h1 class="fw-bold">Upload File</h1>
+    <p>Upload your SEB Config</p>
+
+    <form id="service-form" action="#" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <input type="text" class="form-control mx-auto formBox" name="redeem_code" id="redeem_code" placeholder="Enter Redeem Code" />
+      </div>
+
+      <div class="mb-3">
+        <input type="text" class="form-control mx-auto formBox" name="file_name" id="file_name" placeholder="Enter Name File" />
+      </div>
+
+      <div class="mb-3">
+        <input class="form-control mx-auto formBox" name="file" id="file" type="file" accept=".seb" />
+      </div>
+
+      <button type="submit" class="btn btn-primary px-4">Upload</button>
+    </form>
+
+    <div class="json" id="resultContainer"></div>
+  </div>
+</div>
+
+<% block('addon-script', `
+  <script src="${asset('vendor/jquery/jquery-3.7.1.min.js')}" nonce="${cspNonce}"></script>
+  <script src="${asset('vendor/toastr/js/toastr.min.js')}" nonce="${cspNonce}"></script>
+  <script nonce="${cspNonce}">
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": true,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
+  </script>
+`) %>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
+    function showResult(data) {
+      const resultContainer = document.getElementById('resultContainer');
+      resultContainer.innerHTML = '';
+
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        const card = document.createElement('div');
+        card.className = 'card mx-auto mt-4 formBox';
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card-body';
+
+        const cardTitle = document.createElement('h5');
+        cardTitle.className = 'card-title';
+        cardTitle.textContent = element.name;
+
+        const cardText = document.createElement('p');
+        cardText.className = 'card-text';
+        cardText.textContent = element.value;
+
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(cardText);
+        card.appendChild(cardBody);
+        resultContainer.appendChild(card);
+      }
+    }
+  </script>
+`) %>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
+    const form = document.getElementById('service-form');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const redeemCode = document.getElementById('redeem_code').value;
+      const fileName = document.getElementById('file_name').value;
+      const fileInput = document.getElementById('file');
+
+      if (!redeemCode || !fileName || !file) {
+        toastr.error('Please fill in all fields and select a file.', 'Service');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      submitButton.disabled = true;
+      submitButton.value = 'Loading...';
+
+      toastr.info('Processing your request...', 'Service');
+
+      try {
+        const response = await fetch("${route('service/seb')}/" + redeemCode, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          toastr.success(data.message, 'Service');
+          showResult(data.data);
+        } else {
+          const errorData = await response.json();
+          toastr.error(errorData.message, 'Service');
+        }
+      } catch (error) {
+        toastr.error('An error occurred while uploading the file.', 'Service');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.value = 'Upload';
+      }
+    });
+  </script>
+`) %>

@@ -57,8 +57,7 @@
     <meta property="og:image:width" content="900">
     <meta property="og:image:height" content="549">
 
-    <link rel="stylesheet" href="<%= asset('vendor/css/bootstrap.min.css') %>" nonce="<%= cspNonce %>" />
-    <link rel="stylesheet" href="<%= asset('vendor/css/bootstrap-icons.min.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('vendor/bootstrap/css/bootstrap.min.css') %>" nonce="<%= cspNonce %>" />
     <link rel="stylesheet" href="<%= asset('css/main.css') %>" nonce="<%= cspNonce %>" />
 
     <%- block('addon-style') %>
@@ -66,24 +65,20 @@
   <body>
     <% if (isRouteActive() == 'active') { %>
       <div class="title">
-        <%- partial('components/navbar') %>
+        <%- partial('components/landing/navbar') %>
         <%- block('hero') %>
       </div>
     <% } else { %>
-      <%- partial('components/navbar') %>
+      <%- partial('components/landing/navbar') %>
     <% } %>
 
     <%- body %>
 
-    <%- partial('components/footer') %>
+    <%- partial('components/landing/footer') %>
 
-    <script src="<%= asset('vendor/js/bootstrap.bundle.min.js') %>" nonce="<%= cspNonce %>"></script>
+    <script src="<%= asset('vendor/bootstrap/js/bootstrap.bundle.min.js') %>" nonce="<%= cspNonce %>"></script>
 
     <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>"></script>
-
-    <script nonce="<%= cspNonce %>">
-      document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
 
     <%- block('addon-script') %>
   </body>

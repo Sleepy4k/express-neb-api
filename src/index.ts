@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /**
  * Create Express server
  */
-const app = new App(__dirname).instance
+const app = new App(__dirname).instance;
 
 /**
  * Get port from environment and store in Express.
