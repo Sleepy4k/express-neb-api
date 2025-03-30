@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-objects */
 export const minifyConfig = {
   exceptionUrls: false,
   htmlMinifier: {
@@ -6,6 +7,8 @@ export const minifyConfig = {
     removeAttributeQuotes: false,
     removeComments: true,
     removeEmptyAttributes: false,
+    minifyCSS: true,
+    minifyJS: true,
   },
   override: true,
 };
