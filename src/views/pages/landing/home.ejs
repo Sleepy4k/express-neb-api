@@ -1,0 +1,153 @@
+<% layout('layouts/main.layout') %>
+
+<% const cspNonceToken = cspNonce; %>
+<% const homeCssAsset = asset('css/addon/home.css'); %>
+
+<% block('addon-style', `
+  <link rel="stylesheet" href="${homeCssAsset}" nonce="${cspNonceToken}" />
+`) %>
+
+<% const startedRoute = route('service'); %>
+
+<% block('hero', `
+  <div class="hero">
+    <h1>
+      Your Personal <br />
+      <strong>Exam Bypasser Tool</strong>
+    </h1>
+    <p>
+      Say goodbye to all the stress caused by taking exams! Our powerful tools provide answers to all your online assignments within seconds. Fast, safe
+      and free.
+    </p>
+    <a href="${startedRoute}" class="btn btn-primary mt-3">Get Started</a>
+  </div>
+`) %>
+
+<div class="service">
+  <div class="container text-center my-5">
+    <h2 class="section-title">Our Services</h2>
+    <p class="mb-5">We offer a variety of services to help you with your online exams and assignments.</p>
+
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-12 col-lg-4">
+        <a href="<%= route('service/seb') %>" class="contentService">
+          <div class="cheat-card">
+            <div class="cheat-card-header bg-primary">
+              Safe Exam Broswer
+              <span class="badge bg-light text-dark">Popular</span>
+            </div>
+            <div class="cheat-card-body">
+              <div class="cheat-item">
+                <span class="cheat-name">Bypass the proctoring</span>
+                <span class="cheat-shortcut">Highlight correct</span>
+              </div>
+              <div class="cheat-item">
+                <span class="cheat-name">Free to switch between browser</span>
+                <span class="cheat-shortcut">Supported</span>
+              </div>
+              <div class="cheat-item">
+                <span class="cheat-name">Fast results</span>
+                <span class="cheat-shortcut">Instant</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="faq">
+  <div class="container text-center my-5">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="mb-5">Have questions? We have answers! Check out our FAQ section below.</p>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion" id="faqAccordion">
+          <!-- FAQ Item 1 -->
+          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed bg-primary text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseOne"
+                aria-expanded="false"
+                aria-controls="collapseOne"
+              >
+                <strong>What is NEB?</strong>
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                NEB is a platform designed to help students with their online exams and assignments by providing fast and reliable answers.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed bg-primary text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo"
+                aria-expanded="false"
+                aria-controls="collapseTwo"
+              >
+                <strong>Is it free to use?</strong>
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                Yes! All our services are completely free to use with no hidden fees as long as you had the redeem code.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed bg-primary text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseThree"
+                aria-expanded="false"
+                aria-controls="collapseThree"
+              >
+                <strong>How does it work?</strong>
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">Simply select the service you need, provide your redeem code and get your answers in seconds.</div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 4 (additional example) -->
+          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed bg-primary text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseFour"
+                aria-expanded="false"
+                aria-controls="collapseFour"
+              >
+                <strong>Is this service safe to use?</strong>
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body bg-light">
+                Absolutely! We prioritize your privacy and security. All data is encrypted and we don't store personal information.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

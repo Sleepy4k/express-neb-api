@@ -58,25 +58,37 @@
     <meta property="og:image:height" content="549">
 
     <link rel="stylesheet" href="<%= asset('vendor/bootstrap/css/bootstrap.min.css') %>" nonce="<%= cspNonce %>" />
-    <link rel="stylesheet" href="<%= asset('css/main.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('vendor/bootstrap-icons/font/bootstrap-icons.min.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('vendor/toastr/css/toastr.min.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('css/auth.css') %>" nonce="<%= cspNonce %>" />
 
     <%- block('addon-style') %>
   </head>
   <body>
-    <% if (isRouteActive() == 'active') { %>
-      <div class="title">
-        <%- partial('components/navbar') %>
-        <%- block('hero') %>
-      </div>
-    <% } else { %>
-      <%- partial('components/navbar') %>
-    <% } %>
-
     <%- body %>
 
-    <%- partial('components/footer') %>
-
     <script src="<%= asset('vendor/bootstrap/js/bootstrap.bundle.min.js') %>" nonce="<%= cspNonce %>"></script>
+    <script src="<%= asset('vendor/jquery/jquery-3.7.1.min.js') %>" nonce="<%= cspNonce %>"></script>
+    <script src="<%= asset('vendor/toastr/js/toastr.min.js') %>" nonce="<%= cspNonce %>"></script>
+    <script nonce="<%= cspNonce %>">
+      toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      };
+    </script>
 
     <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>"></script>
 
