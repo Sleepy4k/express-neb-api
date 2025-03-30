@@ -2,7 +2,7 @@ import viewServiceProvider from "@providers/view.provider.js";
 import apiRouter from "@routes/api.js";
 import webRouter from "@routes/web.js";
 import ejsMate from "ejs-mate";
-import { Express } from "express";
+import { type Express } from "express";
 import path from "node:path";
 
 export default (app: Express, dirname: string): void => {

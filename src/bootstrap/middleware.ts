@@ -1,11 +1,11 @@
 /* eslint-disable perfectionist/sort-objects */
-import { cspConfig, minifyConfig } from "@config";
+import { cspConfig, minifyConfig, sessionConfig } from "@config";
 import { rateLimitConfig } from "@config";
 import cors from "cors";
-import { Express } from "express";
-import express from "express";
+import express, { type Express } from "express";
 import minifyHTML from "express-minify-html-2";
 import rateLimit from "express-rate-limit";
+import session from "express-session";
 import helmet from "helmet";
 import logger from "morgan";
 import path from "node:path";
@@ -53,7 +53,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
       ...cspConfig.directives,
       scriptSrc: [...cspConfig.directives.scriptSrc, `'nonce-${cspNonce}'`],
       styleSrc: [...cspConfig.directives.styleSrc, `'nonce-${cspNonce}'`],
-    }
+    },
   };
 
   /**
@@ -62,7 +62,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   app.use(helmet());
   app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true, preload: true }));
   app.use(helmet.noSniff());
-  app.use(helmet.hidePoweredBy())
+  app.use(helmet.hidePoweredBy());
   app.use(helmet.xssFilter());
   app.use(helmet.xXssProtection());
   app.use(helmet.xFrameOptions({ action: "deny" }));
@@ -73,4 +73,9 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
 
   // The Global Limiter Problem on Proxies, uncomment this if you are using a proxy
   // app.set('trust proxy', 1 /* number of proxies between user and server */)
+
+  /**
+   * Setup session management
+   */
+  app.use(session(sessionConfig));
 };
