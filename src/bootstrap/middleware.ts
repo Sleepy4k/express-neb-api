@@ -1,6 +1,5 @@
 /* eslint-disable perfectionist/sort-objects */
-import { cspConfig, minifyConfig, sessionConfig } from "@config";
-import { rateLimitConfig } from "@config";
+import { assetConfig, cspConfig, minifyConfig, rateLimitConfig, sessionConfig } from "@config";
 import cors from "cors";
 import express, { type Express } from "express";
 import minifyHTML from "express-minify-html-2";
@@ -20,20 +19,24 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
    * Setup default express middlewares
    */
   app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
-  app.use(express.static(path.join(dirname, "public")));
+  app.use(express.urlencoded({ extended: false, parameterLimit: 4 }));
+  app.use(express.static(path.join(dirname, "public"), assetConfig));
 
   /**
    * Setup logger
    */
-  app.use(logger(isDevMode ? "dev" : "combined"));
+  app.use(logger(isDevMode ? "dev" : "tiny"));
 
   /**
    * Setup CORS
    */
   app.use(
     cors({
-      methods: "GET, POST, PUT, DELETE",
+      allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+      credentials: true,
+      exposedHeaders: ["Content-Type", "Authorization", "Accept"],
+      maxAge: 86400,
+      methods: "GET, POST, DELETE",
       optionsSuccessStatus: 200,
       origin: isDevMode ? "*" : (app.get("host") as string),
       preflightContinue: false,
@@ -64,15 +67,16 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   app.use(helmet.noSniff());
   app.use(helmet.hidePoweredBy());
   app.use(helmet.xssFilter());
-  app.use(helmet.xXssProtection());
   app.use(helmet.xFrameOptions({ action: "deny" }));
   app.use(helmet.contentSecurityPolicy(cspConfigWithNonce));
   app.use(helmet.referrerPolicy({ policy: "same-origin" }));
   app.use(helmet.dnsPrefetchControl({ allow: false }));
   app.use(helmet.permittedCrossDomainPolicies({ permittedPolicies: "none" }));
 
-  // The Global Limiter Problem on Proxies, uncomment this if you are using a proxy
-  // app.set('trust proxy', 1 /* number of proxies between user and server */)
+  /**
+   * Enable Http Strict Transport Security (HSTS)
+   */
+  if (!isDevMode) app.set("trust proxy", 1);
 
   /**
    * Setup session management
