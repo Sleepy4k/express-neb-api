@@ -16,9 +16,9 @@ const webRouter = Router();
 
 webRouter.get("/", homeController.home);
 
-webRouter.get("/login", loginController.form);
-webRouter.post("/login", loginController.process);
-webRouter.post("/logout", authenticationHandler, logoutController.process);
+webRouter.get("/login", authenticationHandler, loginController.form);
+webRouter.post("/login", authenticationHandler, loginController.process);
+webRouter.delete("/logout", authenticationHandler, logoutController.process);
 
 webRouter.get("/service", serviceController.home);
 
