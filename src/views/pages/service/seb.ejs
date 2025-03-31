@@ -4,7 +4,11 @@
 
 <% block('addon-style', `
   <link rel="stylesheet" href="${asset('vendor/toastr/css/toastr.min.css')}" nonce="${cspNonce}" />
-  <link rel="stylesheet" href="${asset('css/addon/seb.css')}" nonce="${cspNonce}" />
+  <style nonce="${cspNonce}">
+    .formBox {
+      max-width: 500px;
+    }
+  </style>
 `) %>
 
 <div class="services text-center my-5">
@@ -88,52 +92,58 @@
 
 <% block('addon-script', `
   <script nonce="${cspNonce}">
-    const form = document.getElementById('service-form');
-    const submitButton = form.querySelector('button[type="submit"]');
+    function initHandler() {
+      const form = document.getElementById('service-form');
+      const submitButton = form.querySelector('button[type="submit"]');
+      const searchParams = new URLSearchParams(window.location.search);
+      const currentUrlQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-      const redeemCode = document.getElementById('redeem_code').value;
-      const fileName = document.getElementById('file_name').value;
-      const fileInput = document.getElementById('file');
+        const redeemCode = document.getElementById('redeem_code').value;
+        const fileName = document.getElementById('file_name').value;
+        const fileInput = document.getElementById('file');
 
-      if (!redeemCode || !fileName || !file) {
-        toastr.error('Please fill in all fields and select a file.', 'Service');
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('file', fileInput.files[0]);
-
-      submitButton.disabled = true;
-      submitButton.value = 'Loading...';
-
-      toastr.info('Processing your request...', 'Service');
-
-      try {
-        const response = await fetch("${route('service/seb')}/" + redeemCode, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          toastr.success(data.message, 'Service');
-          showResult(data.data);
-        } else {
-          const errorData = await response.json();
-          toastr.error(errorData.message, 'Service');
+        if (!redeemCode || !fileName || !file) {
+          toastr.error('Please fill in all fields and select a file.', 'Service');
+          return;
         }
-      } catch (error) {
-        toastr.error('An error occurred while uploading the file.', 'Service');
-      } finally {
-        submitButton.disabled = false;
-        submitButton.value = 'Upload';
-      }
-    });
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        submitButton.disabled = true;
+        submitButton.value = 'Loading...';
+
+        toastr.info('Processing your request...', 'Service');
+
+        try {
+          const response = await fetch("${route('service/seb')}/" + redeemCode + currentUrlQuery, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            toastr.success(data.message, 'Service');
+            showResult(data.data);
+          } else {
+            const errorData = await response.json();
+            toastr.error(errorData.message, 'Service');
+          }
+        } catch (error) {
+          toastr.error('An error occurred while uploading the file.', 'Service');
+        } finally {
+          submitButton.disabled = false;
+          submitButton.value = 'Upload';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initHandler);
   </script>
 `) %>

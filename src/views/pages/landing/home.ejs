@@ -1,7 +1,16 @@
 <% layout('layouts/main.layout') %>
 
 <% block('addon-style', `
-  <link rel="stylesheet" href="${asset('css/addon/home.css')}" nonce="${cspNonce}" />
+  <style nonce="${cspNonce}">
+    .contentService {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .faqBox {
+      border-radius: 10px;
+    }
+  </style>
 `) %>
 
 <% block('hero', `

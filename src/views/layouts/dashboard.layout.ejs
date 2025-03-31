@@ -110,7 +110,7 @@
           logoutAnchor.disabled = true;
 
           const response = await fetch("<%= route('logout') %>", {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
               'Accept': 'application/json',
             }
