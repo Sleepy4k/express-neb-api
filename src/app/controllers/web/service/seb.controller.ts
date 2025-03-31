@@ -5,6 +5,7 @@ import { defaultEncoder } from "@constants/encoder.js";
 import { REFERER, SEB_CKH_HTTP_HEADER_NAME, SEB_RH_HTTP_HEADER_NAME, USER_AGENT_HEADER_NAME } from "@constants/header.js";
 import { type IResData } from "@interfaces/responseField.js";
 import RedeemModel from "@models/redeem.model.js";
+import Sanitation from "@modules/sanitation.js";
 import SebFile from "@modules/seb.js";
 import UserAgentGenerator from "@modules/userAgent.js";
 import fs from "node:fs";
@@ -65,7 +66,8 @@ const bypass = async (req: Request, res: Response) => {
     return;
   }
 
-  const redeem = redeemModel.find(redeemCode);
+  const sanitazedRedeemCode = Sanitation.sanitizeRedeemCode(redeemCode);
+  const redeem = redeemModel.find(sanitazedRedeemCode);
 
   if (!redeem) {
     res.status(400).json({
@@ -160,7 +162,7 @@ const bypass = async (req: Request, res: Response) => {
 
       res.status(200).json(resData);
 
-      redeemModel.redeem(redeemCode);
+      redeemModel.redeem(sanitazedRedeemCode);
 
       if (serviceConfig.file.deleteAfterParse) {
         fs.unlink(file.path, (err: NodeJS.ErrnoException | null) => {

@@ -7,7 +7,7 @@ import { parseHostname } from "@utils/parse.js";
 /**
  * Home controller to send json response
  *
- * @param {Request} _req
+ * @param {Request} req
  * @param {Response} res
  */
 const home = (req: Request, res: Response) => {

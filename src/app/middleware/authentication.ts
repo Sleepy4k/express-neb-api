@@ -23,6 +23,11 @@ const authenticationHandler = (req: Request, res: Response, next: NextFunction):
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
 
   if (req.session.user?.email) {
+    if (req.path === "/login") {
+      res.redirect(baseUrl);
+      return;
+    }
+
     const user = userModel.find(req.session.user.email);
 
     if (!user || user.password !== req.session.user.password) {
@@ -35,6 +40,8 @@ const authenticationHandler = (req: Request, res: Response, next: NextFunction):
       return;
     }
 
+    next();
+  } else if (req.path === "/login") {
     next();
   } else {
     res.redirect(`${baseUrl}/login`);

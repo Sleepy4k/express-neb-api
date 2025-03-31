@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 
 import { RedeemStatus } from "@enums/redeemStatus.js";
+import { RoleType } from "@enums/roleType.js";
 import RedeemModel from "@models/redeem.model.js";
 import UserModel from "@models/user.model.js";
 
@@ -21,15 +22,31 @@ const userModel: UserModel = new UserModel();
 /**
  * Dashboard controller to render the home page
  *
- * @param {Request} _req
+ * @param {Request} req
  * @param {Response} res
  */
-const home = (_req: Request, res: Response) => {
+const home = (req: Request, res: Response) => {
+  const user = req.session.user;
+  const isUserAdmin = user?.role === RoleType.ADMIN;
+
   const totalUsers = userModel.count();
   const tokens = redeemModel.get();
-  const totalTokens = tokens.length;
-  const totalRedeemed = tokens.filter((token) => token.status === RedeemStatus.REDEEMED).length;
-  const totalNotRedeemed = tokens.filter((token) => token.status === RedeemStatus.PENDING).length;
+  const totalTokens = tokens.filter((token) => {
+    if (isUserAdmin) return true;
+    return token.name === user?.email;
+  }).length;
+  const totalRedeemed = tokens.filter((token) => {
+    if (isUserAdmin) {
+      return token.status === RedeemStatus.REDEEMED;
+    }
+    return token.status === RedeemStatus.REDEEMED && token.name === user?.email;
+  }).length;
+  const totalNotRedeemed = tokens.filter((token) => {
+    if (isUserAdmin) {
+      return token.status === RedeemStatus.PENDING;
+    }
+    return token.status === RedeemStatus.PENDING && token.name === user?.email;
+  }).length;
 
   res.render("pages/dashboard/dashboard", {
     totalNotRedeemed,
