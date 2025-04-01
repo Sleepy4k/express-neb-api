@@ -1,8 +1,8 @@
+/* eslint-disable perfectionist/sort-objects */
 export const rateLimitConfig = {
-  legacyHeaders: true,
-  max: 100,
-  message: "Too many requests from this IP, please try again after an hour",
-  standardHeaders: "draft-8",
+  limit: 100,
   windowMs: 15 * 60 * 1000,
-  // skip: (req: Request) => req.url === '/'
+  legacyHeaders: true,
+  standardHeaders: "draft-8",
+  message: "Too many requests, please try again later.",
 };

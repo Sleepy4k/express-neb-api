@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 
 import RedeemModel from "@models/redeem.model.js";
+import Sanitation from "@modules/sanitation.js";
 import { nameToRedeemCode } from "@utils/parse.js";
 
 /**
@@ -49,10 +50,21 @@ const process = (req: Request, res: Response) => {
       });
       return;
     }
-    const totalUserRedeemCode = redeemModel.countByName(name);
+
+    const sanitazedDescription = Sanitation.sanitizeString(description);
+    if (sanitazedDescription.length > 100) {
+      res.status(400).send({
+        data: [],
+        message: "Description is too long",
+        status: "error",
+      });
+      return;
+    }
+
+    const totalUserRedeemCode = redeemModel.countByName(name) + 1;
     const uniqueSuffix = Math.floor(Math.random() * 10000).toString();
     const redeemCode = `${nameToRedeemCode(name.split("@")[0])}-${uniqueSuffix}-${totalUserRedeemCode.toString()}`;
-    const token = redeemModel.create(redeemCode, name, description);
+    const token = redeemModel.create(redeemCode, name, sanitazedDescription);
 
     res.status(200).send({
       data: {

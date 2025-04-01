@@ -1,5 +1,7 @@
 <% layout('layouts/dashboard.layout') %>
 
+<% block('subTitle', 'Token List') %>
+
 <h2 class="section-title"><i class="fas fa-list"></i> Token List</h2>
 
 <div class="token-table-container">
@@ -19,7 +21,7 @@
           <td class="token-code"><%= token.code %></td>
           <td><%= token.name %></td>
           <td><%= token.description %></td>
-          <td class="timestamp"><%= token.redeemedAt %></td>
+          <td class="timestamp"><%= token.redeemedAt ?? '-' %></td>
           <td><span class="status-badge status-<%= token.status %>"><%= token.status %></span></td>
         </tr>
       <% }) %>

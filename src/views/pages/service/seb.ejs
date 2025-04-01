@@ -3,8 +3,26 @@
 <% block('subTitle', 'Safe Exam Browser') %>
 
 <% block('addon-style', `
+  <link rel="stylesheet" href="${asset('vendor/bootstrap-icons/font/bootstrap-icons.min.css')}" nonce="${cspNonce}" />
   <link rel="stylesheet" href="${asset('vendor/toastr/css/toastr.min.css')}" nonce="${cspNonce}" />
-  <link rel="stylesheet" href="${asset('css/addon/seb.css')}" nonce="${cspNonce}" />
+  <style nonce="${cspNonce}">
+    .formBox {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .btnDownload {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .formBox {
+        width: 100%;
+        max-width: 85%;
+      }
+    }
+  </style>
 `) %>
 
 <div class="services text-center my-5">
@@ -25,10 +43,21 @@
         <input class="form-control mx-auto formBox" name="file" id="file" type="file" accept=".seb" />
       </div>
 
-      <button type="submit" class="btn btn-primary px-4">Upload</button>
+      <div class="d-flex justify-content-center gap-3">
+        <button type="submit" class="btn btn-primary px-4" id="submit-btn">
+          <i class="bi bi-upload me-2"></i>Upload
+        </button>
+        <button type="button" class="btn btn-primary px-4 btnDownload" id="download-btn">
+          <i class="bi bi-download me-2"></i>Download
+        </button>
+      </div>
     </form>
 
-    <div class="json" id="resultContainer"></div>
+    <div class="json mt-4">
+      <div class="container">
+        <div class="row justify-content-center" id="resultContainer"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -58,14 +87,82 @@
 
 <% block('addon-script', `
   <script nonce="${cspNonce}">
+    function downloadResult() {
+      const downloadBtn = document.getElementById('download-btn');
+      const resultContainer = document.getElementById('resultContainer');
+
+      downloadBtn.addEventListener('click', () => {
+        let fileName = "result";
+        const formattedJsonData = {
+          shortTitle: "${title.charAt(0).toUpperCase()}",
+          title: "${title}",
+          version: 2,
+          headers: []
+        };
+
+        const cardData = Array.from(resultContainer.children).map((colDiv) => {
+          const cardBody = colDiv.querySelector('.card-body');
+          const cardTitle = cardBody.querySelector('.card-title').textContent;
+          const cardText = cardBody.querySelector('.card-text').textContent;
+          return { name: cardTitle, value: cardText };
+        });
+
+        cardData.forEach((item) => {
+          if (item.name.toLowerCase() === 'file-name') {
+            fileName = item.value;
+            formattedJsonData.title = item.value;
+            formattedJsonData.shortTitle = item.value.charAt(0).toUpperCase();
+          } else if (item.name.toLowerCase() === 'user-agent') {
+            formattedJsonData.headers.push({
+              enabled: false,
+              name: item.name,
+              value: item.value
+            });
+          } else {
+            formattedJsonData.headers.push({
+              enabled: false,
+              appendMode: false,
+              name: item.name,
+              value: item.value
+            });
+          }
+        });
+
+        const blob = new Blob([JSON.stringify(formattedJsonData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toastr.success('File downloaded successfully!', 'Service');
+      });
+    }
+  </script>
+`) %>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
     function showResult(data) {
+      const downloadBtn = document.getElementById('download-btn');
+      downloadBtn.style.display = 'block';
       const resultContainer = document.getElementById('resultContainer');
       resultContainer.innerHTML = '';
 
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
+        const colDiv = document.createElement('div');
+        if (data.length % 2 !== 0 && index === data.length - 1) {
+          colDiv.className = 'col-md-12 mb-3';
+        } else {
+          colDiv.className = 'col-md-5 mb-3';
+        }
+
         const card = document.createElement('div');
-        card.className = 'card mx-auto mt-4 formBox';
+        card.className = 'card h-100';
+
         const cardBody = document.createElement('div');
         cardBody.className = 'card-body';
 
@@ -80,7 +177,8 @@
         cardBody.appendChild(cardTitle);
         cardBody.appendChild(cardText);
         card.appendChild(cardBody);
-        resultContainer.appendChild(card);
+        colDiv.appendChild(card);
+        resultContainer.appendChild(colDiv);
       }
     }
   </script>
@@ -88,52 +186,64 @@
 
 <% block('addon-script', `
   <script nonce="${cspNonce}">
-    const form = document.getElementById('service-form');
-    const submitButton = form.querySelector('button[type="submit"]');
+    function initHandler() {
+      const form = document.getElementById('service-form');
+      const downloadBtn = document.getElementById('download-btn');
+      const submitButton = document.getElementById('submit-btn');
+      const searchParams = new URLSearchParams(window.location.search);
+      const currentUrlQuery = searchParams.toString() ? '?' + searchParams.toString() : '';
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-      const redeemCode = document.getElementById('redeem_code').value;
-      const fileName = document.getElementById('file_name').value;
-      const fileInput = document.getElementById('file');
+        downloadBtn.style.display = 'none';
 
-      if (!redeemCode || !fileName || !file) {
-        toastr.error('Please fill in all fields and select a file.', 'Service');
-        return;
-      }
+        const redeemCode = document.getElementById('redeem_code').value;
+        const fileName = document.getElementById('file_name').value;
+        const fileInput = document.getElementById('file');
 
-      const formData = new FormData();
-      formData.append('file', fileInput.files[0]);
-
-      submitButton.disabled = true;
-      submitButton.value = 'Loading...';
-
-      toastr.info('Processing your request...', 'Service');
-
-      try {
-        const response = await fetch("${route('service/seb')}/" + redeemCode, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          toastr.success(data.message, 'Service');
-          showResult(data.data);
-        } else {
-          const errorData = await response.json();
-          toastr.error(errorData.message, 'Service');
+        if (!redeemCode || !fileName || !file) {
+          toastr.error('Please fill in all fields and select a file.', 'Service');
+          return;
         }
-      } catch (error) {
-        toastr.error('An error occurred while uploading the file.', 'Service');
-      } finally {
-        submitButton.disabled = false;
-        submitButton.value = 'Upload';
-      }
-    });
+
+        const formData = new FormData();
+        formData.append('file_name', fileName);
+        formData.append('file', fileInput.files[0]);
+
+        submitButton.disabled = true;
+        submitButton.value = 'Loading...';
+
+        toastr.info('Processing your request...', 'Service');
+
+        try {
+          const response = await fetch("${route('service/seb')}/" + redeemCode + currentUrlQuery, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            toastr.success(data.message, 'Service');
+            showResult(data.data);
+          } else {
+            const errorData = await response.json();
+            toastr.error(errorData.message, 'Service');
+          }
+        } catch (error) {
+          toastr.error('An error occurred while uploading the file.', 'Service');
+        } finally {
+          form.reset();
+          submitButton.disabled = false;
+          submitButton.value = 'Upload';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initHandler);
+    document.addEventListener('DOMContentLoaded', downloadResult);
   </script>
 `) %>

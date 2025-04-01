@@ -5,6 +5,7 @@ import { defaultEncoder } from "@constants/encoder.js";
 import { REFERER, SEB_CKH_HTTP_HEADER_NAME, SEB_RH_HTTP_HEADER_NAME, USER_AGENT_HEADER_NAME } from "@constants/header.js";
 import { type IResData } from "@interfaces/responseField.js";
 import RedeemModel from "@models/redeem.model.js";
+import Sanitation from "@modules/sanitation.js";
 import SebFile from "@modules/seb.js";
 import UserAgentGenerator from "@modules/userAgent.js";
 import fs from "node:fs";
@@ -65,7 +66,8 @@ const bypass = async (req: Request, res: Response) => {
     return;
   }
 
-  const redeem = redeemModel.find(redeemCode);
+  const sanitazedRedeemCode = Sanitation.sanitizeRedeemCode(redeemCode);
+  const redeem = redeemModel.find(sanitazedRedeemCode);
 
   if (!redeem) {
     res.status(400).json({
@@ -138,6 +140,9 @@ const bypass = async (req: Request, res: Response) => {
         status: "success",
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { file_name } = req.body;
+
       // Append SEB file data to response
       const responseFields = [
         { condition: serviceConfig.response.showStartUrl, name: REFERER, value: sebFile.StartUrl },
@@ -148,6 +153,7 @@ const bypass = async (req: Request, res: Response) => {
         },
         { condition: serviceConfig.response.showRequestHash, name: SEB_RH_HTTP_HEADER_NAME, value: sebFile.RequestHash },
         { condition: serviceConfig.response.showConfigHash, name: SEB_CKH_HTTP_HEADER_NAME, value: sebFile.getConfigKey(sebFile.StartUrl || "") },
+        { condition: true, name: "File-Name", value: file_name as string || "Naka Exam Bypasser" },
         { condition: serviceConfig.response.showSerializedJson, name: "Serialized", value: sebFile.SerializedJson },
         { condition: serviceConfig.response.showDictionnary, name: "Dictionary", value: JSON.stringify(sebFile.Dictionnary) },
       ];
@@ -160,7 +166,7 @@ const bypass = async (req: Request, res: Response) => {
 
       res.status(200).json(resData);
 
-      redeemModel.redeem(redeemCode);
+      redeemModel.redeem(sanitazedRedeemCode);
 
       if (serviceConfig.file.deleteAfterParse) {
         fs.unlink(file.path, (err: NodeJS.ErrnoException | null) => {

@@ -82,6 +82,8 @@ To run this project, you will need to add the following environment variables to
 `APP_PORT`
 `APP_HOST`
 
+`SESSION_SECRET`
+
 ## Feedback
 
 If you have any feedback, please make an issue with detail description, proof of concept, and node dependencies list

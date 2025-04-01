@@ -3,7 +3,11 @@
 <% block('subTitle', 'Tutorial') %>
 
 <% block('addon-style', `
-  <link rel="stylesheet" href="${asset('css/addon/tutorial.css')}" nonce="${cspNonce}" />
+  <style nonce="${cspNonce}">
+    .faqBox {
+      border-radius: 10px;
+    }
+  </style>
 `) %>
 
 <div class="tutorial">
