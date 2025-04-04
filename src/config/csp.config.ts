@@ -1,8 +1,9 @@
 /* eslint-disable perfectionist/sort-objects */
 export const cspConfig = {
   directives: {
+    defaultSrc: ["'none'"],
     baseUri: ["'self'"],
-    defaultSrc: ["'self'"],
+    manifestSrc: ["'self'"],
     formAction: ["'self'"],
     imgSrc: ["*", "data:"],
     mediaSrc: ["'self'"],
