@@ -22,10 +22,7 @@ const home = (req: Request, res: Response) => {
   const isUserAdmin = user?.role === RoleType.ADMIN;
   const tokens = redeemModel.get();
   const availableTokens = tokens.filter((token) => {
-    if (isUserAdmin) {
-      return token.status === RedeemStatus.PENDING;
-    }
-    return token.status === RedeemStatus.PENDING && token.name === user?.email;
+    return token.status === RedeemStatus.PENDING && (isUserAdmin || token.name === user?.email);
   });
 
   res.render("pages/dashboard/token", {

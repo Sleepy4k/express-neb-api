@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-objects */
 import { RedeemStatus } from "@enums/redeemStatus.js";
 import { type RedeemData } from "@interfaces/redeemData.js";
 import BaseModel from "@modules/baseModel.js";
@@ -45,10 +46,11 @@ class RedeemModel extends BaseModel {
 
     const redeemData: RedeemData = {
       code,
-      description,
       name,
-      redeemedAt: null,
+      description,
       status: RedeemStatus.PENDING,
+      createdAt: new Date().toISOString(),
+      redeemedAt: null,
     };
 
     this.data[code] = redeemData;

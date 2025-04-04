@@ -9,18 +9,17 @@ import { parseHostname } from "@utils/parse.js";
  * @param {Response} res
  */
 const process = (req: Request, res: Response) => {
-  const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
-
   req.session.destroy((err) => {
     if (err) {
       res.status(500).send({
-        data: [],
+        data: {},
         message: "Unable to logout",
         status: "error",
       });
       return;
     }
 
+    const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
     res.status(200).send({
       data: {
         redirect_url: baseUrl,

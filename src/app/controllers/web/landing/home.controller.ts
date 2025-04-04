@@ -1,7 +1,5 @@
 import type { Request, Response } from "express";
 
-import { appConfig } from "@config/app.config.js";
-
 /**
  * Home controller to render the home page
  *
@@ -9,9 +7,7 @@ import { appConfig } from "@config/app.config.js";
  * @param {Response} res
  */
 const home = (_req: Request, res: Response) => {
-  res.render("pages/landing/home", {
-    app_name: appConfig.name,
-  });
+  res.render("pages/landing/home");
 };
 
 export { home };

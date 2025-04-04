@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-interfaces */
 import { type RedeemStatus } from "@enums/redeemStatus.js";
 
 /**
@@ -13,10 +14,11 @@ import { type RedeemStatus } from "@enums/redeemStatus.js";
  */
 interface RedeemData {
   code: string;
-  description?: string;
   name: string;
-  redeemedAt: null | string;
+  description?: string;
   status: RedeemStatus;
+  createdAt: string;
+  redeemedAt: null | string;
 }
 
 export type { RedeemData };
