@@ -2,13 +2,9 @@
 
 <% block('addon-style', `
   <style nonce="${cspNonce}">
-    .contentService {
+    .service-container {
       text-decoration: none;
       color: inherit;
-    }
-
-    .faqBox {
-      border-radius: 10px;
     }
   </style>
 `) %>
@@ -34,7 +30,7 @@
 
     <div class="row g-4 justify-content-center">
       <div class="col-md-12 col-lg-4">
-        <a href="<%= route('service/seb') %>" class="contentService">
+        <a href="<%= route('service/seb') %>" class="service-container">
           <div class="cheat-card">
             <div class="cheat-card-header bg-primary">
               Safe Exam Broswer

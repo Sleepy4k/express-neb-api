@@ -2,15 +2,17 @@
 
 <% block('subTitle', 'Dashboard') %>
 
-<div class="dashboard-welcome">
-  <h2>Welcome to <%= title %></h2>
-  <div class="quick-stats">
-    <div class="stat-card">
-      <i class="fas fa-key"></i>
-      <h3><%= totalTokens %></h3>
-      <p>Tokens Generated</p>
-    </div>
+<h2 class="section-title"><i class="fas fa-chart-simple"></i> Dashboard</h2>
 
+<div class="dashboard-welcome">
+  <figure class="highcharts-figure">
+    <div id="highcharts-container"></div>
+    <p class="highcharts-description">
+      Data token redeem code pada website <strong><%= title %></strong> yang sudah terdaftar pada sistem.
+    </p>
+  </figure>
+
+  <div class="quick-stats">
     <div class="stat-card">
       <i class="fas fa-circle-xmark"></i>
       <h3><%= totalRedeemed %></h3>
@@ -22,11 +24,114 @@
       <h3><%= totalNotRedeemed %></h3>
       <p>Tokens Available</p>
     </div>
+  </div>
 
-    <div class="stat-card">
-      <i class="fas fa-users"></i>
-      <h3><%= totalUsers %></h3>
-      <p>Total Users</p>
-    </div>
+  <div class="quick-stats">
+    <% if (true) { %>
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <h3><%= totalUsers %></h3>
+        <p>Total Users</p>
+      </div>
+
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <h3><%= totalAdminAccess %></h3>
+        <p>Total Admin Access</p>
+      </div>
+
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <h3><%= totalUserAccess %></h3>
+        <p>Total User Access</p>
+      </div>
+    <% } %>
   </div>
 </div>
+
+<% block('addon-script', `
+  <script src="${asset('vendor/highcharts/js/highchart.js')}" nonce="${cspNonce}"></script>
+  <script src="${asset('vendor/highcharts/js/modules/accessibility.js')}" nonce="${cspNonce}"></script>
+  <script src="${asset('vendor/highcharts/js/modules/exporting.js')}" nonce="${cspNonce}"></script>
+  <script nonce="${cspNonce}">
+    Highcharts.chart('highcharts-container', {
+      chart: {
+        type: 'pie',
+        custom: {},
+        events: {
+          render() {
+            const chart = this;
+            const series = chart.series[0];
+
+            let customLabel = chart.options.chart.custom.label;
+            if (!customLabel) {
+              customLabel = chart.renderer.label('Total<br/><strong>${totalTokens}</strong>')
+                .css({
+                  color: '#000',
+                  textAnchor: 'middle'
+                }).add();
+              chart.options.chart.custom.label = customLabel;
+            }
+
+            const x = series.center[0] + chart.plotLeft;
+            const y = series.center[1] + chart.plotTop - (customLabel.attr('height') / 2);
+
+            customLabel.attr({ x, y });
+            customLabel.css({ fontSize: series.center[2] / 12 + 'px' });
+          }
+        }
+      },
+      title: {
+        text: 'Token Redeem Code Statistics'
+      },
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
+      },
+      legend: {
+        enabled: false
+      },
+      plotOptions: {
+        series: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          borderRadius: 8,
+          dataLabels: [
+            {
+              enabled: true,
+              distance: 20,
+              format: '{point.name}'
+            },
+            {
+              enabled: true,
+              distance: -15,
+              format: '{point.percentage:.0f}%',
+              style: {
+                fontSize: '0.9em'
+              }
+            }
+          ],
+          showInLegend: true
+        }
+      },
+      series: [{
+        name: 'Percentage',
+        colorByPoint: true,
+        innerSize: '65%',
+        data: [{
+          name: 'Redeemed',
+          y: parseInt("${totalRedeemed}", 10),
+        }, {
+          name: 'Available',
+          y: parseInt("${totalNotRedeemed}",  10),
+        }]
+      }],
+      responsive: {
+        rules: [{
+          condition: {
+            maxWidth: 500
+          }
+        }]
+      }
+    });
+  </script>
+`) %>

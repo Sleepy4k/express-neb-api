@@ -6,18 +6,18 @@
   <link rel="stylesheet" href="${asset('vendor/bootstrap-icons/font/bootstrap-icons.min.css')}" nonce="${cspNonce}" />
   <link rel="stylesheet" href="${asset('vendor/toastr/css/toastr.min.css')}" nonce="${cspNonce}" />
   <style nonce="${cspNonce}">
-    .formBox {
+    input {
       width: 100%;
       max-width: 500px;
       margin: 0 auto;
     }
 
-    .btnDownload {
+    .btn-download {
       display: none;
     }
 
     @media (max-width: 768px) {
-      .formBox {
+      input {
         width: 100%;
         max-width: 85%;
       }
@@ -32,22 +32,22 @@
 
     <form id="service-form" action="#" method="POST" enctype="multipart/form-data">
       <div class="mb-3">
-        <input type="text" class="form-control mx-auto formBox" name="redeem_code" id="redeem_code" placeholder="Enter Redeem Code" />
+        <input type="text" class="form-control mx-auto" name="redeem_code" id="redeem_code" placeholder="Enter Redeem Code" />
       </div>
 
       <div class="mb-3">
-        <input type="text" class="form-control mx-auto formBox" name="file_name" id="file_name" placeholder="Enter Name File" />
+        <input type="text" class="form-control mx-auto" name="file_name" id="file_name" placeholder="Enter Name File" />
       </div>
 
       <div class="mb-3">
-        <input class="form-control mx-auto formBox" name="file" id="file" type="file" accept=".seb" />
+        <input type="file" class="form-control mx-auto" name="file" id="file" accept=".seb" />
       </div>
 
       <div class="d-flex justify-content-center gap-3">
         <button type="submit" class="btn btn-primary px-4" id="submit-btn">
           <i class="bi bi-upload me-2"></i>Upload
         </button>
-        <button type="button" class="btn btn-primary px-4 btnDownload" id="download-btn">
+        <button type="button" class="btn btn-primary btn-download px-4" id="download-btn">
           <i class="bi bi-download me-2"></i>Download
         </button>
       </div>
@@ -155,7 +155,7 @@
         const element = data[index];
         const colDiv = document.createElement('div');
         if (data.length % 2 !== 0 && index === data.length - 1) {
-          colDiv.className = 'col-md-12 mb-3';
+          colDiv.className = 'col-md-10 mb-3';
         } else {
           colDiv.className = 'col-md-5 mb-3';
         }

@@ -2,6 +2,27 @@
 
 <% block('subTitle', 'Generate Token') %>
 
+<% block('addon-style', `
+  <style nonce="${cspNonce}">
+    .token-generator {
+      width: 50%;
+      margin: 15px auto;
+    }
+
+    @media (max-width: 768px) {
+      .token-generator {
+        width: 90%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .token-generator {
+        width: 100%;
+      }
+    }
+  </style>
+`) %>
+
 <h2 class="section-title"><i class="fas fa-key"></i> Generate New Token</h2>
 
 <div class="token-generator">
