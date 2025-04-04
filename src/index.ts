@@ -1,6 +1,6 @@
 import App from "@bootstrap/app.js";
 import debugLib from "debug";
-import http from "http";
+import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
