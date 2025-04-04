@@ -11,6 +11,15 @@ import path from "node:path";
 
 export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: string): void => {
   /**
+   * Set the application powered by header
+   */
+  app.disable('x-powered-by');
+  app.use((_req, res, next) => {
+    res.setHeader('X-Powered-By', 'Naka Framework');
+    next();
+  });
+
+  /**
    * Minify the response
    */
   app.use(minifyHTML(minifyConfig));
@@ -18,7 +27,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   /**
    * Setup default express middlewares
    */
-  app.use(express.json());
+  app.use(express.json({ strict: true }));
   app.use(express.urlencoded({ extended: false, parameterLimit: 4 }));
   app.use(express.static(path.join(dirname, "public"), assetConfig));
 
@@ -62,16 +71,40 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   /**
    * Setup security headers
    */
-  app.use(helmet());
-  app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true, preload: true }));
-  app.use(helmet.noSniff());
-  app.use(helmet.hidePoweredBy());
-  app.use(helmet.xssFilter());
-  app.use(helmet.xFrameOptions({ action: "deny" }));
-  app.use(helmet.contentSecurityPolicy(cspConfigWithNonce));
-  app.use(helmet.referrerPolicy({ policy: "same-origin" }));
-  app.use(helmet.dnsPrefetchControl({ allow: false }));
-  app.use(helmet.permittedCrossDomainPolicies({ permittedPolicies: "none" }));
+  app.use(helmet({
+    contentSecurityPolicy: cspConfigWithNonce,
+    crossOriginEmbedderPolicy: {
+      policy: "require-corp",
+    },
+    crossOriginOpenerPolicy: {
+      policy: "same-origin"
+    },
+    crossOriginResourcePolicy: {
+      policy: "same-site"
+    },
+    originAgentCluster: true,
+    referrerPolicy: {
+      policy: "strict-origin-when-cross-origin",
+    },
+    strictTransportSecurity: {
+      preload: true,
+      maxAge: 31536000,
+      includeSubDomains: true,
+    },
+    xContentTypeOptions: true,
+    xDnsPrefetchControl: {
+      allow: true
+    },
+    xDownloadOptions: true,
+    xFrameOptions: {
+      action: "deny"
+    },
+    xPermittedCrossDomainPolicies: {
+      permittedPolicies: "none",
+    },
+    xPoweredBy: false,
+    xXssProtection: true,
+  }));
 
   /**
    * Enable Http Strict Transport Security (HSTS)
