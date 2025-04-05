@@ -13,9 +13,9 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   /**
    * Set the application powered by header
    */
-  app.disable('x-powered-by');
+  app.disable("x-powered-by");
   app.use((_req, res, next) => {
-    res.setHeader('X-Powered-By', 'Naka Framework');
+    res.setHeader("X-Powered-By", "Naka Framework");
     next();
   });
 
@@ -71,40 +71,42 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   /**
    * Setup security headers
    */
-  app.use(helmet({
-    contentSecurityPolicy: cspConfigWithNonce,
-    crossOriginEmbedderPolicy: {
-      policy: "require-corp",
-    },
-    crossOriginOpenerPolicy: {
-      policy: "same-origin"
-    },
-    crossOriginResourcePolicy: {
-      policy: "same-site"
-    },
-    originAgentCluster: true,
-    referrerPolicy: {
-      policy: "strict-origin-when-cross-origin",
-    },
-    strictTransportSecurity: {
-      preload: true,
-      maxAge: 31536000,
-      includeSubDomains: true,
-    },
-    xContentTypeOptions: true,
-    xDnsPrefetchControl: {
-      allow: true
-    },
-    xDownloadOptions: true,
-    xFrameOptions: {
-      action: "deny"
-    },
-    xPermittedCrossDomainPolicies: {
-      permittedPolicies: "none",
-    },
-    xPoweredBy: false,
-    xXssProtection: true,
-  }));
+  app.use(
+    helmet({
+      contentSecurityPolicy: cspConfigWithNonce,
+      crossOriginEmbedderPolicy: {
+        policy: "require-corp",
+      },
+      crossOriginOpenerPolicy: {
+        policy: "same-origin",
+      },
+      crossOriginResourcePolicy: {
+        policy: "same-site",
+      },
+      originAgentCluster: true,
+      referrerPolicy: {
+        policy: "strict-origin-when-cross-origin",
+      },
+      strictTransportSecurity: {
+        preload: true,
+        maxAge: 31536000,
+        includeSubDomains: true,
+      },
+      xContentTypeOptions: true,
+      xDnsPrefetchControl: {
+        allow: true,
+      },
+      xDownloadOptions: true,
+      xFrameOptions: {
+        action: "deny",
+      },
+      xPermittedCrossDomainPolicies: {
+        permittedPolicies: "none",
+      },
+      xPoweredBy: false,
+      xXssProtection: true,
+    }),
+  );
 
   /**
    * Enable Http Strict Transport Security (HSTS)
