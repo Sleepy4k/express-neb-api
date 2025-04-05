@@ -1,4 +1,5 @@
 import { createJsonFile, isDirectoryExists, isJsonFileExists, readJsonFileSync, writeJsonFileSync } from "@utils/storage.js";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -28,13 +29,13 @@ const __basedir: string = path.resolve(currPath + dotToParent);
  *
  * @class BaseModel
  */
-class BaseModel {
+class BaseModel<T> {
   /**
    * The data
    *
-   * @type {Record<string, unknown>}
+   * @type {Record<string, T>}
    */
-  protected data: Record<string, unknown>;
+  protected data: Record<string, T> = {};
 
   /**
    * The file path
@@ -44,17 +45,91 @@ class BaseModel {
   protected readonly filePath: string;
 
   /**
+   * A flag to track if data has been loaded
+   */
+  private isDataLoaded = false;
+
+  /**
    * The constructor for the BaseModel class
    *
    * @param {string} filePath - The file path, e.g. data/users.json
    */
-  public constructor(filePath: string) {
-    this.data = {};
+  protected constructor(filePath: string) {
     this.filePath = this.parseFilePath(filePath);
+    this.ensureFileExists();
+  }
 
-    if (!isJsonFileExists(this.filePath)) {
-      createJsonFile(this.filePath);
+  /**
+   * Get the total number of items in the data
+   *
+   * @returns {number} The total number of items in the data
+   */
+  public count(): number {
+    this.loadDataIfNeeded();
+    return Object.keys(this.data).length;
+  }
+
+  /**
+   * Remove an item by its key
+   *
+   * @param {string} key - The key of the item to remove
+   * @returns {boolean} True if the item was removed, false otherwise
+   */
+  public delete(key: string): boolean {
+    this.loadDataIfNeeded();
+
+    if (this.data[key]) {
+      this.data = Object.fromEntries(Object.entries(this.data).filter(([k]) => k !== key));
+      this.saveData();
+      return true;
     }
+
+    return false;
+  }
+
+  /**
+   * Get a specific item by its key
+   *
+   * @param {string} key - The key of the item
+   * @returns {T | undefined} The item if found, otherwise undefined
+   */
+  public find(key: string): T | undefined {
+    this.loadDataIfNeeded();
+    return this.data[key];
+  }
+
+  /**
+   * Get the data from the file
+   *
+   * @returns {T[]}
+   */
+  public get(): T[] {
+    this.loadDataIfNeeded();
+    return Object.values(this.data);
+  }
+
+  /**
+   * Add a new item or update an existing item
+   *
+   * @param {string} key - The key for the item
+   * @param {T} item - The item to add or update
+   * @returns {void}
+   */
+  public save(key: string, item: T): void {
+    this.loadDataIfNeeded();
+    this.data[key] = item;
+    this.saveData();
+  }
+
+  /**
+   * Ensures the JSON file exists. Creates it if it doesn't.
+   */
+  private ensureFileExists(): void {
+    if (isJsonFileExists(this.filePath)) return;
+
+    createJsonFile(this.filePath);
+    this.data = {};
+    this.isDataLoaded = true;
   }
 
   /**
@@ -62,22 +137,25 @@ class BaseModel {
    *
    * @returns {void}
    */
-  public loadData(): void {
-    if (!isJsonFileExists(this.filePath)) {
-      createJsonFile(this.filePath);
-      return;
+  private loadData(): void {
+    try {
+      this.data = readJsonFileSync(this.filePath) as Record<string, T>;
+    } catch {
+      this.data = {};
+      this.ensureFileExists();
     }
-
-    this.data = readJsonFileSync(this.filePath);
   }
 
   /**
-   * Save the data
+   * Load the data from the file if it hasn't been loaded yet
    *
    * @returns {void}
    */
-  public saveData(): void {
-    writeJsonFileSync(this.filePath, this.data);
+  private loadDataIfNeeded(): void {
+    if (!this.isDataLoaded) {
+      this.loadData();
+      this.isDataLoaded = true;
+    }
   }
 
   /**
@@ -88,17 +166,29 @@ class BaseModel {
    * @returns {string} The parsed file path
    */
   private parseFilePath(filePath: string): string {
-    if (!filePath.startsWith("/")) {
-      filePath = "\\" + filePath;
+    const normalizedFilePath = filePath.replace(/\//g, path.sep);
+    const resolvedPath = path.resolve(__basedir, normalizedFilePath);
+    const directory = path.dirname(resolvedPath);
+
+    if (!isDirectoryExists(directory)) {
+      try {
+        fs.mkdirSync(directory, { recursive: true });
+      } catch (error) {
+        console.error(`Error creating directory ${directory}:`, error);
+        throw new Error(`Could not create directory: ${directory}`);
+      }
     }
 
-    const parsedFilePath = path.join(__basedir, filePath.replace(/\//g, "\\"));
+    return resolvedPath;
+  }
 
-    if (!isDirectoryExists(path.dirname(parsedFilePath))) {
-      throw new Error("The directory does not exist");
-    }
-
-    return parsedFilePath;
+  /**
+   * Save the data
+   *
+   * @returns {void}
+   */
+  private saveData(): void {
+    writeJsonFileSync(this.filePath, this.data);
   }
 }
 
