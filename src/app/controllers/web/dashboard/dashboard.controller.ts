@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-objects */
 import type { Request, Response } from "express";
 
 import { RedeemStatus } from "@enums/redeemStatus.js";
@@ -29,7 +30,11 @@ const home = (req: Request, res: Response) => {
   const user = req.session.user;
   const isUserAdmin = user?.role === RoleType.ADMIN;
 
-  const totalUsers = userModel.count();
+  const users = userModel.get();
+  const totalUsers = users.length;
+  const totalAdminAccess = users.filter((user) => user.role === RoleType.ADMIN).length;
+  const totalUserAccess = users.filter((user) => user.role === RoleType.USER).length;
+
   const tokens = redeemModel.get();
   const totalTokens = tokens.filter((token) => {
     if (isUserAdmin) return true;
@@ -53,6 +58,8 @@ const home = (req: Request, res: Response) => {
     totalRedeemed,
     totalTokens,
     totalUsers,
+    totalAdminAccess,
+    totalUserAccess,
   });
 };
 

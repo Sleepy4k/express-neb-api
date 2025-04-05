@@ -16,11 +16,17 @@ const userModel: UserModel = new UserModel();
 /**
  * Login controller to render the home page
  *
- * @param {Request} _req
+ * @param {Request} req
  * @param {Response} res
  */
-const form = (_req: Request, res: Response) => {
-  res.render("pages/auth/login");
+const form = (req: Request, res: Response) => {
+  const previousUrl = req.get("Referer");
+  const redirectUrl = typeof previousUrl === "string" ? previousUrl : undefined;
+  const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
+
+  res.render("pages/auth/login", {
+    redirect_url: redirectUrl ?? baseUrl,
+  });
 };
 
 /**
@@ -30,23 +36,15 @@ const form = (_req: Request, res: Response) => {
  * @param {Response} res
  */
 const process = (req: Request, res: Response) => {
-  let userRole = RoleType.USER;
   const { authKey, role } = req.query;
 
   if (typeof authKey !== "string" || authKey === "" || sha256(authKey || "") !== LOGIN_PAYLOAD) {
     res.status(400).send({
-      data: [],
-      message: "Make sure providing a valid email and password",
+      data: {},
+      message: "Unauthorized access, please contact the administrator if you think this is a mistake",
       status: "error",
     });
     return;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-  if (typeof role !== "string" || role === "" || (role !== RoleType.ADMIN && role !== RoleType.USER)) {
-    userRole = RoleType.USER;
-  } else {
-    userRole = role as RoleType;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -54,7 +52,7 @@ const process = (req: Request, res: Response) => {
 
   if (typeof email !== "string" || email === "") {
     res.status(400).send({
-      data: [],
+      data: {},
       message: "Make sure providing a valid email and password",
       status: "error",
     });
@@ -63,7 +61,7 @@ const process = (req: Request, res: Response) => {
 
   if (typeof password !== "string" || password === "") {
     res.status(400).send({
-      data: [],
+      data: {},
       message: "Make sure providing a valid email and password",
       status: "error",
     });
@@ -71,23 +69,37 @@ const process = (req: Request, res: Response) => {
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]{6,}$/;
-
-  if (!emailRegex.test(email) || !passwordRegex.test(password)) {
+  if (!emailRegex.test(email)) {
     res.status(400).send({
-      data: [],
-      message: "Make sure providing a valid email and password",
+      data: {
+        email: email,
+        format: "Include @ and . in the email address",
+      },
+      message: "Invalid email format",
       status: "error",
     });
     return;
   }
 
-  const userData = userModel.login(email, sha256(password), userRole);
+  const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]{6,}$/;
+  if (!passwordRegex.test(password)) {
+    res.status(400).send({
+      data: {
+        format: "Include letters, numbers, and special characters",
+        password: password,
+      },
+      message: "Password must be at least 6 characters long and contain only letters, numbers, and special characters",
+      status: "error",
+    });
+    return;
+  }
 
+  const userRole = role === RoleType.ADMIN || role === RoleType.USER ? (role as RoleType) : RoleType.USER;
+  const userData = userModel.login(email, sha256(password), userRole);
   if (!userData) {
     res.status(400).send({
-      data: [],
-      message: "Make sure providing a valid email and password",
+      data: {},
+      message: "User not found or invalid credentials, please check your email and password",
       status: "error",
     });
     return;

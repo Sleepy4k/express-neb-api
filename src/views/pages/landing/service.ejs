@@ -4,11 +4,11 @@
 
 <% block('addon-style', `
   <style nonce="${cspNonce}">
-    .containerService {
+    .service-container {
       width: 25rem;
     }
 
-    .serviceImage {
+    .service-content-icon {
       width: 50px;
       height: 50px;
     }
@@ -17,13 +17,13 @@
 
 <div class="services text-center my-5">
   <div class="container text-center faq-title">
-    <h2>Our Service</h2>
+    <h1 class="section-title">Our Service</h1>
     <p>We offer a variety of services to help you with your online exams and assignments.</p>
   </div>
   <div class="d-flex justify-content-center">
-    <a href="<%= route('service/seb') %>" class="text-decoration-none containerService">
+    <a href="<%= route('service/seb') %>" class="text-decoration-none service-container">
       <div class="btn btn-light d-flex align-items-center border shadow-sm p-3">
-        <img src="<%= asset('logo.ico') %>" alt="Quizizz" class="me-3 serviceImage" />
+        <img src="<%= asset('images/seb.png') %>" alt="SEB" class="me-3 service-content-icon" loading="lazy" />
         <span class="fw-semibold text-dark">Safe Exam Browser</span>
       </div>
     </a>

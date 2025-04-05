@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-objects */
 import { RedeemStatus } from "@enums/redeemStatus.js";
 import { type RedeemData } from "@interfaces/redeemData.js";
 import BaseModel from "@modules/baseModel.js";
@@ -8,7 +9,7 @@ import BaseModel from "@modules/baseModel.js";
  * @class RedeemModel
  * @extends BaseModel
  */
-class RedeemModel extends BaseModel {
+class RedeemModel extends BaseModel<RedeemData> {
   /**
    * The constructor for the RedeemModel class
    */
@@ -24,11 +25,7 @@ class RedeemModel extends BaseModel {
    * @returns {number} The redeem data
    */
   public countByName(name: string): number {
-    this.loadData();
-
-    const redeemData = Object.values(this.data).filter((redeem) => (redeem as RedeemData).name === name) as RedeemData[];
-
-    return redeemData.length;
+    return this.get().filter((redeem) => redeem.name === name).length;
   }
 
   /**
@@ -41,33 +38,18 @@ class RedeemModel extends BaseModel {
    * @returns {RedeemData} The redeem data
    */
   public create(code: string, name: string, description: string): RedeemData {
-    this.loadData();
-
     const redeemData: RedeemData = {
       code,
-      description,
       name,
-      redeemedAt: null,
+      description,
       status: RedeemStatus.PENDING,
+      createdAt: new Date().toISOString(),
+      redeemedAt: null,
     };
 
-    this.data[code] = redeemData;
-    this.saveData();
+    this.save(code, redeemData);
 
     return redeemData;
-  }
-
-  /**
-   * Find the redeem data by code
-   *
-   * @param {string} code - The code
-   *
-   * @returns {RedeemData|null} The redeem data
-   */
-  public find(code: string): null | RedeemData {
-    this.loadData();
-
-    return this.data[code] as RedeemData;
   }
 
   /**
@@ -78,29 +60,7 @@ class RedeemModel extends BaseModel {
    * @returns {RedeemData[]|null} The redeem data
    */
   public findByName(name: string): null | RedeemData[] {
-    this.loadData();
-
-    const redeemData = Object.keys(this.data)
-      .map((key) => {
-        return this.data[key] as RedeemData;
-      })
-      .filter((redeem) => redeem.name === name);
-
-    return redeemData;
-  }
-
-  /**
-   * Get the redeem data
-   *
-   * @returns {RedeemData[]}
-   */
-  public get(): RedeemData[] {
-    this.loadData();
-
-    // Parse Record<string, unknown> to RedeemData[]
-    return Object.keys(this.data).map((key) => {
-      return this.data[key] as RedeemData;
-    });
+    return this.get().filter((redeem) => redeem.name === name);
   }
 
   /**
@@ -111,13 +71,13 @@ class RedeemModel extends BaseModel {
    * @returns {RedeemData|null} The redeem data
    */
   public redeem(code: string): null | RedeemData {
-    this.loadData();
+    const redeemData = this.find(code);
+    if (!redeemData) return null;
 
-    const redeemData = this.data[code] as RedeemData;
     redeemData.status = RedeemStatus.REDEEMED;
     redeemData.redeemedAt = new Date().toISOString();
 
-    this.saveData();
+    this.save(code, redeemData);
 
     return redeemData;
   }

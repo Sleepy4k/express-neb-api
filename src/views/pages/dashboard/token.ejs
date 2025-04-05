@@ -2,6 +2,15 @@
 
 <% block('subTitle', 'Token List') %>
 
+<% block('addon-style', `
+  <link rel="stylesheet" href="${asset('vendor/datatables/css/datatables.min.css')}" nonce="${cspNonce}" />
+  <style nonce="${cspNonce}">
+    .dt-search label i {
+      margin-right: 0.5rem !important;
+    }
+  </style>
+`) %>
+
 <h2 class="section-title"><i class="fas fa-list"></i> Token List</h2>
 
 <div class="token-table-container">
@@ -11,8 +20,9 @@
         <th>Code</th>
         <th>Name</th>
         <th>Description</th>
-        <th>Redeemed At</th>
         <th>Status</th>
+        <th>Created At</th>
+        <th>Redeemed At</th>
       </tr>
     </thead>
     <tbody>
@@ -21,10 +31,70 @@
           <td class="token-code"><%= token.code %></td>
           <td><%= token.name %></td>
           <td><%= token.description %></td>
-          <td class="timestamp"><%= token.redeemedAt ?? '-' %></td>
           <td><span class="status-badge status-<%= token.status %>"><%= token.status %></span></td>
+          <td class="timestamp"><%= token.createdAt ?? '-' %></td>
+          <td class="timestamp"><%= token.redeemedAt ?? '-' %></td>
         </tr>
       <% }) %>
     </tbody>
   </table>
 </div>
+
+<% block('addon-script', `
+  <script src="${asset('vendor/datatables/js/datatables.min.js')}" nonce="${cspNonce}"></script>
+  <script nonce="${cspNonce}">
+    $(document).ready(function () {
+      const table = $('.token-table').DataTable({
+        processing: true,
+        responsive: true,
+        rowReorder: true,
+        layout: {
+          top1Start: 'buttons',
+          bottomStart: 'info',
+          bottomEnd: 'paging'
+        },
+        buttons: [
+          {
+            extend: 'copy',
+            text: '<i class="fas fa-copy"></i>',
+            titleAttr: 'Copy',
+            className: 'btn btn-secondary'
+          },
+          {
+            extend: 'print',
+            text: '<i class="fas fa-print"></i>',
+            titleAttr: 'Print',
+            className: 'btn btn-secondary'
+          },
+          {
+            extend: 'csv',
+            text: '<i class="fas fa-file-csv"></i>',
+            titleAttr: 'Export CSV',
+            className: 'btn btn-secondary'
+          },
+          {
+            extend: 'excel',
+            text: '<i class="fas fa-file-excel"></i>',
+            titleAttr: 'Export Excel',
+            className: 'btn btn-secondary'
+          },
+          {
+            extend: 'pdf',
+            text: '<i class="fas fa-file-pdf"></i>',
+            titleAttr: 'Export PDF',
+            className: 'btn btn-secondary'
+          }
+        ],
+        "order": [[0, "asc"]],
+        "pageLength": 10,
+        "lengthChange": true,
+        "searching": true,
+        "info": true,
+        "language": {
+          "search": "<i class='fas fa-search'></i>",
+          "searchPlaceholder": "Search Token..."
+        }
+      });
+    });
+  </script>
+`) %>

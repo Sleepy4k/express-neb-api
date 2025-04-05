@@ -33,7 +33,7 @@ const process = (req: Request, res: Response) => {
 
   if (typeof description !== "string" || description === "") {
     res.status(400).send({
-      data: [],
+      data: {},
       message: "Make sure providing a valid description",
       status: "error",
     });
@@ -44,7 +44,7 @@ const process = (req: Request, res: Response) => {
     const name = req.session.user?.email;
     if (typeof name !== "string" || name === "") {
       res.status(400).send({
-        data: [],
+        data: {},
         message: "It seems like you are not logged in",
         status: "error",
       });
@@ -54,16 +54,16 @@ const process = (req: Request, res: Response) => {
     const sanitazedDescription = Sanitation.sanitizeString(description);
     if (sanitazedDescription.length > 100) {
       res.status(400).send({
-        data: [],
+        data: {},
         message: "Description is too long",
         status: "error",
       });
       return;
     }
 
-    const totalUserRedeemCode = redeemModel.countByName(name) + 1;
-    const uniqueSuffix = Math.floor(Math.random() * 10000).toString();
-    const redeemCode = `${nameToRedeemCode(name.split("@")[0])}-${uniqueSuffix}-${totalUserRedeemCode.toString()}`;
+    const totalRedeemCode = (redeemModel.countByName(name) + 1).toString();
+    const randomizer = Math.floor(Math.random() * 10000).toString();
+    const redeemCode = nameToRedeemCode(name.split("@")[0], `${randomizer}-${totalRedeemCode}`);
     const token = redeemModel.create(redeemCode, name, sanitazedDescription);
 
     res.status(200).send({
@@ -77,7 +77,7 @@ const process = (req: Request, res: Response) => {
     console.log(error);
 
     res.status(500).send({
-      data: [],
+      data: {},
       message: "An error occurred while generating the token",
       status: "error",
     });
