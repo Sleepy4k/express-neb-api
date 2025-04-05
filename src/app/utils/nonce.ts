@@ -6,8 +6,8 @@ import CryptoJS from "crypto-es";
  * @param {number} lengthBytes The length of the nonce in bytes
  * @returns {string} The generated nonce
  */
-const generateNonce = (lengthBytes = 16): string => {
-  const randomBytes = CryptoJS.lib.WordArray.random(lengthBytes);
+const generateNonce = (lengthBytes?: number): string => {
+  const randomBytes = CryptoJS.lib.WordArray.random(lengthBytes ?? 16);
   return CryptoJS.enc.Hex.stringify(randomBytes);
 };
 

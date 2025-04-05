@@ -256,10 +256,11 @@ const serialize = (dictionary: XMLDictionary): string => {
  * Convert a name to a redeem code
  *
  * @param {string} name - The name
+ * @param {string} suffix - The suffix
  *
  * @returns {string} The redeem code
  */
-const nameToRedeemCode = (name: string): string => {
+const nameToRedeemCode = (name: string, suffix: string): string => {
   const currentDate = new Date();
   const day: string = String(currentDate.getDate()).padStart(2, "0");
   const month: string = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -298,11 +299,9 @@ const nameToRedeemCode = (name: string): string => {
     "~",
   ];
   const regex = new RegExp(`[${sensitiveCharacters.join("")}]`, "g");
-  name = name.replace(regex, ""); // Remove sensitive characters
+  const reversedName = name.replace(regex, "").toLowerCase().split("").reverse().join("").replace(/\s+/g, "-");
 
-  const reversedName = name.toLowerCase().split("").reverse().join("").replace(/\s+/g, "-");
-
-  return `${day}${month}${year}-${reversedName}`;
+  return `${day}${month}${year}-${reversedName}-${suffix}`;
 };
 
 export { isValueNullOrUndefined, nameToRedeemCode, normalizePort, parseHostname, parseXMLString, serialize };

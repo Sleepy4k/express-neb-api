@@ -20,7 +20,7 @@ const userModel: UserModel = new UserModel();
  * @param {Response} res
  */
 const form = (req: Request, res: Response) => {
-  const previousUrl = req.get('Referer');
+  const previousUrl = req.get("Referer");
   const redirectUrl = typeof previousUrl === "string" ? previousUrl : undefined;
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
 

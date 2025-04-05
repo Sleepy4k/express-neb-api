@@ -141,7 +141,15 @@ const bypass = async (req: Request, res: Response) => {
       };
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { file_name } = req.body;
+      const { file_name, redeem_code } = req.body;
+      if (redeem_code && redeem_code !== "") {
+        res.status(400).json({
+          data: [],
+          message: "Unauthorized bypass attempt, please contact the administrator if you think this is a mistake",
+          status: "error",
+        });
+        return;
+      }
 
       // Append SEB file data to response
       const responseFields = [
@@ -153,7 +161,7 @@ const bypass = async (req: Request, res: Response) => {
         },
         { condition: serviceConfig.response.showRequestHash, name: SEB_RH_HTTP_HEADER_NAME, value: sebFile.RequestHash },
         { condition: serviceConfig.response.showConfigHash, name: SEB_CKH_HTTP_HEADER_NAME, value: sebFile.getConfigKey(sebFile.StartUrl || "") },
-        { condition: true, name: "File-Name", value: file_name as string || "Naka Exam Bypasser" },
+        { condition: true, name: "File-Name", value: (file_name as string) || "Naka Exam Bypasser" },
         { condition: serviceConfig.response.showSerializedJson, name: "Serialized", value: sebFile.SerializedJson },
         { condition: serviceConfig.response.showDictionnary, name: "Dictionary", value: JSON.stringify(sebFile.Dictionnary) },
       ];

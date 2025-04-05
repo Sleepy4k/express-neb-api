@@ -21,19 +21,7 @@ const isJsonFileExists = (filePath: string): boolean => {
  * @returns {boolean} Whether the directory exists
  */
 const isDirectoryExists = (directoryPath: string): boolean => {
-  const isExists = fs.existsSync(directoryPath);
-
-  try {
-    // if the directory does not exist, create it
-    if (!isExists) {
-      fs.mkdirSync(directoryPath, { recursive: true });
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Error creating directory:", error);
-    return false;
-  }
+  return fs.existsSync(directoryPath);
 };
 
 /**
