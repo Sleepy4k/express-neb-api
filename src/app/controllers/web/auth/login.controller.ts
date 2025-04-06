@@ -23,9 +23,11 @@ const form = (req: Request, res: Response) => {
   const previousUrl = req.get("Referer");
   const redirectUrl = typeof previousUrl === "string" ? previousUrl : undefined;
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const isRedirectUrlGuarded = redirectUrl?.includes("/login") || redirectUrl?.includes("/dashboard");
 
   res.render("pages/auth/login", {
-    redirect_url: redirectUrl ?? baseUrl,
+    redirect_url: isRedirectUrlGuarded ? baseUrl : (redirectUrl ?? baseUrl),
   });
 };
 

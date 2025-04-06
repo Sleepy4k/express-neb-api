@@ -19,10 +19,9 @@ const process = (req: Request, res: Response) => {
       return;
     }
 
-    const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
     res.status(200).send({
       data: {
-        redirect_url: baseUrl,
+        redirect_url: parseHostname(`${req.protocol}://${req.get("host") ?? ""}`),
       },
       message: "Logout successfully",
       status: "success",
