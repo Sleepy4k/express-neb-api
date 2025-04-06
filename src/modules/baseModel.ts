@@ -50,6 +50,11 @@ class BaseModel<T> {
   private isDataLoaded = false;
 
   /**
+   * The last modification time of the data file
+   */
+  private lastModificationTime: null | number = null;
+
+  /**
    * The constructor for the BaseModel class
    *
    * @param {string} filePath - The file path, e.g. data/users.json
@@ -57,6 +62,7 @@ class BaseModel<T> {
   protected constructor(filePath: string) {
     this.filePath = this.parseFilePath(filePath);
     this.ensureFileExists();
+    this.updateLastModificationTime();
   }
 
   /**
@@ -133,6 +139,21 @@ class BaseModel<T> {
   }
 
   /**
+   * Check if the data has changed by comparing the last modification time
+   *
+   * @returns {boolean} True if the data has changed, otherwise false
+   */
+  private isDataChanged(): boolean {
+    try {
+      const stats = fs.statSync(this.filePath);
+      const currentModificationTime = stats.mtimeMs;
+      return currentModificationTime !== this.lastModificationTime;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Load the data
    *
    * @returns {void}
@@ -152,8 +173,9 @@ class BaseModel<T> {
    * @returns {void}
    */
   private loadDataIfNeeded(): void {
-    if (!this.isDataLoaded) {
+    if (!this.isDataLoaded || this.isDataChanged()) {
       this.loadData();
+      this.updateLastModificationTime();
       this.isDataLoaded = true;
     }
   }
@@ -189,6 +211,21 @@ class BaseModel<T> {
    */
   private saveData(): void {
     writeJsonFileSync(this.filePath, this.data);
+    this.updateLastModificationTime();
+  }
+
+  /**
+   * Update the last modification time of the data file
+   *
+   * @returns {void}
+   */
+  private updateLastModificationTime(): void {
+    try {
+      const stats = fs.statSync(this.filePath);
+      this.lastModificationTime = stats.mtimeMs;
+    } catch {
+      this.lastModificationTime = null;
+    }
   }
 }
 
