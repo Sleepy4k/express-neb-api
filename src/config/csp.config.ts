@@ -2,10 +2,10 @@
 export const cspConfig = {
   directives: {
     defaultSrc: ["'none'"],
-    baseUri: ["'self'"],
+    baseUri: ["'none'"],
     manifestSrc: ["'self'"],
     formAction: ["'self'"],
-    imgSrc: ["*", "data:"],
+    imgSrc: ["'self'", "data:"],
     mediaSrc: ["'self'"],
     objectSrc: ["'none'"],
     fontSrc: ["'self'"],
