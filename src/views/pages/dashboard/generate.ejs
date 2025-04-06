@@ -102,6 +102,7 @@
         } catch (error) {
           toastr.error('An error occurred while generating the token.', 'Generate Token');
         } finally {
+          form.reset();
           generateBtn.disabled = false;
           generateBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Generate Token';
         }
