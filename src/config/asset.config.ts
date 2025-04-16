@@ -1,11 +1,11 @@
 /* eslint-disable perfectionist/sort-objects */
 export const assetConfig = {
-  dotfiles: "allow",
+  dotfiles: "ignore",
   etag: true,
   extensions: ["html", "htm"],
   index: false,
-  maxAge: 604800000,
+  maxAge: '1y',
   cacheControl: true,
-  immutable: true,
+  immutable: false,
   redirect: true,
 };
