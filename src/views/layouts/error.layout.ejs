@@ -64,6 +64,8 @@
   <body class="antialiased">
     <%- body %>
 
+    <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>" defer></script>
+
     <%- block('addon-script') %>
   </body>
 </html>

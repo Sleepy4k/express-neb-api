@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <link rel="canonical" href="<%= baseUrl %>" />
+    <link rel="canonical" href="<%= cannonical %>" />
     <link rel="apple-touch-icon" href="<%= asset('favicon.ico') %>" />
     <link rel="icon" type="image/png" href="<%= asset('favicon.ico') %>" />
     <link rel="icon" type="image/x-icon" href="<%= asset('favicon.ico') %>" />
@@ -57,6 +57,9 @@
     <meta property="og:image:width" content="900">
     <meta property="og:image:height" content="549">
 
+    <link rel="preload" href="<%= asset('vendor/fontawesome/css/all.min.css') %>" as="style" nonce="<%= cspNonce %>" />
+    <link rel="preload" href="<%= asset('vendor/toastr/css/toastr.min.css') %>" as="style" nonce="<%= cspNonce %>" />
+
     <link rel="stylesheet" href="<%= asset('vendor/fontawesome/css/all.min.css') %>" nonce="<%= cspNonce %>" />
     <link rel="stylesheet" href="<%= asset('vendor/toastr/css/toastr.min.css') %>" nonce="<%= cspNonce %>" />
     <link rel="stylesheet" href="<%= asset('css/dashboard.css') %>" nonce="<%= cspNonce %>" />
@@ -74,29 +77,33 @@
       </div>
     </div>
 
-    <script src="<%= asset('vendor/jquery/jquery-3.7.1.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script src="<%= asset('vendor/toastr/js/toastr.min.js') %>" nonce="<%= cspNonce %>"></script>
-    <script nonce="<%= cspNonce %>">
-      toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": false,
-        "positionClass": "toast-top-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-      };
-    </script>
+    <script src="<%= asset('vendor/jquery/jquery-3.7.1.min.js') %>" nonce="<%= cspNonce %>" defer></script>
+    <script src="<%= asset('vendor/toastr/js/toastr.min.js') %>" nonce="<%= cspNonce %>" defer></script>
+    <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>" defer></script>
 
-    <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>"></script>
+    <script nonce="<%= cspNonce %>">
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof toastr !== 'undefined') {
+          toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          };
+        }
+      });
+    </script>
 
     <script nonce="<%= cspNonce %>">
       const logoutAnchor = document.getElementById('logout-button');
