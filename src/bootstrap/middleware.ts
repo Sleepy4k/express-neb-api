@@ -1,4 +1,3 @@
-/* eslint-disable perfectionist/sort-objects */
 import { assetConfig, cspConfig, minifyConfig, rateLimitConfig, sessionConfig } from "@config";
 import cors from "cors";
 import express, { type Express } from "express";
@@ -16,6 +15,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   app.disable("x-powered-by");
   app.use((_req, res, next) => {
     res.setHeader("X-Powered-By", "Naka Framework");
+    res.setHeader("Permission-Policy", "accelerometer=(self), attribution-reporting=*, autoplay=(), bluetooth=(), browsing-topics=*, camera=(), compute-pressure=(self), cross-origin-isolated=(self), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=(self), geolocation=(self), gyroscope=(self), hid=(self), identity-credentials-get=(self), idle-detection=(self), local-fonts=(self), magnetometer=(self), microphone=(), midi=(self), otp-credentials=(), payment=(), picture-in-picture=*, publickey-credentials-create=(self), publickey-credentials-get=(self), screen-wake-lock=(self), serial=(self), storage-access=*, usb=(), web-share=(self), window-management=(self), vibrate=(), xr-spatial-tracking=(self)");
     next();
   });
 
@@ -41,9 +41,9 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
    */
   app.use(
     cors({
-      allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+      allowedHeaders: ["Accept", "Authorization", "Content-Type"],
       credentials: true,
-      exposedHeaders: ["Content-Type", "Authorization", "Accept"],
+      exposedHeaders: ["Accept", "Authorization", "Content-Type"],
       maxAge: 86400,
       methods: "GET, POST, DELETE",
       optionsSuccessStatus: 200,
@@ -88,9 +88,9 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
         policy: "strict-origin-when-cross-origin",
       },
       strictTransportSecurity: {
-        preload: true,
-        maxAge: 31536000,
         includeSubDomains: true,
+        maxAge: 31536000,
+        preload: true,
       },
       xContentTypeOptions: true,
       xDnsPrefetchControl: {
