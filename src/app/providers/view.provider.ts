@@ -20,6 +20,7 @@ const viewServiceProvider = (req: Request, res: Response, next: NextFunction): v
   res.locals.user = req.session.user ?? null;
   res.locals.isAdmin = req.session.user?.role === RoleType.ADMIN;
   res.locals.cspNonce = (req.app.get("cspNonce") as string) || "";
+  res.locals.cannonical = `${baseUrl}${req.originalUrl}`;
   res.locals.asset = (path?: string) => `${baseUrl}/${path ?? ""}`;
   res.locals.route = (path?: string) => `${baseUrl}/${path ?? ""}`;
   res.locals.isRouteActive = (route?: string) => {
