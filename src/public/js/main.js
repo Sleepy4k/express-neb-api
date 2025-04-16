@@ -8,7 +8,6 @@
     },
     {
       message: "If someone tells you to copy/paste something here, you have an 11/10 chance that you are being scammed.",
-      style: "",
     },
     {
       message: "%cPasting anything here could give an attacker access to your account.",
@@ -16,13 +15,11 @@
     },
     {
       message: "Unless you really know what you're doing, close this page and stay safe.",
-      style: "",
     },
     {
       message: "If you really understand what you are doing, you should work with us.",
-      style: "",
     },
   ];
 
-  messages.forEach((data) => console.log(data.message, data.style));
+  messages.forEach(({ message, style = "" }) => console.log(message, style));
 })();
