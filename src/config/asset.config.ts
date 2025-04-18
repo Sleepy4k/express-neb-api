@@ -4,7 +4,7 @@ export const assetConfig = {
   etag: true,
   extensions: ["html", "htm"],
   index: false,
-  maxAge: '1y',
+  maxAge: "1y",
   cacheControl: true,
   immutable: false,
   redirect: true,
