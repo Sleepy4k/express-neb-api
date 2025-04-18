@@ -15,7 +15,7 @@
     <div class="collapse navbar-collapse p-3 rounded" id="navbarNav">
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a class="nav-link <%= isRouteActive() %>" href="<%= route() %>">Home</a></li>
-        <li class="nav-item"><a class="nav-link <%= isRouteActive('service') %>" href="<%= route('service') %>">Services</a></li>
+        <li class="nav-item"><a class="nav-link <%= isRouteActive('service/') %>" href="<%= route('service/') %>">Services</a></li>
         <li class="nav-item"><a class="nav-link <%= isRouteActive('tutorial') %>" href="<%= route('tutorial') %>">Tutorial</a></li>
 
         <% if (isLoggedIn) { %>

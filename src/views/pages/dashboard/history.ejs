@@ -41,58 +41,18 @@
 </div>
 
 <% block('addon-script', `
-  <script src="${asset('vendor/datatables/js/datatables.min.js')}" nonce="${cspNonce}"></script>
+  <script src="${asset('vendor/datatables/js/datatables.min.js')}" nonce="${cspNonce}" defer></script>
   <script nonce="${cspNonce}">
     $(document).ready(function () {
-      const table = $('.token-table').DataTable({
-        processing: true,
-        responsive: true,
-        rowReorder: true,
-        layout: {
-          top1Start: 'buttons',
-          bottomStart: 'info',
-          bottomEnd: 'paging'
+      $.ajax({
+        url: "${route('api/datatable/config')}",
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          const table = $('.token-table').DataTable(data.data);
         },
-        buttons: [
-          {
-            extend: 'copy',
-            text: '<i class="fas fa-copy"></i>',
-            titleAttr: 'Copy',
-            className: 'btn btn-secondary'
-          },
-          {
-            extend: 'print',
-            text: '<i class="fas fa-print"></i>',
-            titleAttr: 'Print',
-            className: 'btn btn-secondary'
-          },
-          {
-            extend: 'csv',
-            text: '<i class="fas fa-file-csv"></i>',
-            titleAttr: 'Export CSV',
-            className: 'btn btn-secondary'
-          },
-          {
-            extend: 'excel',
-            text: '<i class="fas fa-file-excel"></i>',
-            titleAttr: 'Export Excel',
-            className: 'btn btn-secondary'
-          },
-          {
-            extend: 'pdf',
-            text: '<i class="fas fa-file-pdf"></i>',
-            titleAttr: 'Export PDF',
-            className: 'btn btn-secondary'
-          }
-        ],
-        "order": [[5, "desc"]],
-        "pageLength": 10,
-        "lengthChange": true,
-        "searching": true,
-        "info": true,
-        "language": {
-          "search": "<i class='fas fa-search'></i>",
-          "searchPlaceholder": "Search history..."
+        error: function (error) {
+          console.error('Error fetching DataTable configuration:', error);
         }
       });
     });

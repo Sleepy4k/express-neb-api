@@ -47,13 +47,35 @@
       const togglePassword = document.getElementById('togglePassword');
       const passwordInput = document.getElementById('password');
 
-      togglePassword.addEventListener('click', function () {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        this.querySelector('i').classList.toggle('bi-eye');
-        this.querySelector('i').classList.toggle('bi-eye-slash');
-        passwordInput.placeholder = type === 'password' ? '***************' : 'your password';
+      togglePassword.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        const icon = togglePassword.querySelector('i');
+        icon.classList.toggle('bi-eye', !isPassword);
+        icon.classList.toggle('bi-eye-slash', isPassword);
+        passwordInput.type = isPassword ? 'text' : 'password';
+        passwordInput.placeholder = isPassword ? 'your password' : '***************';
       });
+    }
+  </script>
+`) %>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
+    function initErrorHandler() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      if (!error || error === '') return;
+
+      switch (error) {
+        case 'verify':
+          toastr.error('Our system detected illegal action during the authentication process', 'Sign In');
+          break;
+        default:
+          break;
+      }
+
+      const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+      window.history.replaceState({ path: newUrl }, '', newUrl);
     }
   </script>
 `) %>
@@ -90,18 +112,22 @@
               password: password
             }),
             headers: {
+              'X-CSRF-Token': '${csrfToken}',
               'Accept': 'application/json',
               'Content-Type': 'application/json',
             }
           });
 
           if (response.ok) {
-            const data = await response.json();
-            toastr.success(data.message, 'Sign In');
-            toastr.info('Redirecting...', 'Logout');
+            const { message, data } = await response.json();
+            const { redirect_url, verificator } = data;
+
+            toastr.success(message, 'Sign In');
+            toastr.info('Redirecting...', 'Sign In');
+
             setTimeout(() => {
               toastr.clear();
-              window.location.href = data.data.redirect_url;
+              window.location.href = redirect_url + (verificator ? "?verificator=" + verificator : '');
             }, 750);
           } else {
             const errorData = await response.json();
@@ -117,6 +143,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', initHandler);
+    document.addEventListener('DOMContentLoaded', initErrorHandler);
     document.addEventListener('DOMContentLoaded', initPasswordHandler);
   </script>
 `) %>

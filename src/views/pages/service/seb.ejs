@@ -92,36 +92,33 @@
       const resultContainer = document.getElementById('resultContainer');
 
       downloadBtn.addEventListener('click', () => {
-        let fileName = "result";
         const formattedJsonData = {
-          shortTitle: "${title.charAt(0).toUpperCase()}",
-          title: "${title}",
+          shortTitle: "",
+          title: "",
           version: 2,
           headers: []
         };
 
+        let fileName = "result";
+
         const cardData = Array.from(resultContainer.children).map((colDiv) => {
           const cardBody = colDiv.querySelector('.card-body');
-          const cardTitle = cardBody.querySelector('.card-title').textContent;
-          const cardText = cardBody.querySelector('.card-text').textContent;
-          return { name: cardTitle, value: cardText };
+          return {
+            name: cardBody.querySelector('.card-title').textContent,
+            value: cardBody.querySelector('.card-text').textContent
+          }
         });
 
         cardData.forEach((item) => {
-          if (item.name.toLowerCase() === 'file-name') {
+          const name = item.name.toLowerCase();
+          if (name === 'file-name') {
             fileName = item.value;
             formattedJsonData.title = item.value;
             formattedJsonData.shortTitle = item.value.charAt(0).toUpperCase();
-          } else if (item.name.toLowerCase() === 'user-agent') {
-            formattedJsonData.headers.push({
-              enabled: false,
-              name: item.name,
-              value: item.value
-            });
           } else {
             formattedJsonData.headers.push({
               enabled: false,
-              appendMode: false,
+              appendMode: name !== 'user-agent',
               name: item.name,
               value: item.value
             });

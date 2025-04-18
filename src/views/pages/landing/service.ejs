@@ -6,11 +6,7 @@
   <style nonce="${cspNonce}">
     .service-container {
       width: 25rem;
-    }
-
-    .service-content-icon {
-      width: 50px;
-      height: 50px;
+      text-decoration: none;
     }
   </style>
 `) %>
@@ -20,12 +16,31 @@
     <h1 class="section-title">Our Service</h1>
     <p>We offer a variety of services to help you with your online exams and assignments.</p>
   </div>
+
   <div class="d-flex justify-content-center">
-    <a href="<%= route('service/seb') %>" class="text-decoration-none service-container">
-      <div class="btn btn-light d-flex align-items-center border shadow-sm p-3">
-        <img src="<%= asset('images/seb.png') %>" alt="SEB" class="me-3 service-content-icon" loading="lazy" />
-        <span class="fw-semibold text-dark">Safe Exam Browser</span>
-      </div>
-    </a>
+    <div class="col-md-12 col-lg-3">
+      <a href="<%= route('service/seb') %>" class="service-container">
+        <div class="cheat-card">
+          <div class="cheat-card-header bg-primary">
+            Safe Exam Broswer
+            <span class="badge bg-light text-dark">Popular</span>
+          </div>
+          <div class="cheat-card-body">
+            <div class="cheat-item">
+              <span class="cheat-name">Bypass the proctoring</span>
+              <span class="cheat-shortcut">Highlight correct</span>
+            </div>
+            <div class="cheat-item">
+              <span class="cheat-name">Free to switch between browser</span>
+              <span class="cheat-shortcut">Supported</span>
+            </div>
+            <div class="cheat-item">
+              <span class="cheat-name">Fast results</span>
+              <span class="cheat-shortcut">Instant</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
   </div>
 </div>
