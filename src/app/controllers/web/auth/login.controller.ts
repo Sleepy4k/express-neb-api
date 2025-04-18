@@ -1,10 +1,9 @@
 import type { Request, Response } from "express";
 
-import { LOGIN_PAYLOAD } from "@constants/auth-payload.js";
 import { RoleType } from "@enums/roleType.js";
 import UserModel from "@models/user.model.js";
-import { sha256 } from "@utils/encryption.js";
-import { parseHostname } from "@utils/parse.js";
+import { encryptAuthVerify, sha256 } from "@utils/encryption.js";
+import { getCurrentDateTime, parseHostname } from "@utils/parse.js";
 
 /**
  * The user model instance for the login controller
@@ -27,6 +26,7 @@ const form = (req: Request, res: Response) => {
   const isRedirectUrlGuarded = redirectUrl?.includes("/login") || redirectUrl?.includes("/dashboard");
 
   res.render("pages/auth/login", {
+    csrfToken: sha256(getCurrentDateTime()),
     redirect_url: isRedirectUrlGuarded ? baseUrl : (redirectUrl ?? baseUrl),
   });
 };
@@ -38,12 +38,12 @@ const form = (req: Request, res: Response) => {
  * @param {Response} res
  */
 const process = (req: Request, res: Response) => {
-  const { authKey, role } = req.query;
-
-  if (typeof authKey !== "string" || authKey === "" || sha256(authKey || "") !== LOGIN_PAYLOAD) {
-    res.status(400).send({
+  const headers = req.headers;
+  const csrf = headers["csrf-token"] ?? headers["x-csrf-token"];
+  if (typeof csrf !== "string" || csrf !== sha256(getCurrentDateTime())) {
+    res.status(403).send({
       data: {},
-      message: "Unauthorized access, please contact the administrator if you think this is a mistake",
+      message: "We couldn't verify your request, please try again",
       status: "error",
     });
     return;
@@ -96,7 +96,8 @@ const process = (req: Request, res: Response) => {
     return;
   }
 
-  const userRole = role === RoleType.ADMIN || role === RoleType.USER ? (role as RoleType) : RoleType.USER;
+  const { geng } = req.query;
+  const userRole = geng === RoleType.ADMIN || geng === RoleType.USER ? (geng as RoleType) : RoleType.USER;
   const userData = userModel.login(email, sha256(password), userRole);
   if (!userData) {
     res.status(400).send({
@@ -107,16 +108,19 @@ const process = (req: Request, res: Response) => {
     return;
   }
 
+  const fixedUserRole = userRole === RoleType.USER ? RoleType.USER : userData.role;
   req.session.user = {
     email: userData.email,
     password: userData.password,
-    role: userRole === RoleType.USER ? RoleType.USER : userData.role,
+    role: fixedUserRole,
+    verified: false,
   };
 
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
   res.status(200).json({
     data: {
-      redirect_url: `${baseUrl}/dashboard`,
+      redirect_url: `${baseUrl}/dashboard/`,
+      verificator: encryptAuthVerify(`${userData.email}${fixedUserRole}`),
     },
     message: "Login successfully",
     status: "success",

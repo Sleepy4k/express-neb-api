@@ -49,6 +49,21 @@ const parseHostname = (host?: null | string): string => {
 };
 
 /**
+ * Get the current date and time in the format YYYY-MM-DD
+ *
+ * @returns {string} The formatted date
+ */
+const getCurrentDateTime = (): string => {
+  const currentDate = new Date();
+  const day: string = String(currentDate.getDate()).padStart(2, "0");
+  const month: string = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const year: string = currentDate.getFullYear().toString();
+  const formattedDate = `${year}-${month}-${day}`;
+
+  return formattedDate;
+};
+
+/**
  * Process the XML value
  *
  * @param {Node} node - The XML node
@@ -261,47 +276,19 @@ const serialize = (dictionary: XMLDictionary): string => {
  * @returns {string} The redeem code
  */
 const nameToRedeemCode = (name: string, suffix: string): string => {
-  const currentDate = new Date();
-  const day: string = String(currentDate.getDate()).padStart(2, "0");
-  const month: string = String(currentDate.getMonth() + 1).padStart(2, "0");
-  const year: string = currentDate.getFullYear().toString();
-
+  // prettier-ignore
   const sensitiveCharacters = [
-    " ",
-    "-",
-    "_",
-    ".",
-    ",",
-    ":",
-    ";",
-    "!",
-    "@",
-    "#",
-    "$",
-    "%",
-    "^",
-    "&",
-    "*",
-    "(",
-    ")",
-    "+",
-    "=",
-    "{",
-    "}",
-    "[",
-    "]",
-    "|",
-    "\\",
-    "/",
-    "<",
-    ">",
-    "?",
-    "~",
+    " ", "-", "_", ".", ",",
+    ":", ";", "!", "@", "#",
+    "$", "%", "^", "&", "*",
+    "(", ")", "+", "=", "{",
+    "}", "[", "]", "|", "\\",
+    "/", "<", ">", "?", "~",
   ];
   const regex = new RegExp(`[${sensitiveCharacters.join("")}]`, "g");
   const reversedName = name.replace(regex, "").toLowerCase().split("").reverse().join("").replace(/\s+/g, "-");
 
-  return `${day}${month}${year}-${reversedName}-${suffix}`;
+  return `${getCurrentDateTime()}-${reversedName}-${suffix}`;
 };
 
-export { isValueNullOrUndefined, nameToRedeemCode, normalizePort, parseHostname, parseXMLString, serialize };
+export { getCurrentDateTime, isValueNullOrUndefined, nameToRedeemCode, normalizePort, parseHostname, parseXMLString, serialize };
