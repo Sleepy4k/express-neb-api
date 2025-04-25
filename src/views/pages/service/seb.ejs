@@ -6,60 +6,48 @@
   <link rel="stylesheet" href="${asset('vendor/bootstrap-icons/font/bootstrap-icons.min.css')}" nonce="${cspNonce}" />
   <link rel="stylesheet" href="${asset('vendor/toastr/css/toastr.min.css')}" nonce="${cspNonce}" />
   <style nonce="${cspNonce}">
-    input {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
     .btn-download {
       display: none;
-    }
-
-    @media (max-width: 768px) {
-      input {
-        width: 100%;
-        max-width: 85%;
-      }
     }
   </style>
 `) %>
 
-<div class="services text-center my-5">
-  <div class="container text-center faq-title">
-    <h1 class="fw-bold">Upload File</h1>
-    <p>Upload your SEB Config</p>
+<main class="services">
+  <div class="container">
+    <div class="upload-section">
+      <h1>Upload File</h1>
+      <p class="subtitle">Upload your SEB Config securely and easily</p>
 
-    <form id="service-form" action="#" method="POST" enctype="multipart/form-data">
-      <div class="mb-3">
-        <input type="text" class="form-control mx-auto" name="redeem_code" id="redeem_code" placeholder="Enter Redeem Code" />
-      </div>
+      <form id="service-form" class="upload-form" action="#" method="POST" enctype="multipart/form-data">
+        <div class="input-group animate-delay-1">
+          <input type="text" class="form-control" name="redeem_code" id="redeem_code" placeholder="Enter Redeem Code" />
+        </div>
 
-      <div class="mb-3">
-        <input type="text" class="form-control mx-auto" name="file_name" id="file_name" placeholder="Enter Name File" />
-      </div>
+        <div class="input-group animate-delay-2">
+          <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Enter Name File" />
+        </div>
 
-      <div class="mb-3">
-        <input type="file" class="form-control mx-auto" name="file" id="file" accept=".seb" />
-      </div>
+        <div class="file-upload animate-delay-3">
+          <input type="file" class="form-control" name="file" id="file" accept=".seb" />
+        </div>
 
-      <div class="d-flex justify-content-center gap-3">
-        <button type="submit" class="btn btn-primary px-4" id="submit-btn">
-          <i class="bi bi-upload me-2"></i>Upload
-        </button>
-        <button type="button" class="btn btn-primary btn-download px-4" id="download-btn">
-          <i class="bi bi-download me-2"></i>Download
-        </button>
-      </div>
-    </form>
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary" id="submit-btn">
+            <i class="bi bi-upload"></i>Upload
+          </button>
+          <button type="button" class="btn btn-primary btn-download" id="download-btn">
+            <i class="bi bi-download"></i>Download
+          </button>
+        </div>
+      </form>
+    </div>
 
-    <div class="json mt-4">
-      <div class="container">
-        <div class="row justify-content-center" id="resultContainer"></div>
-      </div>
+    <div class="configurations animate-delay-4">
+      <h3>Generated Configurations</h3>
+      <div class="config-grid" id="resultContainer"></div>
     </div>
   </div>
-</div>
+</main>
 
 <% block('addon-script', `
   <script src="${asset('vendor/jquery/jquery-3.7.1.min.js')}" nonce="${cspNonce}"></script>
@@ -150,22 +138,15 @@
 
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        const colDiv = document.createElement('div');
-        if (data.length % 2 !== 0 && index === data.length - 1) {
-          colDiv.className = 'col-md-10 mb-3';
-        } else {
-          colDiv.className = 'col-md-5 mb-3';
-        }
-
         const card = document.createElement('div');
-        card.className = 'card h-100';
+        card.className = 'config-card';
 
         const cardBody = document.createElement('div');
         cardBody.className = 'card-body';
 
         const cardTitle = document.createElement('h5');
         cardTitle.className = 'card-title';
-        cardTitle.textContent = element.name;
+        cardTitle.innerHTML = '<i class="bi bi-file-code"></i>'+element.name;
 
         const cardText = document.createElement('p');
         cardText.className = 'card-text';
@@ -174,8 +155,7 @@
         cardBody.appendChild(cardTitle);
         cardBody.appendChild(cardText);
         card.appendChild(cardBody);
-        colDiv.appendChild(card);
-        resultContainer.appendChild(colDiv);
+        resultContainer.appendChild(card);
       }
     }
   </script>

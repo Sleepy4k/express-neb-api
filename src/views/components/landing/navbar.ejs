@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-transparent p-3 fixed-top">
-  <div class="container bg-light">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container">
     <a class="navbar-brand text-primary" href="<%= route() %>">NEB<span class="text-dark"></span></a>
     <button
       class="navbar-toggler"
@@ -10,9 +10,9 @@
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-      <span class="navbar-burger">&#9776;</span>
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse p-3 rounded" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a class="nav-link <%= isRouteActive() %>" href="<%= route() %>">Home</a></li>
         <li class="nav-item"><a class="nav-link <%= isRouteActive('service/') %>" href="<%= route('service/') %>">Services</a></li>
