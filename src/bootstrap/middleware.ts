@@ -58,7 +58,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   /**
    * Rate limiter
    */
-  app.use(rateLimit(rateLimitConfig));
+  if (!isDevMode) app.use(rateLimit(rateLimitConfig));
 
   /**
    * Content Security Policy
