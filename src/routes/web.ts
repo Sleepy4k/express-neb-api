@@ -9,7 +9,7 @@ import * as serviceController from "@controllers/web/landing/service.controller.
 import * as tutorialController from "@controllers/web/landing/tutorial.controller.js";
 import * as sebController from "@controllers/web/service/seb.controller.js";
 import authenticationHandler from "@middleware/authentication.js";
-import fileUploader from "@middleware/fileUploader.js";
+import { sebFileUploader } from "@middleware/fileUploader.js";
 import { Router } from "express";
 
 const webRouter = Router();
@@ -24,7 +24,7 @@ webRouter.get("/service", serviceController.home);
 
 webRouter.get("/service/seb", sebController.form);
 webRouter.post("/service/seb", sebController.missUrl);
-webRouter.post("/service/seb/:redeemCode", fileUploader.single("file"), sebController.bypass);
+webRouter.post("/service/seb/:redeemCode", sebFileUploader.single("file"), sebController.bypass);
 
 webRouter.get("/tutorial", tutorialController.home);
 
