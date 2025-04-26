@@ -5,13 +5,16 @@ xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://nach-neb.my.id/dashboard/generate</loc>
     <lastmod>2025-04-04</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nach-neb.my.id/dashboard/history</loc>
     <lastmod>2025-04-04</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nach-neb.my.id/dashboard/token</loc>
     <lastmod>2025-04-04</lastmod>
+    <priority>0.7</priority>
   </url>
 </urlset>

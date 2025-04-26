@@ -636,7 +636,7 @@ textarea.form-control {
 .tutorial-card code {
   background-color: transparent;
   color: var(--dark-color);
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   font-size: 0.9rem;
 }
 
@@ -831,6 +831,6 @@ footer {
   }
 
   .tutorial-img {
-    max-height: 300px;
+    max-height:  300px;
   }
 }
