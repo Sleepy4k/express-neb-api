@@ -4,6 +4,7 @@ import * as dashboardController from "@controllers/web/dashboard/dashboard.contr
 import * as generateController from "@controllers/web/dashboard/generate.controller.js";
 import * as historyController from "@controllers/web/dashboard/history.controller.js";
 import * as tokenController from "@controllers/web/dashboard/token.controller.js";
+import * as contactController from "@controllers/web/landing/contact.controller.js";
 import * as homeController from "@controllers/web/landing/home.controller.js";
 import * as serviceController from "@controllers/web/landing/service.controller.js";
 import * as tutorialController from "@controllers/web/landing/tutorial.controller.js";
@@ -18,6 +19,7 @@ webRouter.get("/", homeController.home);
 
 webRouter.get("/login", authenticationHandler, loginController.form);
 webRouter.post("/login", authenticationHandler, loginController.process);
+
 webRouter.delete("/logout", authenticationHandler, logoutController.process);
 
 webRouter.get("/service", serviceController.home);
@@ -27,6 +29,8 @@ webRouter.post("/service/seb", sebController.missUrl);
 webRouter.post("/service/seb/:redeemCode", sebFileUploader.single("file"), sebController.bypass);
 
 webRouter.get("/tutorial", tutorialController.home);
+
+webRouter.get("/contact", contactController.home);
 
 webRouter.get("/dashboard", authenticationHandler, dashboardController.home);
 webRouter.get("/dashboard/generate", authenticationHandler, generateController.home);
