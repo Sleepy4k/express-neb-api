@@ -17,6 +17,7 @@
         <li class="nav-item"><a class="nav-link <%= isRouteActive() %>" href="<%= route() %>">Home</a></li>
         <li class="nav-item"><a class="nav-link <%= isRouteActive('service/') %>" href="<%= route('service/') %>">Services</a></li>
         <li class="nav-item"><a class="nav-link <%= isRouteActive('tutorial') %>" href="<%= route('tutorial') %>">Tutorial</a></li>
+        <li class="nav-item"><a class="nav-link <%= isRouteActive('contact') %>" href="<%= route('contact') %>">Contact</a></li>
 
         <% if (isLoggedIn) { %>
           <li class="nav-item d-lg-none"><a class="nav-link <%= isRouteActive('dashboard') %>" href="<%= route('dashboard') %>">Dashboard</a></li>

@@ -1,0 +1,92 @@
+<% layout('layouts/main.layout') %>
+
+<% block('subTitle', 'Contact Us') %>
+
+<% block('addon-style', `
+  <link rel="stylesheet" href="${asset('vendor/bootstrap-icons/font/bootstrap-icons.min.css')}" nonce="${cspNonce}" />
+  <link rel="stylesheet" href="${asset('vendor/toastr/css/toastr.min.css')}" nonce="${cspNonce}" />
+`) %>
+
+<main class="contact-page">
+  <div class="container">
+    <div class="contact-header text-center animate__animated" data-animation="animate__fadeIn">
+      <h1>Contact Us</h1>
+      <p class="subtitle">Have questions or need support? Send us a message</p>
+    </div>
+
+    <div class="contact-form animate__animated" data-animation="animate__fadeInUp">
+        <form id="contact-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" class="form-control" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" class="form-control" required>
+                    <option value="" disabled selected>Select your inquiry</option>
+                    <option value="payment">Payment Issue</option>
+                    <option value="service">Service Question</option>
+                    <option value="technical">Technical Support</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" class="form-control" rows="4" placeholder="Describe your inquiry in detail" required></textarea>
+            </div>
+
+            <div class="form-submit">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send-fill me-2"></i>Submit Inquiry
+                </button>
+            </div>
+        </form>
+    </div>
+  </div>
+</main>
+
+<% block('addon-script', `
+  <script src="${asset('vendor/jquery/jquery-3.7.1.min.js')}" nonce="${cspNonce}"></script>
+  <script src="${asset('vendor/toastr/js/toastr.min.js')}" nonce="${cspNonce}"></script>
+  <script nonce="${cspNonce}">
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": true,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
+  </script>
+`) %>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
+    function initHandler() {
+      const form = document.getElementById('contact-form');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        toastr.warning('Contact form submission is under construction. Please check back later.', 'Contact Us');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initHandler);
+  </script>
+`) %>
