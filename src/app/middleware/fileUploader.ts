@@ -46,7 +46,7 @@ const sebFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback): voi
  */
 const sebDiskStorage = multer.diskStorage({
   destination: (_req: Request, _file: MulterFile, cb: DestinationCallback): void => {
-    cb(null, path.join(__basedir, "storage/app/service"));
+    cb(null, path.join(__basedir, "storage/app/seb/config"));
   },
   filename: (req: Request, file: MulterFile, cb: FileNameCallback): void => {
     const { redeemCode } = req.params;
@@ -59,51 +59,8 @@ const sebDiskStorage = multer.diskStorage({
 });
 
 /**
- * Filter Payment files only
- *
- * @param {Request} _req
- * @param {Express.Multer.File} file
- * @param {FileFilterCallback} cb
- *
- * @returns {void}
- */
-const paymentFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback): void => {
-  const { mimetype, originalname } = file;
-  const fileExtension = originalname.split(".").pop() ?? "";
-  const isExtensionValid = FILE_EXTENSIONS.payment.extensions.includes(`.${fileExtension}`);
-  const isMimeTypeValid = FILE_EXTENSIONS.payment.mimeTypes.includes(mimetype);
-
-  cb(null, isExtensionValid && isMimeTypeValid);
-};
-
-/**
- * Setup the storage for the payment file
- */
-const paymentDiskStorage = multer.diskStorage({
-  destination: (_req: Request, _file: MulterFile, cb: DestinationCallback): void => {
-    cb(null, path.join(__basedir, "storage/app/payment"));
-  },
-  filename: (req: Request, file: MulterFile, cb: FileNameCallback): void => {
-    const { redeemCode } = req.params;
-    const uniqueSuffix = Math.floor(Math.random() * 10000).toString();
-    const prefixName = redeemCode ? `seb-${redeemCode}` : "seb";
-    const fileName = file.originalname.replaceAll(" ", "-");
-
-    cb(null, `${prefixName}-${uniqueSuffix}-${fileName}`);
-  },
-});
-
-/**
  * SEB File uploader middleware
  */
 const sebFileUploader = multer({ fileFilter: sebFilter, storage: sebDiskStorage });
 
-/**
- * Payment File uploader middleware
- */
-const paymentFileUploader = multer({ fileFilter: paymentFilter, storage: paymentDiskStorage });
-
-export {
-  paymentFileUploader,
-  sebFileUploader
-};
+export { sebFileUploader };
