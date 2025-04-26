@@ -10,6 +10,6 @@ export const discordConfig = {
         text: process.env.DISCORD_WEBHOOK_EMBED_FOOTER_TEXT ?? "",
         icon_url: process.env.DISCORD_WEBHOOK_EMBED_FOOTER_ICON_URL ?? "",
       },
-    }
-  }
-}
+    },
+  },
+};
