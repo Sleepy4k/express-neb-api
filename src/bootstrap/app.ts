@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-classes */
 import { appConfig } from "@config/app.config.js";
 import generateNonce from "@utils/nonce.js";
 import { normalizePort } from "@utils/parse.js";
@@ -9,6 +10,11 @@ import provider from "./provider.js";
 import routes from "./routes.js";
 
 class App {
+  #cspNonce: string;
+  #dirname: string;
+  #instance: Express;
+  #isDevMode: boolean;
+
   /**
    * Get path to the application directory
    *
@@ -26,11 +32,6 @@ class App {
   public get instance(): Express {
     return this.#instance;
   }
-
-  #cspNonce: string;
-  #dirname: string;
-  #instance: Express;
-  #isDevMode: boolean;
 
   /**
    * Create an instance of the application

@@ -37,7 +37,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   /**
    * Setup logger
    */
-  app.use(logger(isDevMode ? "dev" : "tiny"));
+  if (isDevMode) app.use(logger("dev"));
 
   /**
    * Setup CORS
