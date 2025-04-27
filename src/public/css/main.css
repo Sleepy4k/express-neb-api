@@ -554,6 +554,145 @@ textarea.form-control {
   color: var(--white);
 }
 
+/* Pricing Section Styles */
+.pricing-section {
+  padding: 6rem 0;
+  margin-bottom: 3rem;
+  background-color: var(--secondary-color);
+}
+
+.pricing-header {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.pricing-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.pricing-box {
+  flex: 1;
+  min-width: 280px;
+  max-width: 350px;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  position: relative;
+  z-index: 1;
+}
+
+.pricing-box.highlighted {
+  transform: translateY(-20px);
+  z-index: 2;
+  border: 2px solid var(--primary-color);
+  box-shadow: var(--shadow-lg);
+}
+
+.pricing-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background-color: var(--accent-color);
+  color: var(--white);
+  padding: 0.5rem 1.5rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+}
+
+.pricing-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.price .period {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.pricing-features {
+  margin: 2rem 0;
+}
+
+.pricing-features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.pricing-features li {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: var(--text-color);
+}
+
+.pricing-features i {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  margin-top: 0.2rem;
+}
+
+.btn-pricing {
+  width: 100%;
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  border: none;
+  transition: var(--transition);
+}
+
+.btn-pricing:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.pricing-box.highlighted .btn-pricing {
+  background-color: var(--accent-color);
+}
+
+.pricing-box.highlighted .btn-pricing:hover {
+  background-color: #e69009;
+}
+
+/* Animasi Kustom */
+.animate__delay-1s {
+  animation-delay: 0.5s;
+}
+
+.animate__delay-2s {
+  animation-delay:  1s;
+}
+
 /* Tutorial Section Styles */
 .tutorial-section {
   padding: 6rem 0;
@@ -749,6 +888,23 @@ footer {
 }
 
 /* Responsive Styles */
+@media (max-width: 992px) {
+  .pricing-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pricing-box {
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .pricing-box.highlighted {
+    transform: none;
+    order: -1;
+  }
+}
+
 @media (max-width: 768px) {
   .upload-section h1 {
     font-size: 2rem;
@@ -832,5 +988,15 @@ footer {
 
   .tutorial-img {
     max-height:  300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .pricing-section {
+    padding: 4rem 0;
+  }
+
+  .price {
+    font-size: 2rem;
   }
 }
