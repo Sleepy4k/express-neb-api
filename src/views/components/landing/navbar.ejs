@@ -2,8 +2,8 @@
   <div class="container">
     <a class="navbar-brand text-primary" href="<%= route() %>">NEB<span class="text-dark"></span></a>
     <button
-      class="navbar-toggler"
       type="button"
+      class="navbar-toggler"
       data-bs-toggle="collapse"
       data-bs-target="#navbarNav"
       aria-controls="navbarNav"
@@ -16,6 +16,7 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a class="nav-link <%= isRouteActive() %>" href="<%= route() %>">Home</a></li>
         <li class="nav-item"><a class="nav-link <%= isRouteActive('service/') %>" href="<%= route('service/') %>">Services</a></li>
+        <li class="nav-item"><a class="nav-link <%= isRouteActive('pricing') %>" href="<%= route('pricing') %>">Pricing</a></li>
         <li class="nav-item"><a class="nav-link <%= isRouteActive('tutorial') %>" href="<%= route('tutorial') %>">Tutorial</a></li>
         <li class="nav-item"><a class="nav-link <%= isRouteActive('contact') %>" href="<%= route('contact') %>">Contact</a></li>
 

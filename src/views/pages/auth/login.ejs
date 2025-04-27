@@ -142,8 +142,10 @@
       });
     }
 
-    document.addEventListener('DOMContentLoaded', initHandler);
-    document.addEventListener('DOMContentLoaded', initErrorHandler);
-    document.addEventListener('DOMContentLoaded', initPasswordHandler);
+    document.addEventListener('DOMContentLoaded', () => {
+      initHandler();
+      initErrorHandler();
+      initPasswordHandler();
+    });
   </script>
 `) %>

@@ -109,7 +109,9 @@
       });
     }
 
-    document.addEventListener('DOMContentLoaded', initHandler);
-    document.addEventListener('DOMContentLoaded', initCopyButton);
+    document.addEventListener('DOMContentLoaded', () => {
+      initHandler();
+      initCopyButton();
+    });
   </script>
 `) %>

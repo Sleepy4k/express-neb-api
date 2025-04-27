@@ -199,8 +199,8 @@
         formData.append('file_name', fileName);
         formData.append('file', fileInput.files[0]);
 
-        submitButton.disabled = true;
-        submitButton.value = 'Loading...';
+        submitButton.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Sending...';
+        submitButton.setAttribute('disabled', 'disabled');
 
         toastr.info('Processing your request...', 'Service');
 
@@ -209,7 +209,7 @@
             method: 'POST',
             body: formData,
             headers: {
-              'Accept': 'application/json'
+              Accept: 'application/json'
             }
           });
 
@@ -217,6 +217,7 @@
             const data = await response.json();
             toastr.success(data.message, 'Service');
             showResult(data.data);
+            form.reset();
           } else {
             const errorData = await response.json();
             toastr.error(errorData.message, 'Service');
@@ -224,14 +225,15 @@
         } catch (error) {
           toastr.error('An error occurred while uploading the file.', 'Service');
         } finally {
-          form.reset();
-          submitButton.disabled = false;
-          submitButton.value = 'Upload';
+          submitButton.innerHTML = '<i class="bi bi-upload"></i>Upload';
+          submitButton.removeAttribute('disabled');
         }
       });
     }
 
-    document.addEventListener('DOMContentLoaded', initHandler);
-    document.addEventListener('DOMContentLoaded', downloadResult);
+    document.addEventListener('DOMContentLoaded', () => {
+      initHandler();
+      downloadResult();
+    });
   </script>
 `) %>

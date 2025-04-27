@@ -1,0 +1,75 @@
+<% layout('layouts/main.layout') %>
+
+<% block('subTitle', 'Pricing') %>
+
+<% const trakteerTipURL = 'https://trakteer.id/nach-neb/tip'; %>
+
+<main class="pricing-section">
+  <div class="container">
+    <div class="pricing-header text-center mb-5 animate__animated" data-animation="animate__fadeInDown">
+      <h1 class="section-title">Token Pricing</h1>
+      <p class="section-subtitle animate__animated" data-animation="animate__fadeIn animate__delay-1s">Choose the right package for your needs</p>
+    </div>
+
+    <div class="pricing-container">
+      <div class="pricing-box basic-plan animate__animated" data-animation="animate__fadeInLeft">
+        <a href="<%= trakteerTipURL %>" target="_blank" rel="noopener" class="pricing-link">
+          <div class="pricing-header">
+            <h3>Basic Plan</h3>
+            <div class="price">35K<span class="period">/1 token</span></div>
+          </div>
+          <div class="pricing-features">
+            <ul>
+              <li><i class="bi bi-check-circle"></i>Standard pricing</li>
+              <li><i class="bi bi-check-circle"></i>Supports all configurations</li>
+              <li><i class="bi bi-check-circle"></i>Perfect for beginners</li>
+            </ul>
+          </div>
+          <div class="pricing-footer">
+            <button class="btn btn-pricing">Get Started</button>
+          </div>
+        </a>
+      </div>
+
+      <div class="pricing-box premium-plan highlighted animate__animated" data-animation="animate__zoomIn animate__delay-1s">
+        <a href="<%= trakteerTipURL %>" target="_blank" rel="noopener" class="pricing-link">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-header">
+            <h3>Premium Plan</h3>
+            <div class="price">150K<span class="period">/5 (+1) tokens</span></div>
+          </div>
+          <div class="pricing-features">
+            <ul>
+              <li><i class="bi bi-check-circle"></i>6 Exam Tokens Included</li>
+              <li><i class="bi bi-check-circle"></i>Save 60K instantly</li>
+              <li><i class="bi bi-check-circle"></i>Scalable for bulk purchases</li>
+              <li><i class="bi bi-check-circle"></i>Exclusive premium benefits</li>
+            </ul>
+          </div>
+          <div class="pricing-footer">
+            <button class="btn btn-pricing">Get Started</button>
+          </div>
+        </a>
+      </div>
+
+      <div class="pricing-box middle-plan animate__animated" data-animation="animate__fadeInRight">
+        <a href="<%= trakteerTipURL %>" target="_blank" rel="noopener" class="pricing-link">
+          <div class="pricing-header">
+            <h3>Enterprise Plan</h3>
+            <div class="price">90K<span class="period">/3 tokens</span></div>
+          </div>
+          <div class="pricing-features">
+            <ul>
+              <li><i class="bi bi-check-circle"></i>Save 15K on this plan</li>
+              <li><i class="bi bi-check-circle"></i>Supports all configurations</li>
+              <li><i class="bi bi-check-circle"></i>Ideal for growing teams</li>
+            </ul>
+          </div>
+          <div class="pricing-footer">
+            <button class="btn btn-pricing">Get Started</button>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
