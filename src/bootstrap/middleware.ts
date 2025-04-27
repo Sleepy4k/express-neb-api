@@ -31,7 +31,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
    * Setup default express middlewares
    */
   app.use(express.json({ strict: true }));
-  app.use(express.urlencoded({ extended: false, parameterLimit: 4 }));
+  app.use(express.urlencoded({ extended: true, parameterLimit: 4 }));
   app.use(express.static(path.join(dirname, "public"), assetConfig));
 
   /**
