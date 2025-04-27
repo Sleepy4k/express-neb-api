@@ -49,7 +49,11 @@
         method: 'GET',
         dataType: 'json',
         success: function (data) {
-          const table = $('.token-table').DataTable(data.data);
+          const updatedData = {
+            ...data.data,
+            order: [[5, "desc"]],
+          };
+          const table = $('.token-table').DataTable(updatedData);
         },
         error: function (error) {
           console.error('Error fetching DataTable configuration:', error);

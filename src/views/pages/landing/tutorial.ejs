@@ -1,96 +1,125 @@
 <% layout('layouts/main.layout') %>
 
-<% block('subTitle', 'Tutorial') %>
+<% block('subTitle', 'Tutorial & Guide') %>
 
-<div class="tutorial">
-  <div class="container text-center my-5">
-    <h1 class="section-title">Frequently Asked Questions</h1>
-    <p class="mb-5">Have questions? We have answers! Check out our FAQ section below.</p>
+<section class="tutorial-section">
+  <div class="container">
+    <div class="tutorial-header text-center mb-5">
+      <h1 class="section-title animate__animated" data-animation="animate__fadeIn">Tutorial & Guide</h1>
+      <p class="section-subtitle animate__animated" data-animation="animate__fadeIn animate__delay-1s"> Learn how to use our platform with these easy-to-follow guides </p>
+    </div>
 
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="accordion" id="faqAccordion">
-          <!-- FAQ Item 1 -->
-          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed bg-primary text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="false"
-                aria-controls="collapseOne"
-              >
-                <strong>What is NEB?</strong>
-              </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body bg-light">
-                NEB is a platform designed to help students with their online exams and assignments by providing fast and reliable answers.
-              </div>
+    <div class="tutorial-tabs-container">
+      <ul class="nav nav-tabs tutorial-tabs" id="tutorialTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic-content" type="button" role="tab" aria-controls="basic-content" aria-selected="true"> Install ModHeader </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="redeem-tab" data-bs-toggle="tab" data-bs-target="#redeem-content" type="button" role="tab" aria-controls="redeem-content" aria-selected="false"> Redeem Code </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="usage-tab" data-bs-toggle="tab" data-bs-target="#usage-content" type="button" role="tab" aria-controls="usage-content" aria-selected="false"> How to Use </button>
+        </li>
+      </ul>
+
+      <div class="tab-content tutorial-content" id="tutorialTabsContent">
+        <div class="tab-pane fade show active" id="basic-content" role="tabpanel" aria-labelledby="basic-tab">
+          <div class="tutorial-card">
+            <h2>Install ModHeader on Your Browser</h2>
+
+            <h3>Step 1</h3>
+            <p>Open your browser and search for the ModHeader Extension.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/modheader/step1.png') %>" alt="Step 1 - Searching for ModHeader Extension" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <h3>Step 2</h3>
+            <p>Install the ModHeader Extension.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/modheader/step2.png') %>" alt="Step 2 - Installing ModHeader" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <h3>Step 3</h3>
+            <p>Once installed, you should see a screen like this, indicating the installation is complete.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/modheader/step3.png') %>" alt="Step 3 - Post-installation Screen" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <div class="tutorial-note">
+              <strong>Note:</strong> Be cautious when using ModHeader. Avoid modifying critical headers.
             </div>
           </div>
+        </div>
 
-          <!-- FAQ Item 2 -->
-          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed bg-primary text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseTwo"
-                aria-expanded="false"
-                aria-controls="collapseTwo"
-              >
-                <strong>Is it free to use?</strong>
-              </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body bg-light">Yes! All our services are completely free to use with no hidden fees as long as you had the redeem code.</div>
+        <div class="tab-pane fade" id="redeem-content" role="tabpanel" aria-labelledby="redeem-tab">
+          <div class="tutorial-card">
+            <h2>Redeem Your Token to Get the Config</h2>
+            <p>Ensure you have received a token from us.</p>
+            <h3>Example Token:</h3>
+            <pre>2025-01-01-blueband-1234-01</pre>
+
+            <h3>Step 1</h3>
+            <p>Go to the service page and select Safe Exam Browser.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/redeem/step1.png') %>" alt="Step 1 - Selecting Safe Exam Browser" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <h3>Step 2</h3>
+            <p>Fill out the form with your token, config name, and upload the config.seb file.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/redeem/step2.png') %>" alt="Step 2 - Filling Out the Form" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <h3>Step 3</h3>
+            <p>Click the Upload button and wait for a notification confirming the config creation.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/redeem/step3.png') %>" alt="Step 3 - Success Notification" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <h3>Step 4</h3>
+            <p>Download the generated config.seb file.</p>
+
+            <div class="tutorial-note">
+              <strong>Note:</strong> Tokens can only be used once. Handle them carefully.
             </div>
           </div>
+        </div>
 
-          <!-- FAQ Item 3 -->
-          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed bg-primary text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseThree"
-                aria-expanded="false"
-                aria-controls="collapseThree"
-              >
-                <strong>How does it work?</strong>
-              </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body bg-light">Simply select the service you need, provide your redeem code and get your answers in seconds.</div>
+        <div class="tab-pane fade" id="usage-content" role="tabpanel" aria-labelledby="usage-tab">
+          <div class="tutorial-card">
+            <h2>How to Use the Config</h2>
+            <p>Make sure you have downloaded the JSON file after redeeming your token.</p>
+
+            <h3>Step 1</h3>
+            <p>Open the ModHeader extension in your browser.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/usage/step1.png') %>" alt="Step 1 - Opening ModHeader" class="img-fluid tutorial-img" loading="lazy">
             </div>
-          </div>
 
-          <!-- FAQ Item 4 (additional example) -->
-          <div class="accordion-item mb-3 border-0 rounded overflow-hidden shadow-sm">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed bg-primary text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseFour"
-                aria-expanded="false"
-                aria-controls="collapseFour"
-              >
-                <strong>Is this service safe to use?</strong>
-              </button>
-            </h2>
-            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body bg-light">
-                Absolutely! We prioritize your privacy and security. All data is encrypted and we don't store personal information.
-              </div>
+            <h3>Step 2</h3>
+            <p>Follow the steps shown below.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/usage/step2.png') %>" alt="Step 2 - Using ModHeader" class="img-fluid tutorial-img" loading="lazy">
+              <img src="<%= asset('images/usage/step3.png') %>" alt="Step 2 - Using ModHeader (import)" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <h3>Step 3</h3>
+            <p>After loading the JSON file, your ModHeader should look like this. Check all the boxes.</p>
+            <div class="tutorial-img-container">
+              <img src="<%= asset('images/usage/step4.png') %>" alt="Step 3 - ModHeader Configuration" class="img-fluid tutorial-img" loading="lazy">
+            </div>
+
+            <pre>Now, open your Quiz/Exam page and refresh it.</pre>
+            <pre>
+              <h3>Congratulations! You can now take the quiz without using Safe Exam Browser.</h3>
+            </pre>
+
+            <div class="tutorial-note">
+              <strong>Note:</strong> Be cautious when using ModHeader. Avoid modifying critical headers.
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>

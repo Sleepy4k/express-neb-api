@@ -17,7 +17,7 @@
       message: "Unless you really know what you're doing, close this page and stay safe.",
     },
     {
-      message: "If you really understand what you are doing, you should work with us.",
+      message: `If you really understand what you are doing, you should work with us. Check out our form: %c${window.location.origin}/contact`,
     },
   ];
 

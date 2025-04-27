@@ -1,5 +1,13 @@
-<% const footerClass = isRouteActive() == 'active' ? "" : "fixed-bottom"; %>
+<%
+const fixedFooterClass = 'footer-fixed';
+const fixedFooterRoutes = [
+  'service/seb',
+];
 
-<footer class="text-center text-lg-start bg-light w-100 <%= footerClass %>">
-  <div class="text-center p-3 footer">© <%= currentYear %> <%= title %>. All Rights Reserved.</div>
+const isFixedFooter = fixedFooterRoutes.some(route => isRouteActive(route));
+const footerClass = isFixedFooter ? fixedFooterClass : '';
+%>
+
+<footer class="footer <%= footerClass %>">
+  <div class="container text-center">© <%= currentYear %> <%= title %>. All Rights Reserved.</div>
 </footer>

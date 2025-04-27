@@ -8,7 +8,26 @@ import RedeemModel from "@models/redeem.model.js";
 import Sanitation from "@modules/sanitation.js";
 import SebFile from "@modules/seb.js";
 import UserAgentGenerator from "@modules/userAgent.js";
+import { ParamsDictionary } from "express-serve-static-core";
 import fs from "node:fs";
+
+/**
+ * The interface for the request body
+ * @interface IBypassBody
+ */
+interface IBypassBody {
+  file_name: string;
+  redeem_code: string;
+}
+
+/**
+ * The interface for the request parameters
+ * @interface IBypassParams
+ * @extends ParamsDictionary
+ */
+interface IBypassParams extends ParamsDictionary {
+  redeemCode: string;
+}
 
 /**
  * The redeem model instance for the service controller
@@ -54,7 +73,7 @@ const missUrl = (_req: Request, res: Response) => {
  * @param {Request} req - The request
  * @param {Response} res - The response
  */
-const bypass = async (req: Request, res: Response) => {
+const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Response) => {
   const redeemCode = req.params.redeemCode;
 
   if (!redeemCode || typeof redeemCode !== "string") {
@@ -140,7 +159,6 @@ const bypass = async (req: Request, res: Response) => {
         status: "success",
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { file_name, redeem_code } = req.body;
       if (redeem_code && redeem_code !== "") {
         res.status(400).json({
@@ -161,7 +179,7 @@ const bypass = async (req: Request, res: Response) => {
         },
         { condition: serviceConfig.response.showRequestHash, name: SEB_RH_HTTP_HEADER_NAME, value: sebFile.RequestHash },
         { condition: serviceConfig.response.showConfigHash, name: SEB_CKH_HTTP_HEADER_NAME, value: sebFile.getConfigKey(sebFile.StartUrl || "") },
-        { condition: true, name: "File-Name", value: (file_name as string) || "Naka Exam Bypasser" },
+        { condition: true, name: "File-Name", value: file_name || "Naka Exam Bypasser" },
         { condition: serviceConfig.response.showSerializedJson, name: "Serialized", value: sebFile.SerializedJson },
         { condition: serviceConfig.response.showDictionnary, name: "Dictionary", value: JSON.stringify(sebFile.Dictionnary) },
       ];

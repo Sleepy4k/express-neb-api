@@ -61,7 +61,7 @@
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:site" content="@artkana30">
-    <meta data-sm property="twitter:title" content="<%= title %>">
+    <meta property="twitter:title" content="<%= title %>">
     <meta property="twitter:description" content="<%= description %>">
     <meta property="twitter:image" content="<%= asset('images/seb.png') %>">
     <meta property="twitter:image:alt" content="<%= title %>">
@@ -76,19 +76,13 @@
     <link rel="preload" href="<%= asset('vendor/bootstrap/css/bootstrap.min.css') %>" as="style" nonce="<%= cspNonce %>" />
 
     <link rel="stylesheet" href="<%= asset('vendor/bootstrap/css/bootstrap.min.css') %>" nonce="<%= cspNonce %>" />
+    <link rel="stylesheet" href="<%= asset('vendor/animate/animate.min.css') %>" nonce="<%= cspNonce %>" />
     <link rel="stylesheet" href="<%= asset('css/main.css') %>" nonce="<%= cspNonce %>" />
 
     <%- block('addon-style') %>
   </head>
   <body>
-    <% if (isRouteActive() == 'active') { %>
-      <div class="title">
-        <%- partial('components/landing/navbar') %>
-        <%- block('hero') %>
-      </div>
-    <% } else { %>
-      <%- partial('components/landing/navbar') %>
-    <% } %>
+    <%- partial('components/landing/navbar') %>
 
     <%- body %>
 
@@ -97,6 +91,29 @@
     <script src="<%= asset('vendor/bootstrap/js/bootstrap.min.js') %>" nonce="<%= cspNonce %>" defer></script>
 
     <script src="<%= asset('js/main.js') %>" nonce="<%= cspNonce %>" defer></script>
+
+    <script nonce="<%= cspNonce %>">
+      window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+      });
+    </script>
+
+    <script nonce="<%= cspNonce %>">
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(({ isIntersecting, target }) => {
+            if (isIntersecting) {
+              const animations = target.dataset.animation.split(' ');
+              animations.forEach(animation => target.classList.add(animation));
+              observer.unobserve(target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate__animated').forEach(el => observer.observe(el));
+      });
+    </script>
 
     <%- block('addon-script') %>
   </body>

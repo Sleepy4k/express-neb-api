@@ -6,6 +6,15 @@ import { encryptAuthVerify, sha256 } from "@utils/encryption.js";
 import { getCurrentDateTime, parseHostname } from "@utils/parse.js";
 
 /**
+ * The interface for the request body
+ * @interface IProcessBody
+ */
+interface IProcessBody {
+  email: string;
+  password: string;
+}
+
+/**
  * The user model instance for the login controller
  *
  * @type {UserModel}
@@ -37,60 +46,39 @@ const form = (req: Request, res: Response) => {
  * @param {Request} req
  * @param {Response} res
  */
-const process = (req: Request, res: Response) => {
-  const headers = req.headers;
-  const csrf = headers["csrf-token"] ?? headers["x-csrf-token"];
-  if (typeof csrf !== "string" || csrf !== sha256(getCurrentDateTime())) {
-    res.status(403).send({
+const process = (req: Request<object, object, IProcessBody>, res: Response) => {
+  const csrfToken = req.headers["csrf-token"] ?? req.headers["x-csrf-token"];
+  if (!csrfToken || csrfToken !== sha256(getCurrentDateTime())) {
+    res.status(403).json({
       data: {},
-      message: "We couldn't verify your request, please try again",
+      message: "Invalid CSRF token. Please try again.",
       status: "error",
     });
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { email, password } = req.body;
-
-  if (typeof email !== "string" || email === "") {
+  if (!email || !password || typeof email !== "string" || typeof password !== "string") {
     res.status(400).send({
       data: {},
-      message: "Make sure providing a valid email and password",
+      message: "Make sure to provide a valid email and password",
       status: "error",
     });
     return;
   }
 
-  if (typeof password !== "string" || password === "") {
-    res.status(400).send({
-      data: {},
-      message: "Make sure providing a valid email and password",
-      status: "error",
-    });
-    return;
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidPassword = /^[a-zA-Z0-9!@#$%^&*]{6,}$/.test(password);
+  if (!isValidEmail || !isValidPassword) {
     res.status(400).send({
       data: {
-        email: email,
-        format: "Include @ and . in the email address",
+        email: isValidEmail ? undefined : email,
+        emailFormatHint: isValidEmail ? undefined : "Include @ and . in the email address",
+        passwordFormatHint: isValidPassword ? undefined : "Include letters, numbers, and special characters",
       },
-      message: "Invalid email format",
-      status: "error",
-    });
-    return;
-  }
-
-  const passwordRegex = /^[a-zA-Z0-9!@#$%^&*]{6,}$/;
-  if (!passwordRegex.test(password)) {
-    res.status(400).send({
-      data: {
-        format: "Include letters, numbers, and special characters",
-        password: password,
-      },
-      message: "Password must be at least 6 characters long and contain only letters, numbers, and special characters",
+      message: isValidEmail
+        ? "Password must be at least 6 characters long and contain only letters, numbers, and special characters"
+        : "Email must be a valid email address and not contain spaces",
       status: "error",
     });
     return;
