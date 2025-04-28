@@ -26,7 +26,7 @@ class ContactModel extends BaseModel<ContactData> {
    *
    * @returns {ContactData} The redeem data
    */
-  public create(name: string, email: string, subject: ContactSubject, message: string, file_url?: string): ContactData {
+  public async create(name: string, email: string, subject: ContactSubject, message: string, file_url?: string): Promise<ContactData> {
     const code = Math.random().toString(36).substring(2, 15) + email.split("@")[0];
     const contactData: ContactData = {
       name,
@@ -36,7 +36,7 @@ class ContactModel extends BaseModel<ContactData> {
       file_url,
     };
 
-    this.save(code, contactData);
+    await this.save(code, contactData);
 
     return contactData;
   }

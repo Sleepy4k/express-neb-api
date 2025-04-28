@@ -88,7 +88,7 @@ const contactFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback):
 };
 
 /**
- * Setup the storage for the seb file
+ * Setup the storage for the contact file
  */
 const contactDiskStorage = multer.diskStorage({
   destination: (req: Request<object, object, IContactFormBody>, _file: MulterFile, cb: DestinationCallback): void => {

@@ -86,7 +86,7 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
   }
 
   const sanitazedRedeemCode = Sanitation.sanitizeRedeemCode(redeemCode);
-  const redeem = redeemModel.find(sanitazedRedeemCode);
+  const redeem = await redeemModel.find(sanitazedRedeemCode);
 
   if (!redeem) {
     res.status(400).json({
@@ -192,7 +192,7 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
 
       res.status(200).json(resData);
 
-      redeemModel.redeem(sanitazedRedeemCode);
+      await redeemModel.redeem(sanitazedRedeemCode);
 
       if (serviceConfig.file.deleteAfterParse) {
         fs.unlink(file.path, (err: NodeJS.ErrnoException | null) => {

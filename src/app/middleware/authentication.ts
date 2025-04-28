@@ -22,7 +22,7 @@ const userModel: UserModel = new UserModel();
  *
  * @returns {void}
  */
-const authenticationHandler = (req: Request, res: Response, next: NextFunction): void => {
+const authenticationHandler = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
 
   if (req.session.user?.email) {
@@ -31,7 +31,7 @@ const authenticationHandler = (req: Request, res: Response, next: NextFunction):
       return;
     }
 
-    const user = userModel.find(req.session.user.email);
+    const user = await userModel.find(req.session.user.email);
 
     if (!user || user.password !== req.session.user.password) {
       req.session.destroy((err) => {

@@ -65,7 +65,7 @@ const process = async (req: Request<object, object, IContactFormBody>, res: Resp
 
     const filePath = `${subject}/${file.originalname}`;
 
-    contactModel.create(name, email, subject as ContactSubject, message, filePath);
+    await contactModel.create(name, email, subject as ContactSubject, message, filePath);
 
     await axios
       .post(

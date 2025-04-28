@@ -26,16 +26,16 @@ const userModel: UserModel = new UserModel();
  * @param {Request} req
  * @param {Response} res
  */
-const home = (req: Request, res: Response) => {
+const home = async (req: Request, res: Response) => {
   const user = req.session.user;
   const isUserAdmin = user?.role === RoleType.ADMIN;
 
-  const users = userModel.get();
+  const users = await userModel.get();
   const totalUsers = users.length;
   const totalAdminAccess = users.filter((user) => user.role === RoleType.ADMIN).length;
   const totalUserAccess = users.filter((user) => user.role === RoleType.USER).length;
 
-  const tokens = redeemModel.get();
+  const tokens = await redeemModel.get();
   const totalTokens = tokens.filter((token) => {
     if (isUserAdmin) return true;
     return token.name === user?.email;

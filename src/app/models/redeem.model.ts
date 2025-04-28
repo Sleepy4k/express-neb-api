@@ -24,8 +24,8 @@ class RedeemModel extends BaseModel<RedeemData> {
    *
    * @returns {number} The redeem data
    */
-  public countByName(name: string): number {
-    return this.get().filter((redeem) => redeem.name === name).length;
+  public async countByName(name: string): Promise<number> {
+    return (await this.get()).filter((redeem) => redeem.name === name).length;
   }
 
   /**
@@ -37,7 +37,7 @@ class RedeemModel extends BaseModel<RedeemData> {
    *
    * @returns {RedeemData} The redeem data
    */
-  public create(code: string, name: string, description: string): RedeemData {
+  public async create(code: string, name: string, description: string): Promise<RedeemData> {
     const redeemData: RedeemData = {
       code,
       name,
@@ -47,7 +47,7 @@ class RedeemModel extends BaseModel<RedeemData> {
       redeemedAt: null,
     };
 
-    this.save(code, redeemData);
+    await this.save(code, redeemData);
 
     return redeemData;
   }
@@ -59,8 +59,8 @@ class RedeemModel extends BaseModel<RedeemData> {
    *
    * @returns {RedeemData[]|null} The redeem data
    */
-  public findByName(name: string): null | RedeemData[] {
-    return this.get().filter((redeem) => redeem.name === name);
+  public async findByName(name: string): Promise<null | RedeemData[]> {
+    return (await this.get()).filter((redeem) => redeem.name === name);
   }
 
   /**
@@ -70,14 +70,14 @@ class RedeemModel extends BaseModel<RedeemData> {
    *
    * @returns {RedeemData|null} The redeem data
    */
-  public redeem(code: string): null | RedeemData {
-    const redeemData = this.find(code);
+  public async redeem(code: string): Promise<null | RedeemData> {
+    const redeemData = await this.find(code);
     if (!redeemData) return null;
 
     redeemData.status = RedeemStatus.REDEEMED;
     redeemData.redeemedAt = new Date().toISOString();
 
-    this.save(code, redeemData);
+    await this.save(code, redeemData);
 
     return redeemData;
   }
