@@ -1,6 +1,7 @@
 import { defaultEncoder } from "@constants/encoder.js";
 import { isValueNullOrUndefined } from "@utils/parse.js";
-import fs from "node:fs";
+import fso from "node:fs";
+import fs from "node:fs/promises";
 
 /**
  * Check if a JSON file exists
@@ -10,7 +11,7 @@ import fs from "node:fs";
  * @returns {boolean} Whether the JSON file exists
  */
 const isJsonFileExists = (filePath: string): boolean => {
-  return fs.existsSync(filePath);
+  return fso.existsSync(filePath);
 };
 
 /**
@@ -21,7 +22,7 @@ const isJsonFileExists = (filePath: string): boolean => {
  * @returns {boolean} Whether the directory exists
  */
 const isDirectoryExists = (directoryPath: string): boolean => {
-  return fs.existsSync(directoryPath);
+  return fso.existsSync(directoryPath);
 };
 
 /**
@@ -32,7 +33,7 @@ const isDirectoryExists = (directoryPath: string): boolean => {
  * @returns {void}
  */
 const createJsonFile = (filePath: string): void => {
-  fs.writeFileSync(filePath, "{}", defaultEncoder);
+  fso.writeFileSync(filePath, "{}", defaultEncoder);
 };
 
 /**
@@ -43,12 +44,12 @@ const createJsonFile = (filePath: string): void => {
  *
  * @returns {Record<string, unknown>} The JSON data
  */
-const readJsonFileSync = (filePath: string, encoding?: BufferEncoding): Record<string, unknown> => {
+const readJsonFileSync = async (filePath: string, encoding?: BufferEncoding): Promise<Record<string, unknown>> => {
   if (isValueNullOrUndefined(encoding)) encoding = defaultEncoder;
 
-  const data = fs.readFileSync(filePath, encoding) as BufferEncoding;
+  const data = await fs.readFile(filePath, encoding);
 
-  return JSON.parse(data) as Record<string, unknown>;
+  return JSON.parse(data.toString()) as Record<string, unknown>;
 };
 
 /**
@@ -59,22 +60,16 @@ const readJsonFileSync = (filePath: string, encoding?: BufferEncoding): Record<s
  *
  * @returns {Promise<Record<string, unknown>>} The JSON data
  */
-const readJsonFileAsync = (filePath: string, encoding?: BufferEncoding): Promise<Record<string, unknown>> => {
+const readJsonFileAsync = async (filePath: string, encoding?: BufferEncoding): Promise<Record<string, unknown>> => {
   if (isValueNullOrUndefined(encoding)) encoding = defaultEncoder;
 
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, encoding, (err, data) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      try {
-        resolve(JSON.parse(data.toString()) as Record<string, unknown>);
-      } catch (e) {
-        reject(new Error(e as string));
-      }
-    });
-  });
+  try {
+    const data = await fs.readFile(filePath, { encoding });
+    return JSON.parse(data.toString()) as Record<string, unknown>;
+  } catch (error: unknown) {
+    console.log(`Error reading JSON file: ${String(error)}`);
+    return {} as Record<string, unknown>;
+  }
 };
 
 /**
@@ -86,12 +81,12 @@ const readJsonFileAsync = (filePath: string, encoding?: BufferEncoding): Promise
  *
  * @returns {void}
  */
-const writeJsonFileSync = (filePath: string, data: Record<string, unknown>, encoding?: BufferEncoding): void => {
+const writeJsonFileSync = async (filePath: string, data: Record<string, unknown>, encoding?: BufferEncoding): Promise<void> => {
   if (isValueNullOrUndefined(encoding)) encoding = defaultEncoder;
 
   const stringifiedData = JSON.stringify(data, null, 2);
 
-  fs.writeFileSync(filePath, stringifiedData, encoding);
+  await fs.writeFile(filePath, stringifiedData, encoding);
 };
 
 /**
@@ -108,21 +103,12 @@ const writeJsonFileAsync = (filePath: string, data: Record<string, unknown>, enc
 
   const stringifiedData = JSON.stringify(data, null, 2);
 
-  return new Promise((resolve, reject) => {
-    fs.writeFile(
-      filePath,
-      stringifiedData,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      encoding!,
-      (err) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve();
-      },
-    );
-  });
+  try {
+    return fs.writeFile(filePath, stringifiedData, { encoding });
+  } catch (error: unknown) {
+    console.log(`Error writing JSON file: ${String(error)}`);
+    return Promise.reject(error as Error);
+  }
 };
 
 export { createJsonFile, isDirectoryExists, isJsonFileExists, readJsonFileAsync, readJsonFileSync, writeJsonFileAsync, writeJsonFileSync };

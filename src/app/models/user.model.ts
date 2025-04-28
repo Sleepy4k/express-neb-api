@@ -17,11 +17,9 @@ class UserModel extends BaseModel<UserData> {
   public constructor() {
     super("users.json");
 
-    if (appConfig.env === "prod" || appConfig.env === "production") return;
-
-    const defaultUserEmail = "tralalelo-tralala@neb.com";
-    const isDefaultUserExists = this.find(defaultUserEmail);
-    if (!isDefaultUserExists) this.create(defaultUserEmail, "SkibidiRizzGyatt%20", RoleType.USER);
+    this.initialize().catch((error: unknown) => {
+      console.error("Error initializing UserModel:", error);
+    });
   }
 
   /**
@@ -32,14 +30,14 @@ class UserModel extends BaseModel<UserData> {
    *
    * @returns {UserData} The user data
    */
-  public create(email: string, password: string, role: RoleType): UserData {
+  public async create(email: string, password: string, role: RoleType): Promise<UserData> {
     const userData: UserData = {
       email,
       password: sha256(password),
       role,
     };
 
-    this.save(email.split("@")[0], userData);
+    await this.save(email.split("@")[0], userData);
 
     return userData;
   }
@@ -51,8 +49,19 @@ class UserModel extends BaseModel<UserData> {
    *
    * @returns {undefined|UserData} The user data
    */
-  public find(email: string): undefined | UserData {
-    return super.find(email.split("@")[0]);
+  public async find(email: string): Promise<undefined | UserData> {
+    return await super.find(email.split("@")[0]);
+  }
+
+  /**
+   * Initializes the user class
+   */
+  public async initialize(): Promise<void> {
+    if (appConfig.env === "prod" || appConfig.env === "production") return;
+
+    const defaultUserEmail = "tralalelo-tralala@neb.com";
+    const isDefaultUserExists = await this.find(defaultUserEmail);
+    if (!isDefaultUserExists) await this.create(defaultUserEmail, "SkibidiRizzGyatt%20", RoleType.USER);
   }
 
   /**
@@ -62,8 +71,8 @@ class UserModel extends BaseModel<UserData> {
    *
    * @returns {RedeemData|null} The redeem data
    */
-  public login(email: string, password: string, role: RoleType = RoleType.USER): null | UserData {
-    const redeemData = this.find(email.split("@")[0]);
+  public async login(email: string, password: string, role: RoleType = RoleType.USER): Promise<null | UserData> {
+    const redeemData = await this.find(email.split("@")[0]);
     if (!redeemData) return null;
 
     if (redeemData.email !== email) return null;

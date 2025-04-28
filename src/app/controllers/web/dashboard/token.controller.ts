@@ -17,10 +17,10 @@ const redeemModel: RedeemModel = new RedeemModel();
  * @param {Request} req
  * @param {Response} res
  */
-const home = (req: Request, res: Response) => {
+const home = async (req: Request, res: Response) => {
   const user = req.session.user;
   const isUserAdmin = user?.role === RoleType.ADMIN;
-  const tokens = redeemModel.get();
+  const tokens = await redeemModel.get();
   const availableTokens = tokens.filter((token) => {
     return token.status === RedeemStatus.PENDING && (isUserAdmin || token.name === user?.email);
   });

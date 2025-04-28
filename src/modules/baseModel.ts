@@ -1,4 +1,5 @@
 import { createJsonFile, isDirectoryExists, isJsonFileExists, readJsonFileSync, writeJsonFileSync } from "@utils/storage.js";
+import { Mutex } from "async-mutex";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -55,6 +56,11 @@ class BaseModel<T> {
   private lastModificationTime: null | number = null;
 
   /**
+   * Mutex to prevent race conditions
+   */
+  private mutex = new Mutex();
+
+  /**
    * The constructor for the BaseModel class
    *
    * @param {string} filePath - The file path, e.g. data/users.json
@@ -70,8 +76,8 @@ class BaseModel<T> {
    *
    * @returns {number} The total number of items in the data
    */
-  public count(): number {
-    this.loadDataIfNeeded();
+  public async count(): Promise<number> {
+    await this.loadDataIfNeeded();
     return Object.keys(this.data).length;
   }
 
@@ -79,38 +85,43 @@ class BaseModel<T> {
    * Remove an item by its key
    *
    * @param {string} key - The key of the item to remove
-   * @returns {boolean} True if the item was removed, false otherwise
+   * @returns {Promise<boolean>} True if the item was removed, false otherwise
    */
-  public delete(key: string): boolean {
-    this.loadDataIfNeeded();
+  public async delete(key: string): Promise<boolean> {
+    const unlock = await this.mutex.acquire()
+    try {
+      await this.loadDataIfNeeded();
 
-    if (this.data[key]) {
-      this.data = Object.fromEntries(Object.entries(this.data).filter(([k]) => k !== key));
-      this.saveData();
-      return true;
+      if (this.data[key]) {
+        this.data = Object.fromEntries(Object.entries(this.data).filter(([k]) => k !== key));
+        await this.saveData();
+        return true;
+      }
+
+      return false;
+    } finally {
+      unlock();
     }
-
-    return false;
   }
 
   /**
    * Get a specific item by its key
    *
    * @param {string} key - The key of the item
-   * @returns {T | undefined} The item if found, otherwise undefined
+   * @returns {Promise<T | undefined>} The item if found, otherwise undefined
    */
-  public find(key: string): T | undefined {
-    this.loadDataIfNeeded();
+  public async find(key: string): Promise<T | undefined> {
+    await this.loadDataIfNeeded();
     return this.data[key];
   }
 
   /**
    * Get the data from the file
    *
-   * @returns {T[]}
+   * @returns {Promise<T[]>}
    */
-  public get(): T[] {
-    this.loadDataIfNeeded();
+  public async get(): Promise<T[]> {
+    await this.loadDataIfNeeded();
     return Object.values(this.data);
   }
 
@@ -119,12 +130,17 @@ class BaseModel<T> {
    *
    * @param {string} key - The key for the item
    * @param {T} item - The item to add or update
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  public save(key: string, item: T): void {
-    this.loadDataIfNeeded();
-    this.data[key] = item;
-    this.saveData();
+  public async save(key: string, item: T): Promise<void> {
+    const unlock = await this.mutex.acquire();
+    try {
+      await this.loadDataIfNeeded();
+      this.data[key] = item;
+      await this.saveData();
+    } finally {
+      unlock();
+    }
   }
 
   /**
@@ -156,11 +172,11 @@ class BaseModel<T> {
   /**
    * Load the data
    *
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  private loadData(): void {
+  private async loadData(): Promise<void> {
     try {
-      this.data = readJsonFileSync(this.filePath) as Record<string, T>;
+      this.data = await readJsonFileSync(this.filePath) as Record<string, T>;
     } catch {
       this.data = {};
       this.ensureFileExists();
@@ -170,11 +186,11 @@ class BaseModel<T> {
   /**
    * Load the data from the file if it hasn't been loaded yet
    *
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  private loadDataIfNeeded(): void {
+  private async loadDataIfNeeded(): Promise<void> {
     if (!this.isDataLoaded || this.isDataChanged()) {
-      this.loadData();
+      await this.loadData();
       this.updateLastModificationTime();
       this.isDataLoaded = true;
     }
@@ -207,10 +223,10 @@ class BaseModel<T> {
   /**
    * Save the data
    *
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  private saveData(): void {
-    writeJsonFileSync(this.filePath, this.data);
+  private async saveData(): Promise<void> {
+    await writeJsonFileSync(this.filePath, this.data);
     this.updateLastModificationTime();
   }
 

@@ -46,7 +46,7 @@ const form = (req: Request, res: Response) => {
  * @param {Request} req
  * @param {Response} res
  */
-const process = (req: Request<object, object, IProcessBody>, res: Response) => {
+const process = async (req: Request<object, object, IProcessBody>, res: Response) => {
   const csrfToken = req.headers["csrf-token"] ?? req.headers["x-csrf-token"];
   if (!csrfToken || csrfToken !== sha256(getCurrentDateTime())) {
     res.status(403).json({
@@ -86,7 +86,7 @@ const process = (req: Request<object, object, IProcessBody>, res: Response) => {
 
   const { geng } = req.query;
   const userRole = geng === RoleType.ADMIN || geng === RoleType.USER ? (geng as RoleType) : RoleType.USER;
-  const userData = userModel.login(email, sha256(password), userRole);
+  const userData = await userModel.login(email, sha256(password), userRole);
   if (!userData) {
     res.status(400).send({
       data: {},

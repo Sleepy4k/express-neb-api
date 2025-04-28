@@ -27,7 +27,7 @@ const home = (_req: Request, res: Response) => {
  * @param {Request} req
  * @param {Response} res
  */
-const process = (req: Request, res: Response) => {
+const process = async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { description } = req.body;
 
@@ -61,10 +61,10 @@ const process = (req: Request, res: Response) => {
       return;
     }
 
-    const totalRedeemCode = (redeemModel.countByName(name) + 1).toString();
+    const totalRedeemCode = (await redeemModel.countByName(name) + 1).toString();
     const randomizer = Math.floor(Math.random() * 10000).toString();
     const redeemCode = nameToRedeemCode(name.split("@")[0], `${randomizer}-${totalRedeemCode}`);
-    const token = redeemModel.create(redeemCode, name, sanitazedDescription);
+    const token = await redeemModel.create(redeemCode, name, sanitazedDescription);
 
     res.status(200).send({
       data: {

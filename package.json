@@ -33,6 +33,7 @@
   "homepage": "https://github.com/sleepy4k/express-typescript-neb#readme",
   "dependencies": {
     "@xmldom/xmldom": "^0.9.6",
+    "async-mutex": "^0.5.0",
     "axios": "^1.9.0",
     "cors": "^2.8.5",
     "crypto-es": "^2.1.0",
