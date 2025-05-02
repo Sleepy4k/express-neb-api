@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { RoleType } from "@enums/roleType.js";
 import UserModel from "@models/user.model.js";
 import { encryptAuthVerify, sha256 } from "@utils/encryption.js";
-import { getCurrentDateTime, parseHostname } from "@utils/parse.js";
+import { parseHostname } from "@utils/parse.js";
 
 /**
  * The interface for the request body
@@ -35,7 +35,6 @@ const form = (req: Request, res: Response) => {
   const isRedirectUrlGuarded = redirectUrl?.includes("/login") || redirectUrl?.includes("/dashboard");
 
   res.render("pages/auth/login", {
-    csrfToken: sha256(getCurrentDateTime()),
     redirect_url: isRedirectUrlGuarded ? baseUrl : (redirectUrl ?? baseUrl),
   });
 };
@@ -47,16 +46,6 @@ const form = (req: Request, res: Response) => {
  * @param {Response} res
  */
 const process = async (req: Request<object, object, IProcessBody>, res: Response) => {
-  const csrfToken = req.headers["csrf-token"] ?? req.headers["x-csrf-token"];
-  if (!csrfToken || csrfToken !== sha256(getCurrentDateTime())) {
-    res.status(403).json({
-      data: {},
-      message: "Invalid CSRF token. Please try again.",
-      status: "error",
-    });
-    return;
-  }
-
   const { email, password } = req.body;
   if (!email || !password || typeof email !== "string" || typeof password !== "string") {
     res.status(400).send({

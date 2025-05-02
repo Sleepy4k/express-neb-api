@@ -10,21 +10,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * Get path to the root directory using dot-to-parent
- *
- * @note If file path is changed, this should be updated
- */
-const dotToParent = "/../../..";
-
-/**
- * Get the current file path
- */
-const currPath = fileURLToPath(import.meta.url);
-
-/**
  * Get the base directory from the current file path and the dot-to-parent
  */
-const __basedir = path.resolve(currPath + dotToParent);
+const __basedir = path.resolve(fileURLToPath(import.meta.url), "../../..");
 
 /**
  * Filter SEB files only
@@ -80,6 +68,12 @@ const sebDiskStorage = multer.diskStorage({
  */
 const contactFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback): void => {
   const { mimetype, originalname } = file;
+
+  if (!originalname || !mimetype) {
+    cb(null, true);
+    return;
+  }
+
   const fileExtension = originalname.split(".").pop() ?? "";
   const isExtensionValid = FILE_EXTENSIONS.contact.extensions.includes(`.${fileExtension}`);
   const isMimeTypeValid = FILE_EXTENSIONS.contact.mimeTypes.includes(mimetype);

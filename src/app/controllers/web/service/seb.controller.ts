@@ -8,7 +8,7 @@ import RedeemModel from "@models/redeem.model.js";
 import Sanitation from "@modules/sanitation.js";
 import SebFile from "@modules/seb.js";
 import UserAgentGenerator from "@modules/userAgent.js";
-import { ParamsDictionary } from "express-serve-static-core";
+import { type ParamsDictionary } from "express-serve-static-core";
 import fs from "node:fs";
 
 /**
@@ -97,7 +97,6 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
     return;
   }
 
-  // Check if redeem code is already redeemed
   if (redeem.redeemedAt !== null) {
     res.status(400).json({
       data: [],
@@ -153,12 +152,6 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
         return;
       }
 
-      const resData: IResData = {
-        data: [],
-        message: "SEB configuration file successfully bypassed",
-        status: "success",
-      };
-
       const { file_name, redeem_code } = req.body;
       if (redeem_code && redeem_code !== "") {
         res.status(400).json({
@@ -169,7 +162,12 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
         return;
       }
 
-      // Append SEB file data to response
+      const resData: IResData = {
+        data: [],
+        message: "SEB configuration file successfully bypassed",
+        status: "success",
+      };
+
       const responseFields = [
         { condition: serviceConfig.response.showStartUrl, name: REFERER, value: sebFile.StartUrl },
         {
@@ -184,11 +182,7 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
         { condition: serviceConfig.response.showDictionnary, name: "Dictionary", value: JSON.stringify(sebFile.Dictionnary) },
       ];
 
-      responseFields.forEach((field) => {
-        if (field.condition) {
-          resData.data?.push({ name: field.name, value: field.value });
-        }
-      });
+      resData.data = responseFields.filter((field) => field.condition).map(({ name, value }) => ({ name, value }));
 
       res.status(200).json(resData);
 

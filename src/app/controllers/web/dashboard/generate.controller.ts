@@ -61,7 +61,7 @@ const process = async (req: Request, res: Response) => {
       return;
     }
 
-    const totalRedeemCode = (await redeemModel.countByName(name) + 1).toString();
+    const totalRedeemCode = ((await redeemModel.countByName(name)) + 1).toString();
     const randomizer = Math.floor(Math.random() * 10000).toString();
     const redeemCode = nameToRedeemCode(name.split("@")[0], `${randomizer}-${totalRedeemCode}`);
     const token = await redeemModel.create(redeemCode, name, sanitazedDescription);
