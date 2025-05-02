@@ -17,6 +17,7 @@ import * as serviceController from "@controllers/web/landing/service.controller.
 import * as tutorialController from "@controllers/web/landing/tutorial.controller.js";
 import * as sebController from "@controllers/web/service/seb.controller.js";
 import * as contactStorageController from "@controllers/web/storage/contact.controller.js";
+import * as contactDashboardController from "@controllers/web/dashboard/contact.controller.js";
 
 const webRouter = Router();
 
@@ -44,6 +45,11 @@ webRouter.get("/dashboard/generate", authenticationHandler, generateController.h
 webRouter.post("/dashboard/generate", authenticationHandler, generateController.process);
 webRouter.get("/dashboard/history", authenticationHandler, historyController.home);
 webRouter.get("/dashboard/token", authenticationHandler, tokenController.home);
+
+// Dashboard - Contact
+webRouter.get("/dashboard/contact", authenticationHandler, contactDashboardController.home);
+webRouter.get("/dashboard/contact/:type", authenticationHandler, contactDashboardController.show);
+webRouter.delete("/dashboard/contact/:type/:id", authenticationHandler, contactDashboardController.remove);
 
 // Storage
 webRouter.get("/storage/contact/{*filePath}", authenticationHandler, contactStorageController.home);

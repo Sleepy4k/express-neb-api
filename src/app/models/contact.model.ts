@@ -20,20 +20,24 @@ class ContactModel extends BaseModel<ContactData> {
   /**
    * Create the redeem data
    *
-   * @param {string} code - The code
    * @param {string} name - The name
-   * @param {string} description - The description
+   * @param {string} email - The email
+   * @param {ContactSubject} subject - The subject
+   * @param {string} message - The message
+   * @param {string} [file_url] - The file url
    *
    * @returns {ContactData} The redeem data
    */
   public async create(name: string, email: string, subject: ContactSubject, message: string, file_url?: string): Promise<ContactData> {
     const code = Math.random().toString(36).substring(2, 15) + email.split("@")[0];
     const contactData: ContactData = {
+      id: code,
       name,
       email,
       subject,
       message,
       file_url,
+      createdAt: new Date().toISOString(),
     };
 
     await this.save(code, contactData);

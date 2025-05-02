@@ -7,11 +7,13 @@ import { type ContactSubject } from "@enums/contactSubject.js";
  * @interface ContactData
  */
 interface ContactData {
+  id: string;
   name: string;
   email: string;
   subject: ContactSubject;
   message: string;
   file_url?: string;
+  createdAt: string;
 }
 
 export type { ContactData };

@@ -57,6 +57,7 @@ class App {
     this.#instance.set("host", appConfig.host);
     this.#instance.set("port", normalizePort(appConfig.port));
     this.#instance.set("cspNonce", this.#cspNonce);
+    this.#instance.set("isDevMode", this.#isDevMode);
   }
 
   /**

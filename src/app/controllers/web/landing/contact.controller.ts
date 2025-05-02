@@ -53,39 +53,30 @@ const process = async (req: Request<object, object, IContactFormBody>, res: Resp
 
   try {
     const file = req.file;
-
-    if (!file) {
-      res.status(400).json({
-        data: [],
-        message: "File not found or invalid file type",
-        status: "error",
-      });
-      return;
-    }
-
-    const filePath = `${subject}/${file.originalname}`;
-
+    const filePath = file ? `${subject}/${file.filename}` : "";
     await contactModel.create(name, email, subject as ContactSubject, message, filePath);
 
-    await axios
-      .post(
-        web3formConfig.form_url,
-        {
-          access_key: web3formConfig.access_key,
-          email,
-          message: `${name} mengirimkan sebuah pesan "${message}"`,
-          name,
-        },
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
+    if (!(req.app.get("isDevMode") as boolean)) {
+      await axios
+        .post(
+          web3formConfig.form_url,
+          {
+            access_key: web3formConfig.access_key,
+            email,
+            message: `${name} mengirimkan sebuah pesan "${message}"`,
+            name,
           },
-        },
-      )
-      .catch((error: unknown) => {
-        console.error("Error sending message to Discord webhook:", error);
-      });
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          },
+        )
+        .catch((error: unknown) => {
+          console.error("Error sending message to Discord webhook:", error);
+        });
+    }
 
     res.status(200).json({
       data: [],

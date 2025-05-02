@@ -5,25 +5,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * Get path to the root directory using dot-to-parent
- *
- * @note If file path is changed, this should be updated
- */
-const dotToParent = "/../../storage/cache";
-
-/**
- * Get the current file path
- *
- * @type {string}
- */
-const currPath: string = fileURLToPath(import.meta.url);
-
-/**
  * Get the base directory from the current file path and the dot-to-parent
  *
  * @type {string}
  */
-const __basedir: string = path.resolve(currPath + dotToParent);
+const __basedir: string = path.resolve(fileURLToPath(import.meta.url), "../../storage/cache");
 
 /**
  * The base model class
@@ -88,7 +74,7 @@ class BaseModel<T> {
    * @returns {Promise<boolean>} True if the item was removed, false otherwise
    */
   public async delete(key: string): Promise<boolean> {
-    const unlock = await this.mutex.acquire()
+    const unlock = await this.mutex.acquire();
     try {
       await this.loadDataIfNeeded();
 
@@ -176,7 +162,7 @@ class BaseModel<T> {
    */
   private async loadData(): Promise<void> {
     try {
-      this.data = await readJsonFileSync(this.filePath) as Record<string, T>;
+      this.data = (await readJsonFileSync(this.filePath)) as Record<string, T>;
     } catch {
       this.data = {};
       this.ensureFileExists();

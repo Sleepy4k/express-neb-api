@@ -1,0 +1,38 @@
+<% layout('layouts/dashboard.layout') %>
+
+<% block('subTitle', 'Contact') %>
+
+<% block('addon-style', `
+  <style nonce="${cspNonce}">
+    .stat-card {
+      cursor: pointer;
+    }
+  </style>
+`) %>
+
+<h2 class="section-title"><i class="fas fa-chart-simple"></i> Contact</h2>
+
+<div class="dashboard-welcome">
+  <div class="quick-stats">
+    <% subjects.forEach(subject => { %>
+      <div class="stat-card" data-target="<%= route('dashboard/contact') %>/<%= subject.subject %>">
+        <i class="fas fa-comment"></i>
+        <h3><%= subject.name %> Subject</h3>
+        <p><%= subject.count %> Total Data</p>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<% block('addon-script', `
+  <script nonce="${cspNonce}">
+    const cards = document.querySelectorAll('.stat-card');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const targetUrl = card.getAttribute('data-target');
+        window.location.href = targetUrl;
+      });
+    });
+  </script>
+`) %>
