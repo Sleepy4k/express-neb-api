@@ -65,10 +65,9 @@ const show = async (req: Request, res: Response) => {
   const subjectType = req.params.type;
 
   if (!Object.values(ContactSubject).includes(subjectType as ContactSubject)) {
-    res.status(400).json({
-      data: [],
-      message: `Subject must be one of the following: ${Object.values(ContactSubject).join(", ")}`,
-      status: "error",
+    res.render("pages/error", {
+      message: "An error occurred!",
+      status: `Subject must be one of the following: ${Object.values(ContactSubject).join(", ")}`,
     });
     return;
   }

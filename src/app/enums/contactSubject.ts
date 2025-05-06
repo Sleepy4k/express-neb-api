@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-enums */
 /**
  * Enum for Redeem Status
  *
@@ -12,6 +13,7 @@ enum ContactSubject {
   GENERAL = "general",
   PAYMENT = "payment",
   TECHNICAL = "technical",
+  OTHER = "other",
 }
 
 /**
@@ -21,6 +23,7 @@ const ContactSubjectList = [
   { name: "General Inquiry", value: ContactSubject.GENERAL },
   { name: "Payment Issue", value: ContactSubject.PAYMENT },
   { name: "Technical Support", value: ContactSubject.TECHNICAL },
+  { name: "Other", value: ContactSubject.OTHER },
 ];
 
 export { ContactSubject, ContactSubjectList };
