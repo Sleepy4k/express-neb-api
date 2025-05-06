@@ -16,11 +16,7 @@ const TOKEN_PRICING = [
       text: "Most Popular",
       className: "pricing-badge",
     },
-    description: [
-      "Standard pricing",
-      "Supports all configurations",
-      "Perfect for beginners"
-    ],
+    description: ["Standard pricing", "Supports all configurations", "Perfect for beginners"],
   },
   {
     id: 2,
@@ -36,12 +32,7 @@ const TOKEN_PRICING = [
       text: "Most Popular",
       className: "pricing-badge",
     },
-    description: [
-      "6 Exam Tokens Included",
-      "Save 60K instantly",
-      "Scalable for bulk purchases",
-      "Exclusive access to new features",
-    ],
+    description: ["6 Exam Tokens Included", "Save 60K instantly", "Scalable for bulk purchases", "Exclusive access to new features"],
   },
   {
     id: 3,
@@ -57,15 +48,8 @@ const TOKEN_PRICING = [
       text: "Most Popular",
       className: "pricing-badge",
     },
-    description: [
-      "Save 15k on this plan",
-      "Supports all configurations",
-      "Ideal for student groups",
-    ],
+    description: ["Save 15k on this plan", "Supports all configurations", "Ideal for student groups"],
   },
 ];
 
-export {
-  PRICING_PAYMENT_URL,
-  TOKEN_PRICING,
-}
+export { PRICING_PAYMENT_URL, TOKEN_PRICING };

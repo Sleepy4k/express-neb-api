@@ -34,7 +34,6 @@ class Mail {
    * Initializes the transporter instance using SMTP configuration
    */
   public constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     this.#transporter = createTransport(smtpConfig as Options);
   }
 
@@ -70,11 +69,6 @@ class Mail {
    * @returns {Promise<void>}
    */
   private async sendSMTPMail(body: ISMTPData): Promise<void> {
-    if (!this.#transporter) {
-      console.error("Transporter is not ready");
-      return;
-    }
-
     try {
       const mailOptions: ISMTPData = {
         from: body.from ?? smtpConfig.auth.user,
@@ -90,7 +84,6 @@ class Mail {
         mailOptions.html = body.html;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       await this.#transporter.sendMail(mailOptions);
     } catch (error) {
       console.error("Error sending email:", error);

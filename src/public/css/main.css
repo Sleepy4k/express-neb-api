@@ -782,7 +782,7 @@ textarea.form-control {
   justify-content: center;
   gap: 0.75rem;
   width: 100%;
-  background-color: #25D366;
+  background-color: #25d366;
   color: white;
   padding: 0.75rem;
   border-radius: var(--radius-sm);
@@ -793,7 +793,7 @@ textarea.form-control {
 }
 
 .btn-payment:hover {
-  background-color: #128C7E;
+  background-color: #128c7e;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }

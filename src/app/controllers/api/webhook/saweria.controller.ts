@@ -29,7 +29,7 @@ const __basedir = path.resolve(fileURLToPath(import.meta.url), "../../../../../s
 const redeemModel: RedeemModel = new RedeemModel();
 
 /**
- * Trakteer controller to handle the webhook request
+ * Saweria controller to handle the webhook request
  *
  * @param {Request} req
  * @param {Response} res
@@ -122,7 +122,9 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
           value = `Thank you ${donator_name} for supporting us`;
           break;
         case "TOKENS_FIELD":
-          value = tokenList.map((token, index) => `<tr><td>Token ${(index + 1).toString()}</td><td class="alignright">${token.code}</td></tr>`).join("");
+          value = tokenList
+            .map((token, index) => `<tr><td>Token ${(index + 1).toString()}</td><td class="alignright">${token.code}</td></tr>`)
+            .join("");
           break;
         case "TOTAL_TOKEN":
           value = tokenList.length.toString();
@@ -201,7 +203,7 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
   res.json({
     code: 200,
     status: "success",
-    message: "Trakteer Webhook Received",
+    message: "Saweria Webhook Received",
     data: {},
   });
 };
