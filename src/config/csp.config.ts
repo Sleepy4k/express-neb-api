@@ -12,8 +12,8 @@ export const cspConfig = {
     frameSrc: ["'self'"],
     blockAllMixedContent: [],
     connectSrc: ["'self'"],
-    scriptSrc: ["'self'", "'strict-dynamic'"],
-    styleSrc: ["'self'", "'strict-dynamic'"],
+    scriptSrc: ["'self'"],
+    styleSrc: ["'self'"],
     upgradeInsecureRequests: [],
   },
 };
