@@ -1,0 +1,5 @@
+tags:
+  - name: Public
+    description: For public endpoints that do not require authentication
+  - name: Telegram
+    description: Endpoints related to Telegram bot functionality
