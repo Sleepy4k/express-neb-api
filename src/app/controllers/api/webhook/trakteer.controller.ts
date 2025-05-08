@@ -63,67 +63,63 @@ const handler = async (req: Request<object, object, ITrakteerData>, res: Respons
   };
 
   if (!(req.app.get("isDevMode") as boolean)) {
-    try {
-      const mailType = appConfig.mail.toLowerCase();
+    const mailType = appConfig.mail.toLowerCase();
 
-      if (mailType === "web3form") {
-        await new Mail().sendMail({
-          name: supporter_name,
-          email: "trakteer@nach-neb.my.id",
-          message: `${supporter_name} mengirimkan sebuah ${type} dengan jumlah ${String(price)} dan pesan "${supporter_message}"`,
-        });
-      } else {
-        await new Mail().sendMail({
-          to: "happytime@gmail.com",
-          subject: `${appConfig.name} - Someone sent you a ${type}`,
-          text: `${supporter_name} mengirimkan sebuah ${type} dengan jumlah ${String(price)} dan pesan "${supporter_message}`,
-        });
-      }
-    } catch (error: unknown) {
-      console.error(`Error sending email using ${appConfig.mail.toLowerCase()}:`, error);
+    if (mailType === "web3form") {
+      await new Mail().sendMail({
+        name: supporter_name,
+        email: "trakteer@nach-neb.my.id",
+        message: `${supporter_name} mengirimkan sebuah ${type} dengan jumlah ${String(price)} dan pesan "${supporter_message}"`,
+      }).catch((error: unknown) => {
+        console.error("Error sending email using Web3Form:", error);
+      });
+    } else {
+      await new Mail().sendMail({
+        to: "happytime@gmail.com",
+        subject: `${appConfig.name} - Someone sent you a ${type}`,
+        text: `${supporter_name} mengirimkan sebuah ${type} dengan jumlah ${String(price)} dan pesan "${supporter_message}`,
+      }).catch((error: unknown) => {
+        console.error("Error sending email:", error);
+      });
     }
 
-    try {
-      await axios.post(
-        discordConfig.webhook.url,
-        {
-          username: discordConfig.webhook.name,
-          avatar_url: discordConfig.webhook.avatar_url,
-          embeds: [
-            {
-              title: `${supporter_name} mengirimkan sebuah ${type}`,
-              description: `Jumlah: ${String(price)}
-        Pesan: ${supporter_message}
+    await axios.post(
+      discordConfig.webhook.url,
+      {
+        username: discordConfig.webhook.name,
+        avatar_url: discordConfig.webhook.avatar_url,
+        embeds: [
+          {
+            title: `${supporter_name} mengirimkan sebuah ${type}`,
+            description: `Jumlah: ${String(price)}
+      Pesan: ${supporter_message}
 
-        <@460453000129937408>
-        <@602069520709976064>
-        <@998089787024093264>`,
-              color: discordConfig.webhook.color,
-              footer: {
-                text: discordConfig.webhook.embed.footer.text,
-                icon_url: discordConfig.webhook.embed.footer.icon_url,
-              },
+      <@460453000129937408>
+      <@602069520709976064>
+      <@998089787024093264>`,
+            color: discordConfig.webhook.color,
+            footer: {
+              text: discordConfig.webhook.embed.footer.text,
+              icon_url: discordConfig.webhook.embed.footer.icon_url,
             },
-          ],
-        },
-        HEADERS,
-      );
-    } catch (error: unknown) {
+          },
+        ],
+      },
+      HEADERS,
+    ).catch((error: unknown) => {
       console.error("Error sending message to Discord webhook:", error);
-    }
+    });
 
-    try {
-      await axios.post(
-        telegramConfig.endpoint.replace("<YOUR_BOT_TOKEN>", telegramConfig.token).replace("<YOUR_CHAT_ID>", telegramConfig.token),
-        {
-          chat_id: telegramConfig.chat_id,
-          text: `${supporter_name} mengirimkan sebuah ${type} dengan jumlah ${String(price)} dan pesan "${supporter_message}\n**Pesan Ini Dikirim Dari NEB Service**`,
-        },
-        HEADERS,
-      );
-    } catch (error: unknown) {
-      console.error("Error sending message to Discord webhook:", error);
-    }
+    await axios.post(
+      telegramConfig.endpoint.replace("<YOUR_BOT_TOKEN>", telegramConfig.token).replace("<YOUR_CHAT_ID>", telegramConfig.token),
+      {
+        chat_id: telegramConfig.chat_id,
+        text: `${supporter_name} mengirimkan sebuah ${type} dengan jumlah ${String(price)} dan pesan "${supporter_message}\n**Pesan Ini Dikirim Dari NEB Service**`,
+      },
+      HEADERS,
+    ).catch((error: unknown) => {
+      console.error("Error sending message to Telegram:", error);
+    });
   }
 
   res.json({

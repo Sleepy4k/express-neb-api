@@ -12,7 +12,7 @@ import RedeemModel from "@models/redeem.model.js";
 import Mail from "@modules/mail.js";
 import { nameToRedeemCode, parseHostname } from "@utils/parse.js";
 import axios from "axios";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -65,6 +65,7 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
     return;
   }
 
+  const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
   const tokenPricing = TOKEN_PRICING.find((token) => token.price === amount_raw);
   if (!tokenPricing) {
     res.status(400).json({
@@ -75,67 +76,51 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
         amount_raw: "amount_raw must be one of the following: " + TOKEN_PRICING.map((token) => token.price).join(", "),
       },
     });
+    await new Mail()
+      .sendMail({
+        from: `NEB Payments <${smtpConfig.auth.user}>`,
+        to: donator_email,
+        subject: `${appConfig.name} - Your ${type} has been received`,
+        html: `<p>Hi ${donator_name},</p><p>Thank you for your support!<br>However, we couldn't process your payment of ${amount_raw.toLocaleString("id-ID", { style: "currency", currency: "IDR" })} because it doesn't match our pricing. Please check our pricing page for more information at <a href="${baseUrl}/contact" target="_blank" rel="noopener">Contact Us</a>.</p><p>Best regards,<br>${appConfig.name}</p>`,
+      })
+      .catch((error: unknown) => {
+        console.error("Error sending email:", error);
+      });
     return;
   }
 
   const tokenList: RedeemData[] = [];
-  const totalRedeemCode = (await redeemModel.countByName(donator_email)) + 1;
+  const tokensToGenerate = tokenPricing.token;
+  const totalRedeemCode = await redeemModel.countByName(donator_email);
 
-  for (let i = totalRedeemCode; i < totalRedeemCode + tokenPricing.token; i++) {
+  for (let i = 0; i < tokensToGenerate; i++) {
     const randomizer = Math.floor(Math.random() * 10000).toString();
-    const redeemCode = nameToRedeemCode(donator_email.split("@")[0], `${randomizer}-${i.toString()}`);
-    const token = await redeemModel.create(redeemCode, donator_email, `Token dari ${donator_name} sebesar ${String(amount_raw)}`);
+    const redeemCode = nameToRedeemCode(donator_email.split("@")[0], `${randomizer}-${(totalRedeemCode + i + 1).toString()}`);
+    const token = await redeemModel.create(redeemCode, donator_email, `Token dari ${donator_name} sebesar ${amount_raw.toString()}`);
     tokenList.push(token);
   }
 
-  let paymentHtml = await new Promise<string>((resolve, reject) => {
-    fs.readFile(path.join(__basedir, "payment.html"), "utf8", (err, data) => {
-      if (err) {
-        console.error("Error reading file:", err);
-        reject(err);
-      } else {
-        resolve(data);
-      }
+  const placeholders: Record<string, string | string[]> = {
+    APP_NAME: appConfig.name,
+    CONTACT_URL: `${baseUrl}/contact`,
+    DESCRIPTION: `${donator_name}<br>${donator_email}<br>${amount_raw.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}`,
+    FOOTER: `@ ${new Date().getFullYear().toString()} ${appConfig.name}. All Rights Reserved.`,
+    MESSAGE: `Thank you ${donator_name} for supporting us`,
+    TOTAL_TOKEN: tokensToGenerate.toString(),
+    TOKENS_FIELD: tokenList
+      .map((token, index) => `<tr><td>Token ${(index + 1).toString()}</td><td class="alignright">${token.code}</td></tr>`)
+      .join(""),
+  };
+
+  const paymentHtml = await fs
+    .readFile(path.join(__basedir, "payment.html"), "utf8")
+    .then((data: string) => {
+      return data.replace(/{{ (.*?) }}/g, (_, key: string) => String(placeholders[key.trim()] || ""));
+    })
+    .catch((error: unknown) => {
+      console.error("Error reading file:", error);
+      return "";
     });
-  });
-
-  const replaceableStrings = paymentHtml.match(/{{ (.*?) }}/g);
-  if (replaceableStrings) {
-    replaceableStrings.forEach((replaceableString) => {
-      const key = replaceableString.replace(/{{ | }}/g, "").trim();
-      let value: string | string[] = "";
-
-      switch (key) {
-        case "APP_NAME":
-          value = appConfig.name;
-          break;
-        case "CONTACT_URL":
-          value = `${parseHostname(`${req.protocol}://${req.get("host") ?? ""}`)}/contact`;
-          break;
-        case "DESCRIPTION":
-          value = `${donator_name}<br>${donator_email}<br>${String(amount_raw)}`;
-          break;
-        case "FOOTER":
-          value = `@ ${new Date().getFullYear().toString()} ${appConfig.name}. All Rights Reserved.`;
-          break;
-        case "MESSAGE":
-          value = `Thank you ${donator_name} for supporting us`;
-          break;
-        case "TOKENS_FIELD":
-          value = tokenList
-            .map((token, index) => `<tr><td>Token ${(index + 1).toString()}</td><td class="alignright">${token.code}</td></tr>`)
-            .join("");
-          break;
-        case "TOTAL_TOKEN":
-          value = tokenList.length.toString();
-          break;
-        default:
-          break;
-      }
-
-      paymentHtml = paymentHtml.replace(replaceableString, value);
-    });
-  }
 
   const HEADERS = {
     headers: {
@@ -144,20 +129,27 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
     },
   };
 
+  res.json({
+    code: 200,
+    status: "success",
+    message: "Saweria Webhook Received",
+    data: {},
+  });
+
   if (!(req.app.get("isDevMode") as boolean)) {
-    try {
-      await new Mail().sendMail({
+    await new Mail()
+      .sendMail({
         from: `NEB Payments <${smtpConfig.auth.user}>`,
         to: donator_email,
         subject: `${appConfig.name} - Your ${type} has been received`,
         html: paymentHtml,
+      })
+      .catch((error: unknown) => {
+        console.error("Error sending email:", error);
       });
-    } catch (error: unknown) {
-      console.error(`Error sending email using smtp:`, error);
-    }
 
-    try {
-      await axios.post(
+    await axios
+      .post(
         discordConfig.webhook.url,
         {
           username: discordConfig.webhook.name,
@@ -166,12 +158,12 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
             {
               title: `${donator_name} mengirimkan sebuah ${type}`,
               description: `Email: ${donator_email}
-        Jumlah: ${String(amount_raw)}
-        Pesan: ${message}
+      Jumlah: ${String(amount_raw)}
+      Pesan: ${message}
 
-        <@460453000129937408>
-        <@602069520709976064>
-        <@998089787024093264>`,
+      <@460453000129937408>
+      <@602069520709976064>
+      <@998089787024093264>`,
               color: discordConfig.webhook.color,
               footer: {
                 text: discordConfig.webhook.embed.footer.text,
@@ -181,31 +173,24 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
           ],
         },
         HEADERS,
-      );
-    } catch (error: unknown) {
-      console.error("Error sending message to Discord webhook:", error);
-    }
+      )
+      .catch((error: unknown) => {
+        console.error("Error sending message to Discord webhook:", error);
+      });
 
-    try {
-      await axios.post(
+    await axios
+      .post(
         telegramConfig.endpoint.replace("<YOUR_BOT_TOKEN>", telegramConfig.token).replace("<YOUR_CHAT_ID>", telegramConfig.token),
         {
           chat_id: telegramConfig.chat_id,
           text: `${donator_name} mengirimkan sebuah ${type} dengan jumlah ${String(amount_raw)} dan pesan "${message}\n**Pesan Ini Dikirim Dari NEB Service**`,
         },
         HEADERS,
-      );
-    } catch (error: unknown) {
-      console.error("Error sending message to Discord webhook:", error);
-    }
+      )
+      .catch((error: unknown) => {
+        console.error("Error sending message to Telegram:", error);
+      });
   }
-
-  res.json({
-    code: 200,
-    status: "success",
-    message: "Saweria Webhook Received",
-    data: {},
-  });
 };
 
 export default handler;
