@@ -1,4 +1,5 @@
 import { assetConfig, cspConfig, minifyConfig, rateLimitConfig, sessionConfig } from "@config";
+import { swaggerConfig, swaggerUiConfig } from "@config/swagger.config.js";
 import cors from "cors";
 import express, { type Express } from "express";
 import minifyHTML from "express-minify-html-2";
@@ -7,6 +8,8 @@ import session from "express-session";
 import helmet from "helmet";
 import logger from "morgan";
 import path from "node:path";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: string): void => {
   /**
@@ -50,7 +53,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
       maxAge: 86400,
       methods: "GET, POST, DELETE",
       optionsSuccessStatus: 200,
-      origin: isDevMode ? "*" : (app.get("host") as string),
+      origin: isDevMode ? "*" : (app.get("baseUrl") as string),
       preflightContinue: false,
     }),
   );
@@ -63,53 +66,52 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   /**
    * Content Security Policy
    */
-  const cspConfigWithNonce = {
+  const createCspConfig = (additionalDirectives: Record<string, string[]>) => ({
     directives: {
       ...cspConfig.directives,
-      scriptSrc: [...cspConfig.directives.scriptSrc, `'nonce-${cspNonce}'`],
-      styleSrc: [...cspConfig.directives.styleSrc, `'nonce-${cspNonce}'`],
+      ...additionalDirectives,
     },
-  };
+  });
+
+  const cspConfigWithNonce = createCspConfig({
+    scriptSrc: ["'self'", "'strict-dynamic'", `'nonce-${cspNonce}'`],
+    styleSrc: ["'self'", "'strict-dynamic'", `'nonce-${cspNonce}'`],
+  });
+
+  const cspConfigForDocs = createCspConfig({
+    imgSrc: ["'self'", "data:", "http:", "https:"],
+    scriptSrc: ["'self'", "'unsafe-inline'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+  });
 
   /**
    * Setup security headers
    */
-  app.use(
+  app.use((req, res, next) => {
+    const isApiDocs = req.path.includes("/api-docs");
+    const selectedCspConfig = isApiDocs ? cspConfigForDocs : cspConfigWithNonce;
+
     helmet({
-      contentSecurityPolicy: cspConfigWithNonce,
-      crossOriginEmbedderPolicy: {
-        policy: "require-corp",
-      },
-      crossOriginOpenerPolicy: {
-        policy: "same-origin",
-      },
-      crossOriginResourcePolicy: {
-        policy: "same-site",
-      },
+      contentSecurityPolicy: selectedCspConfig,
+      crossOriginEmbedderPolicy: { policy: "require-corp" },
+      crossOriginOpenerPolicy: { policy: "same-origin" },
+      crossOriginResourcePolicy: { policy: "same-site" },
       originAgentCluster: true,
-      referrerPolicy: {
-        policy: "strict-origin-when-cross-origin",
-      },
+      referrerPolicy: { policy: "strict-origin-when-cross-origin" },
       strictTransportSecurity: {
         includeSubDomains: true,
         maxAge: 31536000,
         preload: true,
       },
       xContentTypeOptions: true,
-      xDnsPrefetchControl: {
-        allow: true,
-      },
+      xDnsPrefetchControl: { allow: true },
       xDownloadOptions: true,
-      xFrameOptions: {
-        action: "deny",
-      },
-      xPermittedCrossDomainPolicies: {
-        permittedPolicies: "none",
-      },
+      xFrameOptions: { action: "deny" },
+      xPermittedCrossDomainPolicies: { permittedPolicies: "none" },
       xPoweredBy: false,
       xXssProtection: true,
-    }),
-  );
+    })(req, res, next);
+  });
 
   /**
    * Enable Http Strict Transport Security (HSTS)
@@ -120,4 +122,33 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
    * Setup session management
    */
   app.use(session(sessionConfig));
+
+  /**
+   * Setup swagger documentation
+   */
+  const mergedSwaggerConfig = {
+    ...swaggerConfig,
+    definition: {
+      ...swaggerConfig.definition,
+      info: {
+        ...swaggerConfig.definition.info,
+        contact: {
+          ...swaggerConfig.definition.info.contact,
+          url: `${app.get("baseUrl") as string}/contact`,
+        },
+      },
+    }
+  };
+
+  const mergedSwaggerUiConfig = {
+    ...swaggerUiConfig,
+    customfavIcon: `${app.get("baseUrl") as string}/favicon.ico`,
+    swaggerOptions: {
+      ...swaggerUiConfig.swaggerOptions,
+      url: `${app.get("baseUrl") as string}/api-docs`,
+    },
+    swaggerUrl: `${app.get("baseUrl") as string}/api-docs`,
+  };
+
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(mergedSwaggerConfig), mergedSwaggerUiConfig));
 };

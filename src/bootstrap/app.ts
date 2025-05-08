@@ -56,6 +56,7 @@ class App {
   private configuration(): void {
     this.#instance.set("host", appConfig.host);
     this.#instance.set("port", normalizePort(appConfig.port));
+    this.#instance.set("baseUrl", appConfig.host.includes("localhost") ? `${appConfig.host}:${appConfig.port.toString()}` : appConfig.host);
     this.#instance.set("cspNonce", this.#cspNonce);
     this.#instance.set("isDevMode", this.#isDevMode);
   }
