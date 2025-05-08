@@ -5,6 +5,8 @@ import { Router } from "express";
 import * as datatableController from "@controllers/api/datatable.controller.js";
 import * as homeController from "@controllers/api/home.controller.js";
 import * as teleStatusController from "@controllers/api/telegram/status.controller.js";
+import * as telePricingController from "@controllers/api/telegram/pricing.controller.js";
+import * as teleFAQController from "@controllers/api/telegram/faq.controller.js";
 import trakteerController from "@controllers/api/webhook/trakteer.controller.js";
 import saweriaController from "@controllers/api/webhook/saweria.controller.js";
 import telegramApi from "@middleware/telegramApi.js";
@@ -20,6 +22,8 @@ apiRouter.get("/datatable/localisation", datatableController.localisation);
 
 // Telegram
 apiRouter.get("/telegram/status", telegramApi, teleStatusController.home);
+apiRouter.get("/telegram/pricing", telegramApi, telePricingController.home);
+apiRouter.get("/telegram/faq", telegramApi, teleFAQController.home);
 
 // Webhook
 apiRouter.post("/webhook/trakteer", trakteerController);
