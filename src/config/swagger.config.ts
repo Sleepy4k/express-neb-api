@@ -51,7 +51,7 @@ export const swaggerConfig = {
       },
     ],
   },
-  apis: [`${__basedir}/swagger/**/*.yaml`],
+  apis: [`${__basedir}/docs/**/*.yaml`],
 };
 
 export const swaggerUiConfig = {
@@ -66,5 +66,6 @@ export const swaggerUiConfig = {
     showExtensions: true,
     showCommonExtensions: true,
     supportedSubmitMethods: ["get", "head"],
+    persistAuthorization: true,
   },
 };

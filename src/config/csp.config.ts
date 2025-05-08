@@ -11,7 +11,7 @@ export const cspConfig = {
     fontSrc: ["'self'"],
     frameSrc: ["'self'"],
     blockAllMixedContent: [],
-    connectSrc: ["'self'"],
+    connectSrc: ["'self'", "nach-neb.my.id"],
     scriptSrc: ["'self'"],
     styleSrc: ["'self'"],
     upgradeInsecureRequests: [],
