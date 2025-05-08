@@ -55,6 +55,13 @@ const handler = async (req: Request<object, object, ITrakteerData>, res: Respons
     return;
   }
 
+  res.json({
+    code: 200,
+    status: "success",
+    message: "Trakteer Webhook Received",
+    data: {},
+  });
+
   const HEADERS = {
     headers: {
       Accept: "application/json",
@@ -121,13 +128,6 @@ const handler = async (req: Request<object, object, ITrakteerData>, res: Respons
       console.error("Error sending message to Telegram:", error);
     });
   }
-
-  res.json({
-    code: 200,
-    status: "success",
-    message: "Trakteer Webhook Received",
-    data: {},
-  });
 };
 
 export default handler;
