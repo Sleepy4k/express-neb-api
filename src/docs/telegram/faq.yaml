@@ -1,0 +1,61 @@
+/telegram/faq:
+  get:
+    summary: The telegram faq api route
+    description: This is the telegram faq api route to get the faq information
+    operationId: getTelegramFaq
+    tags:
+      - Telegram
+    responses:
+      "200":
+        description: A JSON object of faq information such as question and answer
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The HTTP status code
+                  example: 200
+                status:
+                  type: string
+                  description: The status of the response
+                  example: "success"
+                message:
+                  type: string
+                  description: The message of the response
+                  example: "FAQ information retrieved successfully"
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      question:
+                        type: string
+                        description: The question of the FAQ item
+                        example: "How to use this API?"
+                      answer:
+                        type: string
+                        description: The answer of the FAQ item
+                        example: "You can use this API by sending a GET request to the endpoint."
+              example:
+                code: 200
+                status: "success"
+                message: "FAQ information retrieved successfully"
+                data:
+                  - question: "How to use this API?"
+                    answer: "You can use this API by sending a GET request to the endpoint."
+                  - question: "What is the pricing?"
+                    answer: "The pricing is available on the pricing page."
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'

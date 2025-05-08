@@ -1,0 +1,142 @@
+/webhook/trakteer:
+  post:
+    summary: Trakteer webhook notification
+    description: This endpoint is used to receive webhook notifications from Trakteer.
+    operationId: trakteerWebhook
+    tags:
+      - Webhook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: The type of event that triggered the webhook
+                example: "donation"
+              price:
+                type: number
+                description: The amount of the donation
+                example: 10000
+              supporter_name:
+                type: string
+                description: The name of the supporter
+                example: "John Doe"
+              supporter_message:
+                type: string
+                description: The message from the supporter
+                example: "Keep up the good work!"
+            example:
+              type: "donation"
+              price: 10000
+              supporter_name: "John Doe"
+              supporter_message: "Keep up the good work!"
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The HTTP status code
+                  example: 200
+                status:
+                  type: string
+                  description: The status of the response
+                  example: "success"
+                message:
+                  type: string
+                  description: The message of the response
+                  example: "Trakteer Webhook Received"
+                data:
+                  type: object
+            example:
+              code: 200
+              status: "success"
+              message: "Trakteer Webhook Received"
+              data: {}
+      "400":
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The HTTP status code
+                  example: 400
+                status:
+                  type: string
+                  description: The status of the response
+                  example: "error"
+                message:
+                  type: string
+                  description: The error message
+                  example: "Invalid request body"
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: The expected type of the event
+                      example: "type is required"
+                    price:
+                      type: string
+                      description: The expected type of the price
+                      example: "price is required"
+                    supporter_name:
+                      type: string
+                      description: The expected type of the supporter name
+                      example: "supporter_name is required"
+                    supporter_message:
+                      type: string
+                      description: The expected type of the supporter message
+                      example: "supporter_message is required"
+              example:
+                code: 400
+                status: "error"
+                message: "Invalid request body"
+                data:
+                  type: "type is required"
+                  price: "price is required"
+                  supporter_name: "supporter_name is required"
+                  supporter_message: "supporter_message is required"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The HTTP status code
+                  example: 401
+                status:
+                  type: string
+                  description: The status of the response
+                  example: "error"
+                message:
+                  type: string
+                  description: The error message
+                  example: "Unauthorized request"
+                data:
+                  type: object
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'

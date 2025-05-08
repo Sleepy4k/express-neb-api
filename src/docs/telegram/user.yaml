@@ -1,0 +1,76 @@
+/telegram/users:
+  get:
+    summary: The telegram users api route
+    description: This is the telegram users api route to get the list of application users
+    operationId: getTelegramUsers
+    tags:
+      - Telegram
+    responses:
+      "200":
+        description:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The HTTP status code
+                  example: 200
+                status:
+                  type: string
+                  description: The status of the response
+                  example: "success"
+                message:
+                  type: string
+                  description: The message of the response
+                  example: "List of application user"
+                data:
+                  type: object
+                  properties:
+                    total:
+                      type: integer
+                      description: The total number of users
+                      example: 100
+                    users:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            description: The email of the user
+                            example: "user@example.com"
+                          name:
+                            type: string
+                            description: The name of the user
+                            example: "user"
+                          role:
+                            type: string
+                            description: The role of the user
+                            example: "admin"
+              example:
+                code: 200
+                status: "success"
+                message: "List of application user"
+                data:
+                  total: 100
+                  users:
+                    - email: "user1@example.com"
+                      name: "user1"
+                      role: "admin"
+                    - email: "user2@example.com"
+                      name: "user2"
+                      role: "user"
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
