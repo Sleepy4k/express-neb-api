@@ -22,16 +22,18 @@ export const swaggerConfig = {
       },
       contact: {
         name: "NEB Support",
-        url: `${appConfig.host}/contact`,
+        url: null, // Change this on bootstrap/middleware.ts
         email: "admin@nach-neb.my.id",
       },
     },
     servers: [
       {
+        prior: "development",
         url: "http://localhost:3000/api",
         description: "Local server",
       },
       {
+        prior: "production",
         url: "https://nach-neb.my.id/api",
         description: "Production server",
       },
@@ -57,10 +59,7 @@ export const swaggerConfig = {
 export const swaggerUiConfig = {
   explorer: false,
   customSiteTitle: `${appConfig.name} - API Documentation`,
-  customfavIcon: `${appConfig.host}/favicon.ico`,
-  swaggerUrl: `${appConfig.host}/api-docs`,
   swaggerOptions: {
-    path: `${appConfig.host}/api-docs`,
     docExpansion: "none",
     filter: true,
     showExtensions: true,
