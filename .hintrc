@@ -7,9 +7,13 @@
       "default",
       {
         "ignore": [
-          "text-size-adjust"
+          "text-size-adjust",
+          "-webkit-text-size-adjust",
+          "-webkit-text-size-adjust: none"
         ]
       }
-    ]
+    ],
+    "no-inline-styles": "off",
+    "meta-viewport": "off"
   }
 }

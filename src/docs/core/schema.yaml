@@ -1,0 +1,70 @@
+components:
+  schemas:
+    MissingRouteResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 404
+        status:
+          type: string
+          description: The status of the response
+          example: "error"
+        message:
+          type: string
+          description: The error message
+          example: "Route not found"
+        data:
+          type: object
+          properties:
+            path:
+              type: string
+              description: The path of the request
+              example: "/api/v1/unknown"
+            method:
+              type: string
+              description: The HTTP method of the request
+              example: "GET"
+            hostname:
+              type: string
+              description: The hostname of the server
+              example: "http://localhost"
+            protocol:
+              type: string
+              description: The protocol of the request
+              example: "http"
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 500
+        status:
+          type: string
+          description: The status of the response
+          example: "error"
+        message:
+          type: string
+          description: The error message
+          example: "An error occurred!"
+        data:
+          type: object
+          properties:
+            path:
+              type: string
+              description: The path of the request
+              example: "/api/v1/unknown"
+            method:
+              type: string
+              description: The HTTP method of the request
+              example: "GET"
+            hostname:
+              type: string
+              description: The hostname of the server
+              example: "http://localhost"
+            protocol:
+              type: string
+              description: The protocol of the request
+              example: "http"

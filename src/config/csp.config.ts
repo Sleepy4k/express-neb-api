@@ -11,9 +11,9 @@ export const cspConfig = {
     fontSrc: ["'self'"],
     frameSrc: ["'self'"],
     blockAllMixedContent: [],
-    connectSrc: ["'self'"],
-    scriptSrc: ["'self'", "'strict-dynamic'"],
-    styleSrc: ["'self'", "'strict-dynamic'"],
+    connectSrc: ["'self'", "nach-neb.my.id"],
+    scriptSrc: ["'self'"],
+    styleSrc: ["'self'"],
     upgradeInsecureRequests: [],
   },
 };

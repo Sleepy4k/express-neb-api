@@ -2,75 +2,69 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-
-    <% if (block('subTitle').toString()) { %>
-      <meta name="title" content="<%= title %> - <%= block('subTitle').toString() %>">
-    <% } else { %>
-      <meta name="title" content="<%= title %>">
-    <% } %>
-
-    <% if (typeof description !== 'undefined') { %>
-      <meta name="description" content="<%= description %>">
-    <% } %>
-
     <meta name="author" content="Benjamin4k">
     <meta name="coverage" content="Worldwide">
     <meta name="distribution" content="Global">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="application-name" content="<%= title %>">
+    <meta name="robots" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="keywords" content="seb, neb, nach, bumn, naka, bypass, seb bypass, neb bypass, nach bypass, naka bypass, seb bypasser, neb bypasser, nach bypasser, naka bypasser, seb exam, naka exam, nach exam, neb exam, safe exam browser, safe exam browser bypass, safe exam browser bypass tool, seb bypass tool, neb bypass tool, naka bypass tool, nach bypass tool, naka exam bypasser, nach exam bypasser, seb exam bypasser, neb exam bypasser, seb exam bypass tool, naka exam bypass tool, nach exam bypass tool, neb exam bypass tool">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+    <link rel="canonical" href="<%= cannonical %>" />
     <link rel="icon" href="<%= asset('favicon.ico') %>" />
     <link rel="shortcut icon" href="<%= asset('favicon.ico') %>" />
     <link rel="apple-touch-icon" href="<%= asset('favicon.ico') %>" />
     <link rel="apple-touch-icon-precomposed" href="<%= asset('favicon.ico') %>" />
 
     <% if (block('subTitle').toString()) { %>
-      <title>
-        <%= title %> - <%= block('subTitle').toString() %>
-      </title>
+      <title><%= title %> - <%= block('subTitle').toString() %></title>
+      <meta name="title" content="<%= title %> - <%= block('subTitle').toString() %>">
+      <meta property="og:title" content="<%= title %> - <%= block('subTitle').toString() %>">
+      <meta property="twitter:title" content="<%= title %> - <%= block('subTitle').toString() %>">
     <% } else { %>
       <title><%= title %></title>
+      <meta name="title" content="<%= title %>">
+      <meta property="og:title" content="<%= title %>">
+      <meta property="twitter:title" content="<%= title %>">
+    <% } %>
+
+    <% if (typeof description !== 'undefined') { %>
+      <meta name="description" content="<%= description %>">
+      <meta property="og:description" content="<%= description %>">
+      <meta property="twitter:description" content="<%= description %>">
     <% } %>
 
     <meta property="csp-nonce" content="<%= cspNonce %>">
 
-    <meta property="og:locale" content="en">
     <meta property="og:url" content="<%= baseUrl %>">
+    <meta property="twitter:url" content="<%= baseUrl %>">
+
+    <meta property="og:locale" content="en_US">
+    <meta property="twitter:locale" content="en_US">
+    <meta property="og:locale:alternate" content="id_ID">
+    <meta property="twitter:locale:alternate" content="id_ID">
+
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="<%= title %>">
 
-    <% if (block('subTitle').toString()) { %>
-      <meta property="og:title" content="<%= title %> - <%= block('subTitle').toString() %>">
-    <% } else { %>
-      <meta property="og:title" content="<%= title %>">
-    <% } %>
-
-    <% if (typeof description !== 'undefined') { %>
-      <meta property="og:description" content="<%= description %>">
-    <% } %>
-
-    <meta property="og:image" content="<%= asset('images/seb.png') %>">
-    <meta property="og:image:width" content="900">
-    <meta property="og:image:height" content="549">
-    <meta property="og:image:alt" content="<%= title %>">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:secure_url" content="<%= asset('images/seb.png') %>">
-
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:site" content="@artkana30">
-    <meta property="twitter:title" content="<%= title %>">
-    <meta property="twitter:description" content="<%= description %>">
-    <meta property="twitter:image" content="<%= asset('images/seb.png') %>">
-    <meta property="twitter:image:alt" content="<%= title %>">
-    <meta property="twitter:image:width" content="900">
-    <meta property="twitter:image:height" content="549">
-    <meta property="twitter:image:type" content="image/png">
-    <meta property="twitter:image:secure_url" content="<%= asset('images/seb.png') %>">
     <meta property="twitter:creator" content="@artkana30">
-    <meta property="twitter:label1" content="Written by">
-    <meta property="twitter:data1" content="Benjamin4k">
+
+    <meta property="og:image" content="<%= asset('favicon.ico') %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="<%= title %>">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:secure_url" content="<%= asset('favicon.ico') %>">
+
+    <meta property="twitter:image" content="<%= asset('favicon.ico') %>">
+    <meta property="twitter:image:alt" content="<%= title %>">
+    <meta property="twitter:image:width" content="1200">
+    <meta property="twitter:image:height" content="675">
+    <meta property="twitter:image:type" content="image/png">
+    <meta property="twitter:image:secure_url" content="<%= asset('favicon.ico') %>">
 
     <link rel="stylesheet" href="<%= asset('css/error.css') %>" nonce="<%= cspNonce %>" />
     <link rel="stylesheet" href="<%= asset('css/font.css') %>" nonce="<%= cspNonce %>" />

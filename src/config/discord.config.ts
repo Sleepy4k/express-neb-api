@@ -1,4 +1,8 @@
 /* eslint-disable perfectionist/sort-objects */
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export const discordConfig = {
   webhook: {
     url: process.env.DISCORD_WEBHOOK_URL ?? "",

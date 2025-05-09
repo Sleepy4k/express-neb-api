@@ -684,6 +684,124 @@ textarea.form-control {
   background-color: #e69009;
 }
 
+/* Pop-up Pricing */
+.purchase-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.purchase-popup.show {
+  opacity: 1;
+  display: flex;
+}
+
+.popup-content {
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(20px) scale(0.98);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+.purchase-popup.show .popup-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.popup-content h3 {
+  color: var(--primary-color);
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.popup-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0 0.5rem;
+  line-height: 1;
+}
+
+.popup-close:hover {
+  color: var(--primary-color);
+  transform: rotate(90deg);
+}
+
+.popup-steps {
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+
+.step-number {
+  background-color: var(--primary-color);
+  color: var(--white);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+.btn-payment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  background-color: #25d366;
+  color: white;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  margin-top: 1rem;
+}
+
+.btn-payment:hover {
+  background-color: #128c7e;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-payment i {
+  font-size: 1.25rem;
+}
+
 /* Animasi Kustom */
 .animate__delay-1s {
   animation-delay: 0.5s;
@@ -987,7 +1105,7 @@ footer {
   }
 
   .tutorial-img {
-    max-height:  300px;
+    max-height: 300px;
   }
 }
 
@@ -998,5 +1116,17 @@ footer {
 
   .price {
     font-size: 2rem;
+  }
+  .popup-content {
+    padding: 1.5rem;
+  }
+
+  .popup-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .step {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

@@ -1,0 +1,143 @@
+components:
+  schemas:
+    WebhookSaweriaBody:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of event that triggered the webhook
+          example: "donation"
+        message:
+          type: string
+          description: The message from the supporter
+          example: "Keep up the good work!"
+        amount_raw:
+          type: number
+          description: The amount of the donation in raw format
+          example: 35000
+        donator_name:
+          type: string
+          description: The name of the supporter
+          example: "John Doe"
+        donator_email:
+          type: string
+          description: The email of the supporter
+          example: "user@example.com"
+    WebhookSaweriaPostResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 200
+        status:
+          type: string
+          description: The status of the response
+          example: "success"
+        message:
+          type: string
+          description: The message of the response
+          example: "Saweria Webhook Received"
+        data:
+          type: object
+    WebhookSaweriaInvalidBodyResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 400
+        status:
+          type: string
+          description: The status of the response
+          example: "error"
+        message:
+          type: string
+          description: The error message
+          example: "Invalid request body"
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              description: The expected type of the event
+              example: "type is required"
+            message:
+              type: string
+              description: The expected message from the supporter
+              example: "message is required"
+            amount_raw:
+              type: string
+              description: The expected amount of the donation
+              example: "amount_raw is required"
+            donator_name:
+              type: string
+              description: The expected name of the supporter
+              example: "donator_name is required"
+            donator_email:
+              type: string
+              description: The expected email of the supporter
+              example: "donator_email is required"
+    WebhookSaweriaUnauthorizedResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 401
+        status:
+          type: string
+          description: The status of the response
+          example: "error"
+        message:
+          type: string
+          description: The error message
+          example: "Unauthorized request"
+        data:
+          type: object
+          properties:
+
+/webhook/saweria:
+  post:
+    summary: Saweria webhook notification
+    description: This endpoint is used to receive webhook notifications from Saweria.
+    operationId: saweriaWebhook
+    tags:
+      - Webhook
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookSaweriaBody'
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSaweriaPostResponse'
+      "400":
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSaweriaInvalidBodyResponse'
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSaweriaUnauthorizedResponse'
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
