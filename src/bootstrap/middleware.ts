@@ -134,20 +134,19 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
         ...swaggerConfig.definition.info,
         contact: {
           ...swaggerConfig.definition.info.contact,
-          url: `${app.get("baseUrl") as string}/contact`,
+          url: new URL("/contact", app.get("baseUrl") as string).toString(),
         },
       },
-    }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      servers: swaggerConfig.definition.servers.sort((a, _b) =>
+        (isDevMode ? a.prior === "development" : a.prior === "production") ? -1 : 1
+      ),
+    },
   };
 
   const mergedSwaggerUiConfig = {
     ...swaggerUiConfig,
-    customfavIcon: `${app.get("baseUrl") as string}/favicon.ico`,
-    swaggerOptions: {
-      ...swaggerUiConfig.swaggerOptions,
-      url: `${app.get("baseUrl") as string}/api-docs`,
-    },
-    swaggerUrl: `${app.get("baseUrl") as string}/api-docs`,
+    customfavIcon: new URL("/favicon.ico", app.get("baseUrl") as string).toString(),
   };
 
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(mergedSwaggerConfig), mergedSwaggerUiConfig));
