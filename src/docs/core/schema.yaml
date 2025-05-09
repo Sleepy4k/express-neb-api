@@ -34,15 +34,6 @@ components:
               type: string
               description: The protocol of the request
               example: "http"
-        example:
-          code: 404
-          status: "error"
-          message: "Your request couldn't be found!"
-          data:
-            path: "/api/v1/unknown"
-            method: "GET"
-            hostname: "http://localhost"
-            protocol: "http"
     ErrorResponse:
       type: object
       properties:
@@ -77,12 +68,3 @@ components:
               type: string
               description: The protocol of the request
               example: "http"
-        example:
-          code: 500
-          status: "error"
-          message: "An error occurred!"
-          data:
-            path: "/api/v1/unknown"
-            method: "GET"
-            hostname: "http://localhost"
-            protocol: "http"

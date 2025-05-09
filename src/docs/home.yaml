@@ -1,3 +1,32 @@
+components:
+  schemas:
+    HomeGetResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 200
+        status:
+          type: string
+          description: The status of the response
+          example: "success"
+        message:
+          type: string
+          description: The message of the response
+          example: "Welcome to the API"
+        data:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the application
+              example: "My Application"
+            host:
+              type: string
+              description: The hostname of the server
+              example: "http://localhost"
+
 /:
   get:
     summary: The home api route
@@ -11,38 +40,7 @@
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                code:
-                  type: integer
-                  description: The HTTP status code
-                  example: 200
-                status:
-                  type: string
-                  description: The status of the response
-                  example: "success"
-                message:
-                  type: string
-                  description: The message of the response
-                  example: "Welcome to the API"
-                data:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: The name of the application
-                      example: "My Application"
-                    host:
-                      type: string
-                      description: The hostname of the server
-                      example: "http://localhost"
-              example:
-                code: 200
-                status: "success"
-                message: "Welcome to the API"
-                data:
-                  name: "My Application"
-                  host: "http://localhost"
+              $ref: '#/components/schemas/HomeGetResponse'
       "404":
         description: Route not found
         content:
