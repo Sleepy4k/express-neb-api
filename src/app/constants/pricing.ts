@@ -1,5 +1,5 @@
 /* eslint-disable perfectionist/sort-objects */
-const PRICING_PAYMENT_URL = "https://trakteer.id/nach-neb/tip";
+const PRICING_PAYMENT_URL = "https://saweria.co/nachneb";
 
 const TOKEN_PRICING = [
   {

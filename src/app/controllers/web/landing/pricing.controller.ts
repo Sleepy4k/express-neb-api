@@ -10,7 +10,7 @@ import { PRICING_PAYMENT_URL, TOKEN_PRICING } from "@constants/pricing.js";
  */
 const home = (_req: Request, res: Response) => {
   res.render("pages/landing/pricing", {
-    data: TOKEN_PRICING,
+    data: TOKEN_PRICING.sort((a, b) => a.id - b.id),
     paymentURL: PRICING_PAYMENT_URL,
   });
 };

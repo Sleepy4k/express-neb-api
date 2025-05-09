@@ -82,7 +82,7 @@ const handler = async (req: Request<object, object, ITrakteerData>, res: Respons
       });
     } else {
       await new Mail().sendMail({
-        to: "happytime@gmail.com",
+        to: "happytime6318@gmail.com",
         subject: `${appConfig.name} - Someone sent you a ${type}`,
         text: `${supporter_name} mengirimkan sebuah ${type} dengan jumlah ${String(price)} dan pesan "${supporter_message}`,
       }).catch((error: unknown) => {

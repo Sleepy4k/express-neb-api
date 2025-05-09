@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { appConfig } from "@config/app.config.js";
 import { discordConfig } from "@config/discord.config.js";
+import { saweriaConfig } from "@config/saweria.config.js";
 import { smtpConfig } from "@config/smtp.config.js";
 import { telegramConfig } from "@config/telegram.config.js";
 import { TOKEN_PRICING } from "@constants/pricing.js";
@@ -37,6 +38,16 @@ const redeemModel: RedeemModel = new RedeemModel();
 const handler = async (req: Request<object, object, ISaweriaData>, res: Response) => {
   const { type, message, amount_raw, donator_name, donator_email } = req.body;
 
+  if ((req.query.verificator ?? "") !== saweriaConfig.webhook.token) {
+    res.status(401).json({
+      code: 401,
+      status: "error",
+      message: "Unauthorized request",
+      data: {},
+    });
+    return;
+  }
+
   if (!type || !message || !amount_raw || !donator_name || !donator_email) {
     res.status(400).json({
       code: 400,
@@ -66,26 +77,63 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
   }
 
   const baseUrl = parseHostname(`${req.protocol}://${req.get("host") ?? ""}`);
-  const tokenPricing = TOKEN_PRICING.find((token) => token.price === amount_raw);
-  if (!tokenPricing) {
+  const sortedPricing = TOKEN_PRICING.sort((a, b) => a.price - b.price);
+  const lowestPrice = sortedPricing[0]?.price;
+
+  if (!lowestPrice || amount_raw < lowestPrice) {
     res.status(400).json({
       code: 400,
       status: "error",
       message: "Invalid amount_raw",
       data: {
-        amount_raw: "amount_raw must be one of the following: " + TOKEN_PRICING.map((token) => token.price).join(", "),
+        amount_raw: `amount_raw must be at least ${lowestPrice.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}`,
       },
     });
     await new Mail()
       .sendMail({
         from: `NEB Payments <${smtpConfig.auth.user}>`,
         to: donator_email,
-        subject: `${appConfig.name} - Your ${type} has been received`,
-        html: `<p>Hi ${donator_name},</p><p>Thank you for your support!<br>However, we couldn't process your payment of ${amount_raw.toLocaleString("id-ID", { style: "currency", currency: "IDR" })} because it doesn't match our pricing. Please check our pricing page for more information at <a href="${baseUrl}/contact" target="_blank" rel="noopener">Contact Us</a>.</p><p>Best regards,<br>${appConfig.name}</p>`,
+        subject: `${appConfig.name} - Payment Issue Notification`,
+        html: `
+          <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+              <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+                <h2 style="color: #555;">Hello ${donator_name},</h2>
+                <p>Thank you for your generous support!</p>
+                <p>Unfortunately, we couldn't process your payment of <strong>${amount_raw.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}</strong> because it doesn't meet the minimum pricing requirement.</p>
+                <p>Please visit our <a href="${baseUrl}/contact" target="_blank" rel="noopener" style="color: #007bff; text-decoration: none;">Contact Us</a> page for more information about our pricing tiers.</p>
+                <p>We truly appreciate your understanding and hope to assist you further.</p>
+                <p style="margin-top: 20px;">Best regards,</p>
+                <p style="font-weight: bold;">${appConfig.name} Team</p>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                <footer style="text-align: center; font-size: 12px; color: #777;">
+                  &copy; ${new Date().getFullYear().toString()} ${appConfig.name}. All Rights Reserved.
+                </footer>
+              </div>
+            </body>
+          </html>
+        `,
       })
       .catch((error: unknown) => {
         console.error("Error sending email:", error);
       });
+    return;
+  }
+
+  const tokenPricing = sortedPricing
+    .slice()
+    .reverse()
+    .find((token) => amount_raw >= token.price);
+
+  if (!tokenPricing) {
+    res.status(400).json({
+      code: 400,
+      status: "error",
+      message: "Invalid amount_raw",
+      data: {
+        amount_raw: "amount_raw must match a valid pricing tier",
+      },
+    });
     return;
   }
 
@@ -141,7 +189,7 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
       .sendMail({
         from: `NEB Payments <${smtpConfig.auth.user}>`,
         to: donator_email,
-        subject: `${appConfig.name} - Your ${type} has been received`,
+        subject: `${appConfig.name} - Thank You for Your ${type}`,
         html: paymentHtml,
       })
       .catch((error: unknown) => {
@@ -157,13 +205,15 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
           embeds: [
             {
               title: `${donator_name} mengirimkan sebuah ${type}`,
-              description: `Email: ${donator_email}
-      Jumlah: ${String(amount_raw)}
-      Pesan: ${message}
+              description: `
+                Email: ${donator_email}
+                Jumlah: ${String(amount_raw)}
+                Pesan: ${message}
 
-      <@460453000129937408>
-      <@602069520709976064>
-      <@998089787024093264>`,
+                <@460453000129937408>
+                <@602069520709976064>
+                <@998089787024093264>
+              `,
               color: discordConfig.webhook.color,
               footer: {
                 text: discordConfig.webhook.embed.footer.text,

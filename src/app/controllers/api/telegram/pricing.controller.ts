@@ -16,7 +16,7 @@ const home = (_req: Request, res: Response) => {
     message: "List of available pricing",
     data: {
       payment_url: PRICING_PAYMENT_URL,
-      data: TOKEN_PRICING.map((item) => ({
+      data: TOKEN_PRICING.sort((a, b) => a.id - b.id).map((item) => ({
         id: item.id,
         name: item.name,
         popular: item.badge.enabled,
