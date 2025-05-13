@@ -38,7 +38,7 @@ const redeemModel: RedeemModel = new RedeemModel();
 const handler = async (req: Request<object, object, ISaweriaData>, res: Response) => {
   const { type, message, amount_raw, donator_name, donator_email } = req.body;
 
-  if (!req.headers["x-saweria-signature"] || req.headers["x-saweria-signature"] === "") {
+  if (!req.headers["saweria-callback-signature"] || req.headers["saweria-callback-signature"] === "") {
     res.status(400).json({
       code: 400,
       status: "error",
