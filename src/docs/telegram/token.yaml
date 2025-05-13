@@ -65,22 +65,22 @@ components:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TelegramServiceTokenGetResponse'
+              $ref: "#/components/schemas/TelegramServiceTokenGetResponse"
       "400":
         description: Invalid redeem code
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TelegramServiceTokenInvalidGetResponse'
+              $ref: "#/components/schemas/TelegramServiceTokenInvalidGetResponse"
       "404":
         description: Route not found
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"

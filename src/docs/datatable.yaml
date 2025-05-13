@@ -168,19 +168,19 @@ components:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DatatableConfigGetResponse'
+              $ref: "#/components/schemas/DatatableConfigGetResponse"
       "404":
         description: Route not found
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"
 
 /datatable/localisation:
   get:
@@ -195,16 +195,16 @@ components:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DatatableLocalisationGetResponse'
+              $ref: "#/components/schemas/DatatableLocalisationGetResponse"
       "404":
         description: Route not found
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"

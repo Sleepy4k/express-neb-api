@@ -100,35 +100,35 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/WebhookTrakteerBody'
+            $ref: "#/components/schemas/WebhookTrakteerBody"
     responses:
-      '200':
+      "200":
         description: Successful response
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookTrakteerPostResponse'
+              $ref: "#/components/schemas/WebhookTrakteerPostResponse"
       "400":
         description: Bad request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookTrakteerInvalidBodyResponse'
+              $ref: "#/components/schemas/WebhookTrakteerInvalidBodyResponse"
       "401":
         description: Unauthorized
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookTrakteerUnauthorizedResponse'
+              $ref: "#/components/schemas/WebhookTrakteerUnauthorizedResponse"
       "404":
         description: Route not found
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"

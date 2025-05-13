@@ -28,20 +28,20 @@ const home = (_req: Request, res: Response) => {
           {
             name: "Quick and reliable results",
             description: "Instant",
-          }
-        ]
+          },
+        ],
       },
       {
         name: "Kahoot",
         coming_soon: true,
-        features: []
+        features: [],
       },
       {
         name: "Quizizz",
         coming_soon: true,
-        features: []
-      }
-    ]
+        features: [],
+      },
+    ],
   });
 };
 

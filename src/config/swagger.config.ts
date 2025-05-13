@@ -41,9 +41,9 @@ export const swaggerConfig = {
     components: {
       securitySchemes: {
         TelegramApiAuth: {
-          type: 'apiKey',
-          in: 'header',
-          name: 'X-Telegram-Token',
+          type: "apiKey",
+          in: "header",
+          name: "X-Telegram-Token",
         },
       },
     },

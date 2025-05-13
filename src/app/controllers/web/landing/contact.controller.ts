@@ -70,19 +70,22 @@ const process = async (req: Request<object, object, IContactFormBody>, res: Resp
       const mailType = appConfig.mail.toLowerCase();
 
       if (mailType === "web3form") {
-        await new Mail().sendMail({
-          name,
-          email,
-          message: `${name} mengirimkan sebuah pesan "${message}"`,
-        }).catch((error: unknown) => {
-          console.error("Error sending email using Web3Form:", error);
-        });
+        await new Mail()
+          .sendMail({
+            name,
+            email,
+            message: `${name} mengirimkan sebuah pesan "${message}"`,
+          })
+          .catch((error: unknown) => {
+            console.error("Error sending email using Web3Form:", error);
+          });
       } else {
-        await new Mail().sendMail({
-          from: `NEB Contact Form <${smtpConfig.auth.user}>`,
-          to: "happytime6318@gmail.com",
-          subject: `${appConfig.name} - New Contact Form Submission`,
-          html: `
+        await new Mail()
+          .sendMail({
+            from: `NEB Contact Form <${smtpConfig.auth.user}>`,
+            to: "happytime6318@gmail.com",
+            subject: `${appConfig.name} - New Contact Form Submission`,
+            html: `
             <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
               <h2 style="color: #4CAF50;">New Contact Form Submission</h2>
               <p><strong>Subject:</strong> ${subject}</p>
@@ -90,17 +93,19 @@ const process = async (req: Request<object, object, IContactFormBody>, res: Resp
               <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #1E90FF;">${email}</a></p>
               <p><strong>Message:</strong></p>
               <blockquote style="border-left: 4px solid #4CAF50; padding-left: 10px; color: #555;">${message}</blockquote>
-              <p><strong>File:</strong> ${filePath
-                ? `<a href="${new URL(`/storage/contact/${filePath}`, baseUrl).toString()}" style="color: #1E90FF;">Download File</a>`
-                : "No file attached"
+              <p><strong>File:</strong> ${
+                filePath
+                  ? `<a href="${new URL(`/storage/contact/${filePath}`, baseUrl).toString()}" style="color: #1E90FF;">Download File</a>`
+                  : "No file attached"
               }</p>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
               <p style="font-size: 0.9em; color: #777;">This email was sent from the NEB Contact Form.</p>
             </div>
           `,
-        }).catch((error: unknown) => {
-          console.error("Error sending email:", error);
-        });
+          })
+          .catch((error: unknown) => {
+            console.error("Error sending email:", error);
+          });
       }
     }
   } catch (error) {

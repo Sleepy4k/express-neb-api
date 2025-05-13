@@ -138,9 +138,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
         },
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      servers: swaggerConfig.definition.servers.sort((a, _b) =>
-        (isDevMode ? a.prior === "development" : a.prior === "production") ? -1 : 1
-      ),
+      servers: swaggerConfig.definition.servers.sort((a, _b) => ((isDevMode ? a.prior === "development" : a.prior === "production") ? -1 : 1)),
     },
   };
 

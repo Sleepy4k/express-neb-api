@@ -42,16 +42,16 @@ components:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TelegramFaqGetResponse'
+              $ref: "#/components/schemas/TelegramFaqGetResponse"
       "404":
         description: Route not found
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"

@@ -55,7 +55,7 @@ const missUrl = (_req: Request, res: Response) => {
     code: 422,
     status: "error",
     message: "Please provide a redeem code (e.g. /bypass/123) and a SEB file to perform the bypass",
-    data: []
+    data: [],
   });
 };
 

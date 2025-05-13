@@ -107,19 +107,19 @@ components:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "422":
         description: Invalid request body
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TelegramServiceSebInvalidRouteResponse'
+              $ref: "#/components/schemas/TelegramServiceSebInvalidRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"
 
 /telegram/service/seb/{redeemCode}:
   post:
@@ -133,7 +133,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TelegramServiceSebBody'
+            $ref: "#/components/schemas/TelegramServiceSebBody"
     parameters:
       - name: redeemCode
         in: path
@@ -148,22 +148,22 @@ components:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TelegramServiceSebPostResponse'
+              $ref: "#/components/schemas/TelegramServiceSebPostResponse"
       "400":
         description: Bad request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TelegramServiceSebInvalidRedeemCodeResponse'
+              $ref: "#/components/schemas/TelegramServiceSebInvalidRedeemCodeResponse"
       "404":
         description: Route not found
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"

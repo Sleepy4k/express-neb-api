@@ -109,35 +109,35 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/WebhookSaweriaBody'
+            $ref: "#/components/schemas/WebhookSaweriaBody"
     responses:
-      '200':
+      "200":
         description: Successful response
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookSaweriaPostResponse'
+              $ref: "#/components/schemas/WebhookSaweriaPostResponse"
       "400":
         description: Bad request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookSaweriaInvalidBodyResponse'
+              $ref: "#/components/schemas/WebhookSaweriaInvalidBodyResponse"
       "401":
         description: Unauthorized
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookSaweriaUnauthorizedResponse'
+              $ref: "#/components/schemas/WebhookSaweriaUnauthorizedResponse"
       "404":
         description: Route not found
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MissingRouteResponse'
+              $ref: "#/components/schemas/MissingRouteResponse"
       "500":
         description: Internal server error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ErrorResponse'
+              $ref: "#/components/schemas/ErrorResponse"
