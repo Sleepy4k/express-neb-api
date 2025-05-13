@@ -1,0 +1,61 @@
+components:
+  schemas:
+    TelegramServiceGetResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 200
+        status:
+          type: string
+          description: The status of the response
+          example: "success"
+        message:
+          type: string
+          description: The message of the response
+          example: "Service information retrieved successfully"
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the service
+                example: "Telegram Bot"
+              description:
+                type: string
+                description: The description of the service
+                example: "A bot that provides various functionalities"
+              coming_soon:
+                type: boolean
+                description: Indicates if the service is coming soon
+                example: false
+
+/telegram/service:
+  get:
+    summary: The telegram service api route
+    description: This is the telegram service api route to get the service information
+    operationId: getTelegramService
+    tags:
+      - Telegram
+    responses:
+      "200":
+        description: The telegram service information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramServiceGetResponse'
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'

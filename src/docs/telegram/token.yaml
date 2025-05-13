@@ -1,0 +1,86 @@
+components:
+  schemas:
+    TelegramServiceTokenGetResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 200
+        status:
+          type: string
+          description: The status of the response
+          example: "success"
+        message:
+          type: string
+          description: The message of the response
+          example: "Token retrieved successfully"
+        data:
+          type: object
+          properties:
+            redeem_code:
+              type: string
+              description: The token for the service
+              example: "TOKEN1234567890"
+            bypass_url:
+              type: string
+              description: The URL to bypass the service
+              example: "https://example.com/bypass/1234567890"
+    TelegramServiceTokenInvalidGetResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 400
+        status:
+          type: string
+          description: The status of the response
+          example: "error"
+        message:
+          type: string
+          description: The error message
+          example: "Redeem code already used"
+        data:
+          type: object
+
+/telegram/service/check/{redeemCode}:
+  get:
+    summary: The telegram service api route to check the redeem code
+    description: This is the telegram service api route to check the redeem code
+    operationId: getTelegramServiceCheck
+    tags:
+      - Telegram
+    parameters:
+      - name: redeemCode
+        in: path
+        required: true
+        description: The redeem code for the service
+        schema:
+          type: string
+          example: "REDEEM123"
+    responses:
+      "200":
+        description: The telegram service redeem code information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramServiceTokenGetResponse'
+      "400":
+        description: Invalid redeem code
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramServiceTokenInvalidGetResponse'
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'

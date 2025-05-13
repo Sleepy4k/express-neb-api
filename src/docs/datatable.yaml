@@ -1,0 +1,210 @@
+components:
+  schemas:
+    DatatableConfigGetResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 200
+        status:
+          type: string
+          description: The status of the response
+          example: "success"
+        message:
+          type: string
+          description: The message of the response
+          example: "DataTable Configuration"
+        data:
+          type: object
+          properties:
+            processing:
+              type: boolean
+              description: Indicates if the data is being processed
+              example: true
+            responsive:
+              type: boolean
+              description: Indicates if the data is responsive
+              example: true
+            rowReorder:
+              type: boolean
+              description: Indicates if the rows can be reordered
+              example: true
+            layout:
+              type: object
+              properties:
+                top1Start:
+                  type: string
+                  description: The starting point of the top1 layout
+                  example: "buttons"
+                bottomStart:
+                  type: string
+                  description: The starting point of the bottom layout
+                  example: "info"
+                bottomEnd:
+                  type: string
+                  description: The ending point of the bottom layout
+                  example: "paging"
+            buttons:
+              type: array
+              items:
+                type: object
+                properties:
+                  extend:
+                    type: string
+                    description: The action to be performed
+                    example: "copy"
+                  text:
+                    type: string
+                    description: The text to be displayed on the button
+                    example: "Copy"
+                  className:
+                    type: string
+                    description: The class name of the button
+                    example: "btn btn-primary"
+                  titleAttr:
+                    type: string
+                    description: The title attribute of the button
+                    example: "Copy to clipboard"
+            order:
+              type: array
+              items:
+                type: array
+                items:
+                  - type: integer
+                    description: The order of the data
+                    example: 0
+                  - type: string
+                    description: The column to be ordered
+                    example: "asc"
+            pageLength:
+              type: integer
+              description: The number of records to be displayed per page
+              example: 10
+            lengthChange:
+              type: boolean
+              description: Indicates if the length can be changed
+              example: true
+            searching:
+              type: boolean
+              description: Indicates if searching is enabled
+              example: true
+            info:
+              type: boolean
+              description: Indicates if information is displayed
+              example: true
+            language:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: The URL for the language file
+                  example: "https://nach-neb.my.id/datatable/localisation"
+    DatatableLocalisationGetResponse:
+      type: object
+      properties:
+        emptyTable:
+          type: string
+          example: "Tidak ada data yang tersedia di tabel"
+        info:
+          type: string
+          example: "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri"
+        infoEmpty:
+          type: string
+          example: "Menampilkan 0 hingga 0 dari 0 entri"
+        infoFiltered:
+          type: string
+          example: "(disaring dari _MAX_ total entri)"
+        lengthMenu:
+          type: string
+          example: "Tampilkan _MENU_ entri"
+        loadingRecords:
+          type: string
+          example: "Sedang memuat..."
+        processing:
+          type: string
+          example: "Sedang memproses..."
+        search:
+          type: string
+          example: "Pencarian:"
+        zeroRecords:
+          type: string
+          example: "Tidak ada data yang ditemukan"
+        paginate:
+          type: object
+          properties:
+            first:
+              type: string
+              example: "Pertama"
+            last:
+              type: string
+              example: "Terakhir"
+            next:
+              type: string
+              example: "Selanjutnya"
+            previous:
+              type: string
+              example: "Sebelumnya"
+        aria:
+          type: object
+          properties:
+            sortAscending:
+              type: string
+              example: ": aktifkan untuk mengurutkan kolom secara ascending"
+            sortDescending:
+              type: string
+              example: ": aktifkan untuk mengurutkan kolom secara descending"
+
+/datatable/config:
+  get:
+    summary: The datatable config api route
+    description: This is the datatable config api route to get the datatable configuration
+    operationId: getDatatableConfig
+    tags:
+      - DataTable
+    responses:
+      "200":
+        description: A JSON object of datatable configuration such as processing and responsive
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatatableConfigGetResponse'
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'
+
+/datatable/localisation:
+  get:
+    summary: The datatable localisation api route
+    description: This is the datatable localisation api route to get the datatable localisation
+    operationId: getDatatableLocalisation
+    tags:
+      - DataTable
+    responses:
+      "200":
+        description: A JSON object of datatable localisation such as empty table and info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatatableLocalisationGetResponse'
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MissingRouteResponse'
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorResponse'

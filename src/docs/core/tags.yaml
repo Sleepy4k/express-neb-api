@@ -1,6 +1,8 @@
 tags:
   - name: Public
     description: For public endpoints that do not require authentication
+  - name: DataTable
+    description: Endpoints related to data table functionality
   - name: Telegram
     description: Endpoints related to Telegram bot functionality
   - name: Webhook
