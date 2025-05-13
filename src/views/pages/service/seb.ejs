@@ -196,6 +196,7 @@
         }
 
         const formData = new FormData();
+        formData.append('redeem_code', redeemCode);
         formData.append('file_name', fileName);
         formData.append('file', fileInput.files[0]);
 
