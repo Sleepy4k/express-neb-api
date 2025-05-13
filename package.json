@@ -1,6 +1,6 @@
 {
   "name": "express-typescript-neb",
-  "version": "2.0.0",
+  "version": "2.2.13",
   "private": true,
   "exports": "./index.js",
   "type": "module",
