@@ -5,8 +5,8 @@ const TOKEN_PRICING = [
   {
     id: 1,
     name: "Basic Plan",
-    price: 35000,
-    displayPrice: "35K",
+    price: 5000,
+    displayPrice: "5K",
     token: 1,
     tokenDisplay: "1 Token",
     className: "basic-plan",
@@ -21,8 +21,8 @@ const TOKEN_PRICING = [
   {
     id: 2,
     name: "Premium Plan",
-    price: 150000,
-    displayPrice: "150K",
+    price: 25000,
+    displayPrice: "25K",
     token: 6,
     tokenDisplay: "5 (+1) Tokens",
     className: "premium-plan highlighted",
@@ -32,13 +32,13 @@ const TOKEN_PRICING = [
       text: "Most Popular",
       className: "pricing-badge",
     },
-    description: ["6 Exam Tokens Included", "Save 60K instantly", "Scalable for bulk purchases", "Exclusive access to new features"],
+    description: ["6 Exam Tokens Included", "Save 5K instantly", "Scalable for bulk purchases", "Exclusive access to new features"],
   },
   {
     id: 3,
     name: "Enterprise Plan",
-    price: 90000,
-    displayPrice: "90K",
+    price: 12000,
+    displayPrice: "12K",
     token: 3,
     tokenDisplay: "3 Tokens",
     className: "middle-plan",
@@ -48,7 +48,7 @@ const TOKEN_PRICING = [
       text: "Most Popular",
       className: "pricing-badge",
     },
-    description: ["Save 15k on this plan", "Supports all configurations", "Ideal for student groups"],
+    description: ["Save 3k on this plan", "Supports all configurations", "Ideal for student groups"],
   },
 ];
 

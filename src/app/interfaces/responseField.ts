@@ -8,6 +8,7 @@
  * @property {IResField[]|undefined} data - The data of the response
  */
 interface IResData {
+  code?: number | undefined;
   data?: IResField[] | undefined;
   message?: string | undefined;
   status?: string | undefined;

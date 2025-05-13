@@ -126,11 +126,9 @@ const remove = async (req: Request<IContactDeleteParams, object, object>, res: R
   if (oldData?.file_url && oldData.file_url !== "") {
     const filePath = path.join(__basedir, oldData.file_url);
 
-    try {
-      await fs.unlink(filePath);
-    } catch (error) {
+    await fs.unlink(filePath).catch((error: unknown) => {
       console.error("Error deleting file:", error);
-    }
+    });
   }
 
   res.status(200).json({

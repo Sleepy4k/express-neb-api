@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-objects */
 import type { Request, Response } from "express";
 
 import { serviceConfig } from "@config/service.config.js";
@@ -44,26 +45,17 @@ const redeemModel: RedeemModel = new RedeemModel();
 const userAgentGenerator: UserAgentGenerator = new UserAgentGenerator();
 
 /**
- * The form controller for the service controller
- *
- * @param {Request} _req - The request
- * @param {Response} res - The response
- */
-const form = (_req: Request, res: Response) => {
-  res.render("pages/service/seb");
-};
-
-/**
  * The missing URL controller for the service controller
  *
  * @param {Request} _req - The request
  * @param {Response} res - The response
  */
 const missUrl = (_req: Request, res: Response) => {
-  res.status(404).json({
-    data: [],
-    message: "Please provide a redeem code (e.g. /bypass/123) and a SEB file to perform the bypass",
+  res.status(422).json({
+    code: 422,
     status: "error",
+    message: "Please provide a redeem code (e.g. /bypass/123) and a SEB file to perform the bypass",
+    data: []
   });
 };
 
@@ -78,29 +70,31 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
 
   if (!redeemCode || typeof redeemCode !== "string") {
     res.status(400).send({
-      data: [],
+      code: 400,
+      status: "error",
       message: "Please provide a redeem code",
-      status: "error",
+      data: [],
     });
     return;
   }
 
-  const { redeem_code } = req.body;
-
-  if (!redeem_code && redeem_code !== "") {
+  const bodyRedeemCode = req.body.redeem_code;
+  if (bodyRedeemCode && bodyRedeemCode !== "") {
     res.status(400).json({
-      data: [],
+      code: 400,
+      status: "error",
       message: "Unauthorized bypass attempt, please contact the administrator if you think this is a mistake",
-      status: "error",
+      data: [],
     });
     return;
   }
 
-  if (redeemCode !== redeem_code) {
+  if (redeemCode !== bodyRedeemCode) {
     res.status(400).json({
-      data: [],
-      message: "Redeem code does not match the redeem code in the body",
+      code: 400,
       status: "error",
+      message: "Redeem code does not match the redeem code in the body",
+      data: [],
     });
     return;
   }
@@ -110,18 +104,20 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
 
   if (!redeem) {
     res.status(400).json({
-      data: [],
-      message: "Invalid redeem code",
+      code: 400,
       status: "error",
+      message: "Invalid redeem code",
+      data: [],
     });
     return;
   }
 
   if (redeem.redeemedAt !== null) {
     res.status(400).json({
-      data: [],
-      message: "Redeem code already used",
+      code: 400,
       status: "error",
+      message: "Redeem code already used",
+      data: [],
     });
     return;
   }
@@ -131,9 +127,10 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
 
     if (!file) {
       res.status(400).json({
-        data: [],
-        message: "File not found or invalid file type",
+        code: 400,
         status: "error",
+        message: "File not found or invalid file type",
+        data: [],
       });
       return;
     }
@@ -148,27 +145,31 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
 
       if (!sebFile) {
         res.status(400).json({
-          data: [],
-          message: "Error parsing SEB file",
+          code: 400,
           status: "error",
+          message: "Error parsing SEB file",
+          data: [],
         });
         return;
       }
 
       if (!sebFile.StartUrl || sebFile.StartUrl === "") {
         res.status(400).json({
-          data: [],
-          message: "Start URL not found in SEB file",
+          code: 400,
           status: "error",
+          message: "Start URL not found in SEB file",
+          data: [],
         });
         return;
       }
 
       const { file_name } = req.body;
+
       const resData: IResData = {
-        data: [],
-        message: "SEB configuration file successfully bypassed",
+        code: 200,
         status: "success",
+        message: "SEB configuration file successfully bypassed",
+        data: [],
       };
 
       const responseFields = [
@@ -193,27 +194,29 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
 
       if (serviceConfig.file.deleteAfterParse) {
         await fs.unlink(file.path).catch((err: unknown) => {
-          console.log(`Error deleting file: ${err as Error}`);
+          console.log(`Error deleting file: ${(err as Error).message}`);
         });
       }
     } catch (err) {
       console.log(err);
 
       res.status(400).json({
-        data: [],
-        message: "Error reading file",
+        code: 400,
         status: "error",
+        message: "Error reading file",
+        data: [],
       });
     }
   } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      data: [],
-      message: "An error occurred",
+      code: 500,
       status: "error",
+      message: "An error occurred",
+      data: [],
     });
   }
 };
 
-export { bypass, form, missUrl };
+export { bypass, missUrl };
