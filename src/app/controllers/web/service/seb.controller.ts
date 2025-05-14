@@ -87,7 +87,7 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
 
   const { redeem_code } = req.body;
 
-  if (!redeem_code || redeem_code !== "") {
+  if (!redeem_code || redeem_code === "") {
     res.status(400).json({
       data: [],
       message: "Unauthorized bypass attempt, please contact the administrator if you think this is a mistake",

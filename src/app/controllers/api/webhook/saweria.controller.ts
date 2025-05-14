@@ -7,7 +7,6 @@ import { saweriaConfig } from "@config/saweria.config.js";
 import { smtpConfig } from "@config/smtp.config.js";
 import { telegramConfig } from "@config/telegram.config.js";
 import { TOKEN_PRICING } from "@constants/pricing.js";
-import { RedeemData } from "@interfaces/redeemData.js";
 import { ISaweriaData } from "@interfaces/saweriaData.js";
 import RedeemModel from "@models/redeem.model.js";
 import Mail from "@modules/mail.js";
@@ -36,8 +35,6 @@ const redeemModel: RedeemModel = new RedeemModel();
  * @param {Response} res
  */
 const handler = async (req: Request<object, object, ISaweriaData>, res: Response) => {
-  const { type, message, amount_raw, donator_name, donator_email } = req.body;
-
   if (!req.headers["saweria-callback-signature"] || req.headers["saweria-callback-signature"] === "") {
     res.status(400).json({
       code: 400,
@@ -57,6 +54,8 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
     });
     return;
   }
+
+  const { type, message, amount_raw, donator_name, donator_email } = req.body;
 
   if (!type || !message || !amount_raw || !donator_name || !donator_email) {
     res.status(400).json({
@@ -99,34 +98,37 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
         amount_raw: `amount_raw must be at least ${lowestPrice.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}`,
       },
     });
-    await new Mail()
-      .sendMail({
-        from: `NEB Payments <${smtpConfig.auth.user}>`,
-        to: donator_email,
-        subject: `${appConfig.name} - Payment Issue Notification`,
-        html: `
-          <html>
-            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-              <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-                <h2 style="color: #555;">Hello ${donator_name},</h2>
-                <p>Thank you for your generous support!</p>
-                <p>Unfortunately, we couldn't process your payment of <strong>${amount_raw.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}</strong> because it doesn't meet the minimum pricing requirement.</p>
-                <p>Please visit our <a href="${baseUrl}/contact" target="_blank" rel="noopener" style="color: #007bff; text-decoration: none;">Contact Us</a> page for more information about our pricing tiers.</p>
-                <p>We truly appreciate your understanding and hope to assist you further.</p>
-                <p style="margin-top: 20px;">Best regards,</p>
-                <p style="font-weight: bold;">${appConfig.name} Team</p>
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-                <footer style="text-align: center; font-size: 12px; color: #777;">
-                  &copy; ${new Date().getFullYear().toString()} ${appConfig.name}. All Rights Reserved.
-                </footer>
-              </div>
-            </body>
-          </html>
-        `,
-      })
-      .catch((error: unknown) => {
-        console.error("Error sending email:", error);
-      });
+
+    if (!(req.app.get("isDevMode") as boolean)) {
+      await new Mail()
+        .sendMail({
+          from: `NEB Payments <${smtpConfig.auth.user}>`,
+          to: donator_email,
+          subject: `${appConfig.name} - Payment Issue Notification`,
+          html: `
+            <html>
+              <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+                  <h2 style="color: #555;">Hello ${donator_name},</h2>
+                  <p>Thank you for your generous support!</p>
+                  <p>Unfortunately, we couldn't process your payment of <strong>${amount_raw.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}</strong> because it doesn't meet the minimum pricing requirement.</p>
+                  <p>Please visit our <a href="${baseUrl}/contact" target="_blank" rel="noopener" style="color: #007bff; text-decoration: none;">Contact Us</a> page for more information about our pricing tiers.</p>
+                  <p>We truly appreciate your understanding and hope to assist you further.</p>
+                  <p style="margin-top: 20px;">Best regards,</p>
+                  <p style="font-weight: bold;">${appConfig.name} Team</p>
+                  <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                  <footer style="text-align: center; font-size: 12px; color: #777;">
+                    &copy; ${new Date().getFullYear().toString()} ${appConfig.name}. All Rights Reserved.
+                  </footer>
+                </div>
+              </body>
+            </html>
+          `,
+        })
+        .catch((error: unknown) => {
+          console.error("Error sending email:", error);
+        });
+    }
     return;
   }
 
@@ -147,16 +149,21 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
     return;
   }
 
-  const tokenList: RedeemData[] = [];
-  const tokensToGenerate = tokenPricing.token;
+  const remainingBalance = amount_raw - tokenPricing.price;
+  const tokensToGenerate = tokenPricing.token + Math.floor(remainingBalance / lowestPrice);
   const totalRedeemCode = await redeemModel.countByName(donator_email);
 
-  for (let i = 0; i < tokensToGenerate; i++) {
-    const randomizer = Math.floor(Math.random() * 10000).toString();
-    const redeemCode = nameToRedeemCode(donator_email.split("@")[0], `${randomizer}-${(totalRedeemCode + i + 1).toString()}`);
-    const token = await redeemModel.create(redeemCode, donator_email, `Token dari ${donator_name} sebesar ${amount_raw.toString()}`);
-    tokenList.push(token);
-  }
+  const tokenList = await Promise.all(
+    Array.from({ length: tokensToGenerate }, async (_, i) => {
+      const randomizer = Math.floor(Math.random() * 10000).toString();
+      const redeemCode = nameToRedeemCode(donator_email.split("@")[0], `${randomizer}-${(totalRedeemCode + i + 1).toString()}`);
+      return redeemModel.create(
+        redeemCode,
+        donator_email,
+        `Token dari ${donator_name} sebesar ${lowestPrice.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}`,
+      );
+    }),
+  );
 
   const placeholders: Record<string, string | string[]> = {
     APP_NAME: appConfig.name,
@@ -191,7 +198,7 @@ const handler = async (req: Request<object, object, ISaweriaData>, res: Response
     code: 200,
     status: "success",
     message: "Saweria Webhook Received",
-    data: {},
+    data: tokenList,
   });
 
   if (!(req.app.get("isDevMode") as boolean)) {
