@@ -10,6 +10,8 @@ import SebFile from "@modules/seb.js";
 import UserAgentGenerator from "@modules/userAgent.js";
 import { type ParamsDictionary } from "express-serve-static-core";
 import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 /**
  * The interface for the request body
@@ -28,6 +30,11 @@ interface IBypassBody {
 interface IBypassParams extends ParamsDictionary {
   redeemCode: string;
 }
+
+/**
+ * Get the base directory from the current file path and the dot-to-parent
+ */
+const __basedir = path.resolve(fileURLToPath(import.meta.url), "../../../../../storage/app/seb/results");
 
 /**
  * The redeem model instance for the service controller
@@ -190,6 +197,21 @@ const bypass = async (req: Request<IBypassParams, object, IBypassBody>, res: Res
       res.status(200).json(resData);
 
       await redeemModel.redeem(sanitazedRedeemCode);
+
+      await fs.writeFile(
+        path.join(__basedir, `${redeem.name.split("@")[0] ?? "default"}/${file_name}.json`),
+        JSON.stringify({
+          headers: resData.data.map((field) => ({
+            checked: false,
+            name: field.name,
+            value: field.value,
+          })),
+          initial: file_name.charAt(0).toUpperCase(),
+          name: file_name.replaceAll(" ", "_").toLowerCase(),
+          tooltip: file_name,
+        }),
+        { encoding: defaultEncoder },
+      );
 
       if (serviceConfig.file.deleteAfterParse) {
         await fs.unlink(file.path).catch((err: unknown) => {

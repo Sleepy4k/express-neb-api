@@ -16,8 +16,6 @@ import axios from "axios";
  * @param {Response} res
  */
 const handler = async (req: Request<object, object, ITrakteerData>, res: Response) => {
-  const { type, supporter_name, supporter_message, price } = req.body;
-
   if (req.headers["x-webhook-token"] !== trakteerConfig.webhook.token) {
     res.status(401).json({
       code: 401,
@@ -27,6 +25,8 @@ const handler = async (req: Request<object, object, ITrakteerData>, res: Respons
     });
     return;
   }
+
+  const { type, supporter_name, supporter_message, price } = req.body;
 
   if (!type || !supporter_name || !supporter_message || !price) {
     res.status(400).json({
