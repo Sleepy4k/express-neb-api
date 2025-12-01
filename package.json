@@ -39,7 +39,7 @@
     "crypto-es": "^2.1.0",
     "dotenv": "^16.5.0",
     "ejs-mate": "^4.0.0",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "express-minify-html-2": "^2.0.0",
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
