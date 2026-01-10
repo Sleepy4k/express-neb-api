@@ -1,42 +1,33 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable perfectionist/sort-imports */
 import { Router } from "express";
 
 // Controllers
-import * as datatableController from "@controllers/api/datatable.controller.js";
-import * as homeController from "@controllers/api/home.controller.js";
-import * as teleStatusController from "@controllers/api/telegram/status.controller.js";
-import * as telePricingController from "@controllers/api/telegram/pricing.controller.js";
-import * as teleFAQController from "@controllers/api/telegram/faq.controller.js";
-import * as teleUsersController from "../app/controllers/api/telegram/users.controller.js";
-import * as teleServiceController from "../app/controllers/api/telegram/service.controller.js";
-import * as teleTokenController from "../app/controllers/api/telegram/token.controller.js";
-import * as teleSebController from "../app/controllers/api/telegram/seb.controller.js";
-import trakteerController from "@controllers/api/webhook/trakteer.controller.js";
-import saweriaController from "@controllers/api/webhook/saweria.controller.js";
-import telegramApi from "@middleware/telegramApi.js";
-import { sebFileUploader } from "../app/middleware/fileUploader.js";
+import HomeController from "@controllers/home.controller.js";
+import FaqController from "@controllers/faq.controller.js";
+import ServiceController from "@controllers/service.controller.js";
+import ContactController from "@controllers/contact.controller.js";
+
+import { sebFileUploader } from "@middleware/fileUploader.js";
+import webApi from "@middleware/webApi.js";
 
 const apiRouter = Router();
 
 // Home
-apiRouter.get("/", homeController.home);
+apiRouter.get("/", HomeController.index);
 
-// Datatable
-apiRouter.get("/datatable/config", datatableController.configuration);
-apiRouter.get("/datatable/localisation", datatableController.localisation);
+// FAQ
+apiRouter.get("/faq", FaqController.index);
+apiRouter.get("/faqs", FaqController.index); // Legacy route
 
-// Telegram
-apiRouter.get("/telegram/status", telegramApi, teleStatusController.home);
-apiRouter.get("/telegram/pricing", telegramApi, telePricingController.home);
-apiRouter.get("/telegram/faq", telegramApi, teleFAQController.home);
-apiRouter.get("/telegram/users", telegramApi, teleUsersController.home);
-apiRouter.get("/telegram/service", telegramApi, teleServiceController.home);
-apiRouter.get("/telegram/service/check/:redeemCode", telegramApi, teleTokenController.check);
-apiRouter.post("/telegram/service/seb", telegramApi, teleSebController.missUrl);
-apiRouter.post("/telegram/service/seb/:redeemCode", telegramApi, sebFileUploader.single("file"), teleSebController.bypass);
+// Contact
+apiRouter.post("/contact", ContactController.store);
 
-// Webhook
-apiRouter.post("/webhook/trakteer", trakteerController);
-apiRouter.post("/webhook/saweria", saweriaController);
+// Service
+apiRouter.get("/service", ServiceController.index);
+apiRouter.post("/service", ServiceController.store);
+apiRouter.post("/service/safe-exam-bypasser", webApi, sebFileUploader.single("file"), ServiceController.seb);
+apiRouter.post("/service/kahoot-bypasser", webApi, ServiceController.kahoot);
+apiRouter.post("/service/quizizz-bypasser", webApi, ServiceController.quizizz);
 
 export default apiRouter;

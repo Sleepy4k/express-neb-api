@@ -1,6 +1,6 @@
 import { type XMLDictionary } from "@interfaces/xmlFile.js";
 import { sha256 } from "@utils/encryption.js";
-import { parseXMLString, serialize } from "@utils/parse.js";
+import { serialize } from "@utils/parse.js";
 
 /**
  * The SEB file class
@@ -63,12 +63,11 @@ class SebFile {
   /**
    * Create an instance of the SebFile class
    *
-   * @param {string} sebXML - The SEB XML file
+   * @param {string} dictionnary - The SEB XML file
    *
-   * @returns {SebFile|undefined} The SebFile instance or undefined
+   * @returns {SebFile | undefined} The SebFile instance or undefined
    */
-  public static createInstance(sebXML: string): SebFile | undefined {
-    const dictionnary = parseXMLString(sebXML);
+  public static createInstance(dictionnary: undefined | XMLDictionary): SebFile | undefined {
     if (!dictionnary) return;
 
     const serializedJson = serialize(dictionnary);

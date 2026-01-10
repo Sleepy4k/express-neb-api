@@ -1,0 +1,90 @@
+components:
+  schemas:
+    SafeExamBody:
+      type: object
+      properties:
+        file_name:
+          type: string
+          description: The name of the file to be uploaded
+          example: "Quiz Jarkom"
+        file:
+          type: string
+          format: binary
+          description: The file to be uploaded
+          example: "base64-encoded-file-content"
+    SafeExamPostResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 200
+        status:
+          type: string
+          description: The status of the response
+          example: "success"
+        message:
+          type: string
+          description: The message of the response
+          example: "SEB configuration file successfully bypassed"
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the header file
+                example: "Referer"
+              value:
+                type: string
+                description: The value of the header file
+                example: "https://example.com/referer"
+      example:
+        code: 200
+        status: success
+        message: SEB configuration file successfully bypassed
+        data:
+          - name: Referer
+            value: https://example.com/referer
+          - name: User-Agent
+            value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3
+          - name: X-SafeExamBrowser-RequestHash
+            value: 1234567890abcdef
+          - name: X-SafeExamBrowser-ConfigHash
+            value: 1234567890abcdef
+          - name: File-Name
+            value: Quiz Jarkom
+
+/safe-exam-bypasser:
+  post:
+    summary: The safe exam browser api route
+    description: This is the safe exam browser api route to get a safe exam browser bypass link
+    operationId: postSafeExam
+    tags:
+      - Bypasser
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SafeExamBody"
+    responses:
+      "200":
+        description: A JSON object of safe exam browser response
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SafeExamPostResponse"
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MissingRouteResponse"
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"

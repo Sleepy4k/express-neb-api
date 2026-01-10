@@ -1,6 +1,6 @@
 export const serviceConfig = {
   file: {
-    deleteAfterParse: false,
+    deleteAfterParse: true,
   },
   response: {
     showConfigHash: true,

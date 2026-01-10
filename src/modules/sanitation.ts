@@ -67,7 +67,7 @@ class Sanitation {
    * @returns The sanitized input.
    */
   public static sanitizeBoolean(input: boolean): boolean {
-    return !!input;
+    return input satisfies boolean;
   }
 
   /**

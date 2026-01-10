@@ -1,6 +1,5 @@
 /* eslint-disable perfectionist/sort-classes */
 import { appConfig } from "@config/app.config.js";
-import generateNonce from "@utils/nonce.js";
 import { normalizePort } from "@utils/parse.js";
 import express, { type Express } from "express";
 
@@ -10,7 +9,6 @@ import provider from "./provider.js";
 import routes from "./routes.js";
 
 class App {
-  #cspNonce: string;
   #dirname: string;
   #instance: Express;
   #isDevMode: boolean;
@@ -41,7 +39,6 @@ class App {
   public constructor(dirname: string) {
     this.#dirname = dirname;
     this.#instance = express();
-    this.#cspNonce = generateNonce();
     this.#isDevMode = appConfig.env === "development" || appConfig.env === "local";
 
     this.configuration();
@@ -56,8 +53,8 @@ class App {
   private configuration(): void {
     this.#instance.set("host", appConfig.host);
     this.#instance.set("port", normalizePort(appConfig.port));
+    this.#instance.set("basePath", this.#dirname);
     this.#instance.set("baseUrl", appConfig.host.includes("localhost") ? `${appConfig.host}:${appConfig.port.toString()}` : appConfig.host);
-    this.#instance.set("cspNonce", this.#cspNonce);
     this.#instance.set("isDevMode", this.#isDevMode);
   }
 
@@ -68,8 +65,8 @@ class App {
    */
   private setup(): void {
     provider(this.#instance);
-    middleware(this.#instance, this.#dirname, this.#isDevMode, this.#cspNonce);
-    routes(this.#instance, this.#dirname);
+    middleware(this.#instance, this.#isDevMode);
+    routes(this.#instance);
     handlers(this.#instance);
   }
 }

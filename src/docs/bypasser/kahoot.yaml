@@ -1,0 +1,44 @@
+components:
+  schemas:
+    KahootPostResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 501
+        status:
+          type: string
+          description: The status of the response
+          example: "error"
+        message:
+          type: string
+          description: The message of the response
+          example: "Kahoot service is not implemented yet"
+
+/kahoot-bypasser:
+  post:
+    summary: The kahoot api route
+    description: This is the kahoot api route to get a kahoot bypass link
+    operationId: postKahoot
+    tags:
+      - Bypasser
+    responses:
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MissingRouteResponse"
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"
+      "501":
+        description: A JSON object of kahoot response
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KahootPostResponse"

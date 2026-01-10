@@ -268,27 +268,16 @@ const serialize = (dictionary: XMLDictionary): string => {
 };
 
 /**
- * Convert a name to a redeem code
+ * Convert a text to a slug
  *
- * @param {string} name - The name
- * @param {string} suffix - The suffix
+ * @param {string} text - The text to convert
  *
- * @returns {string} The redeem code
+ * @returns {string} The slugified text
  */
-const nameToRedeemCode = (name: string, suffix: string): string => {
-  // prettier-ignore
-  const sensitiveCharacters = [
-    " ", "-", "_", ".", ",",
-    ":", ";", "!", "@", "#",
-    "$", "%", "^", "&", "*",
-    "(", ")", "+", "=", "{",
-    "}", "[", "]", "|", "\\",
-    "/", "<", ">", "?", "~",
-  ];
-  const regex = new RegExp(`[${sensitiveCharacters.join("")}]`, "g");
-  const reversedName = name.replace(regex, "").toLowerCase().split("").reverse().join("").replace(/\s+/g, "-");
+const toSlug = (text: string): string =>
+  text
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");
 
-  return `${getCurrentDateTime()}-${reversedName}-${suffix}`;
-};
-
-export { getCurrentDateTime, isValueNullOrUndefined, nameToRedeemCode, normalizePort, parseHostname, parseXMLString, serialize };
+export { getCurrentDateTime, isValueNullOrUndefined, normalizePort, parseHostname, parseXMLString, serialize, toSlug };

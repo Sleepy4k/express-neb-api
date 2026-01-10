@@ -1,0 +1,84 @@
+components:
+  schemas:
+    FaqGetResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 200
+        status:
+          type: string
+          description: The status of the response
+          example: "success"
+        message:
+          type: string
+          description: The message of the response
+          example: "FAQ information retrieved successfully"
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              q:
+                type: string
+                description: The question of the FAQ item
+                example: "How to use this API?"
+              a:
+                type: string
+                description: The answer of the FAQ item
+                example: "You can use this API by sending a GET request to the endpoint."
+
+/faq:
+  get:
+    summary: The faq api route
+    description: This is the faq api route to get the faq information
+    operationId: getFaq
+    tags:
+      - Miscellaneous
+    responses:
+      "200":
+        description: A JSON object of faq information such as question and answer
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FaqGetResponse"
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MissingRouteResponse"
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"
+
+/faqs:
+  get:
+    summary: The faq api route (legacy)
+    description: This is the faq api route to get the faq information
+    operationId: getFaqLegacy
+    tags:
+      - Miscellaneous
+    responses:
+      "200":
+        description: A JSON object of faq information such as question and answer
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FaqGetResponse"
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MissingRouteResponse"
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"

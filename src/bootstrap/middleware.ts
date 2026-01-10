@@ -1,17 +1,14 @@
-import { assetConfig, cspConfig, minifyConfig, rateLimitConfig, sessionConfig } from "@config";
+import { cspConfig, rateLimitConfig } from "@config";
 import { swaggerConfig, swaggerUiConfig } from "@config/swagger.config.js";
 import cors from "cors";
 import express, { type Express } from "express";
-import minifyHTML from "express-minify-html-2";
 import rateLimit from "express-rate-limit";
-import session from "express-session";
 import helmet from "helmet";
 import logger from "morgan";
-import path from "node:path";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
-export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: string): void => {
+export default (app: Express, isDevMode: boolean): void => {
   /**
    * Set the application powered by header
    */
@@ -26,16 +23,10 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   });
 
   /**
-   * Minify the response
-   */
-  app.use(minifyHTML(minifyConfig));
-
-  /**
    * Setup default express middlewares
    */
   app.use(express.json({ strict: true }));
   app.use(express.urlencoded({ extended: true, parameterLimit: 4 }));
-  app.use(express.static(path.join(dirname, "public"), assetConfig));
 
   /**
    * Setup logger
@@ -74,8 +65,8 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
   });
 
   const cspConfigWithNonce = createCspConfig({
-    scriptSrc: ["'self'", "'strict-dynamic'", `'nonce-${cspNonce}'`],
-    styleSrc: ["'self'", "'strict-dynamic'", `'nonce-${cspNonce}'`],
+    scriptSrc: ["'self'", "'strict-dynamic'"],
+    styleSrc: ["'self'", "'strict-dynamic'"],
   });
 
   const cspConfigForDocs = createCspConfig({
@@ -88,7 +79,7 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
    * Setup security headers
    */
   app.use((req, res, next) => {
-    const isApiDocs = req.path.includes("/api-docs");
+    const isApiDocs = req.path.includes("/docs");
     const selectedCspConfig = isApiDocs ? cspConfigForDocs : cspConfigWithNonce;
 
     helmet({
@@ -118,34 +109,25 @@ export default (app: Express, dirname: string, isDevMode: boolean, cspNonce: str
    */
   if (!isDevMode) app.set("trust proxy", 1);
 
-  /**
-   * Setup session management
-   */
-  app.use(session(sessionConfig));
-
-  /**
-   * Setup swagger documentation
-   */
-  const mergedSwaggerConfig = {
-    ...swaggerConfig,
-    definition: {
-      ...swaggerConfig.definition,
-      info: {
-        ...swaggerConfig.definition.info,
-        contact: {
-          ...swaggerConfig.definition.info.contact,
-          url: new URL("/contact", app.get("baseUrl") as string).toString(),
-        },
+  if (isDevMode) {
+    /**
+     * Setup swagger documentation
+     */
+    const mergedSwaggerConfig = {
+      ...swaggerConfig,
+      apis: [`${app.get("basePath") as string}/docs/**/*.yaml`],
+      definition: {
+        ...swaggerConfig.definition,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        servers: swaggerConfig.definition.servers.sort((a, _b) => (a.prior === "development" ? -1 : 1)),
       },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      servers: swaggerConfig.definition.servers.sort((a, _b) => ((isDevMode ? a.prior === "development" : a.prior === "production") ? -1 : 1)),
-    },
-  };
+    };
 
-  const mergedSwaggerUiConfig = {
-    ...swaggerUiConfig,
-    customfavIcon: new URL("/favicon.ico", app.get("baseUrl") as string).toString(),
-  };
+    const mergedSwaggerUiConfig = {
+      ...swaggerUiConfig,
+      customfavIcon: new URL("/favicon.ico", app.get("baseUrl") as string).toString(),
+    };
 
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(mergedSwaggerConfig), mergedSwaggerUiConfig));
+    app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(mergedSwaggerConfig), mergedSwaggerUiConfig));
+  }
 };

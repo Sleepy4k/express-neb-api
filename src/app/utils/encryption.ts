@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-import CryptoES from "crypto-es";
+import { authConfig } from "@config/auth.config.js";
+import { Hex, SHA256 } from "crypto-es";
 
 /**
  * Global salt used for encryption and decryption.
@@ -8,7 +9,7 @@ import CryptoES from "crypto-es";
  *
  * @constant {string}
  */
-const SALT = Math.random().toString(36).substring(2, 15);
+const SALT = authConfig.saltKey;
 
 /**
  * Hashes the given data using the SHA-256 algorithm.
@@ -21,7 +22,21 @@ const SALT = Math.random().toString(36).substring(2, 15);
  * sha256('data'); // => '3d3fxxxxxx'
  */
 const sha256 = (data: string): string => {
-  return CryptoES.SHA256(data).toString(CryptoES.enc.Hex);
+  return SHA256(data).toString(Hex);
+};
+
+/**
+ * Encodes the given data to base64 format.
+ *
+ * @param {string} data - The data to encode
+ *
+ * @returns {string} The base64 encoded data
+ *
+ * @example
+ * base64('data'); // => 'ZGF0YQ=='
+ */
+const base64 = (data: string): string => {
+  return btoa(data);
 };
 
 /**
@@ -115,4 +130,4 @@ const decryptAuthVerify = (ciphertext: string): string => {
   }
 };
 
-export { decryptAuthVerify, encryptAuthVerify, sha256 };
+export { base64, decryptAuthVerify, encryptAuthVerify, sha256 };

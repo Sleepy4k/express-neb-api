@@ -1,6 +1,6 @@
 components:
   schemas:
-    HomeGetResponse:
+    ContactPostResponse:
       type: object
       properties:
         code:
@@ -14,33 +14,24 @@ components:
         message:
           type: string
           description: The message of the response
-          example: "Welcome to the API"
+          example: "Your message has been sent successfully!"
         data:
-          type: object
-          properties:
-            name:
-              type: string
-              description: The name of the application
-              example: "My Application"
-            host:
-              type: string
-              description: The hostname of the server
-              example: "http://localhost"
+          type: array
 
-/:
-  get:
-    summary: The home api route
-    description: This is the home api route to check if the server is running
-    operationId: getHome
+/contact:
+  post:
+    summary: The contact api route
+    description: This is the contact api route to send a message
+    operationId: postContact
     tags:
-      - Home
+      - Miscellaneous
     responses:
       "200":
-        description: A JSON object of server status such as application name and hostname
+        description: A JSON object of contact response
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/HomeGetResponse"
+              $ref: "#/components/schemas/ContactPostResponse"
       "404":
         description: Route not found
         content:

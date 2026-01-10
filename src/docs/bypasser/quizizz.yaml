@@ -1,0 +1,44 @@
+components:
+  schemas:
+    QuizizzPostResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The HTTP status code
+          example: 501
+        status:
+          type: string
+          description: The status of the response
+          example: "error"
+        message:
+          type: string
+          description: The message of the response
+          example: "Quizizz service is not implemented yet"
+
+/quizizz-bypasser:
+  post:
+    summary: The quizizz api route
+    description: This is the quizizz api route to get a quizizz bypass link
+    operationId: postQuizizz
+    tags:
+      - Bypasser
+    responses:
+      "404":
+        description: Route not found
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MissingRouteResponse"
+      "500":
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"
+      "501":
+        description: A JSON object of quizizz response
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuizizzPostResponse"

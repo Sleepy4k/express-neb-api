@@ -1,18 +1,10 @@
 import type { DestinationCallback, FileNameCallback, MulterFile } from "@interfaces/multerDiskStorage.js";
 
 import FILE_EXTENSIONS from "@constants/file-extensions.js";
-import { ContactSubject } from "@enums/contactSubject.js";
-import { IContactFormBody } from "@interfaces/contactFormBody.js";
 import { type Request } from "express";
 import multer, { type FileFilterCallback } from "multer";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-/**
- * Get the base directory from the current file path and the dot-to-parent
- */
-const __basedir = path.resolve(fileURLToPath(import.meta.url), "../../..");
 
 /**
  * Filter SEB files only
@@ -36,7 +28,8 @@ const sebFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback): voi
  * Setup the storage for the seb file
  */
 const sebDiskStorage = multer.diskStorage({
-  destination: (_req: Request, _file: MulterFile, cb: DestinationCallback): void => {
+  destination: (req: Request, _file: MulterFile, cb: DestinationCallback): void => {
+    const __basedir = req.app.get("basePath") as string;
     const filePath = path.join(__basedir, "storage/app/seb/config");
 
     if (!fs.existsSync(filePath)) {
@@ -47,65 +40,12 @@ const sebDiskStorage = multer.diskStorage({
 
     cb(null, filePath);
   },
-  filename: (req: Request, file: MulterFile, cb: FileNameCallback): void => {
-    const { redeemCode } = req.params;
+  filename: (_req: Request, file: MulterFile, cb: FileNameCallback): void => {
     const uniqueSuffix = Math.floor(Math.random() * 10000).toString();
-    const prefixName = redeemCode ? `bypass-${redeemCode}` : "bypass";
+    const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const fileName = file.originalname.replaceAll(/\s+/g, "-");
 
-    cb(null, `${prefixName}-${uniqueSuffix}-${fileName}`);
-  },
-});
-
-/**
- * Filter Image and PDF files only
- *
- * @param {Request} _req
- * @param {Express.Multer.File} file
- * @param {FileFilterCallback} cb
- *
- * @returns {void}
- */
-const contactFilter = (_req: Request, file: MulterFile, cb: FileFilterCallback): void => {
-  const { mimetype, originalname } = file;
-
-  if (!originalname || !mimetype) {
-    cb(null, true);
-    return;
-  }
-
-  const fileExtension = originalname.split(".").pop() ?? "";
-  const isExtensionValid = FILE_EXTENSIONS.contact.extensions.includes(`.${fileExtension}`);
-  const isMimeTypeValid = FILE_EXTENSIONS.contact.mimeTypes.includes(mimetype);
-
-  cb(null, isExtensionValid && isMimeTypeValid);
-};
-
-/**
- * Setup the storage for the contact file
- */
-const contactDiskStorage = multer.diskStorage({
-  destination: (req: Request<object, object, IContactFormBody>, _file: MulterFile, cb: DestinationCallback): void => {
-    const { subject } = req.body;
-    const filePath = path.join(
-      __basedir,
-      "storage/app/contact",
-      Object.values(ContactSubject).includes(subject as ContactSubject) ? subject : "general",
-    );
-
-    if (!fs.existsSync(filePath)) {
-      fs.mkdir(filePath, { recursive: true }, (err) => {
-        if (err) console.error("Error creating directory:", err);
-      });
-    }
-
-    cb(null, filePath);
-  },
-  filename: (_req: Request, file: MulterFile, cb: FileNameCallback): void => {
-    const uniqueSuffix = Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
-    const sanitizedFileName = file.originalname.replaceAll(/\s+/g, "-");
-
-    cb(null, `${uniqueSuffix}-${sanitizedFileName}`);
+    cb(null, `bypass-${uniqueSuffix}-${currentDate}-${fileName}`);
   },
 });
 
@@ -114,9 +54,4 @@ const contactDiskStorage = multer.diskStorage({
  */
 const sebFileUploader = multer({ fileFilter: sebFilter, storage: sebDiskStorage });
 
-/**
- * Contact File uploader middleware
- */
-const contactFileUploader = multer({ fileFilter: contactFilter, storage: contactDiskStorage });
-
-export { contactFileUploader, sebFileUploader };
+export { sebFileUploader };
