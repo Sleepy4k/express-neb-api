@@ -1,51 +1,29 @@
-# Express Typescript Naka Exam Bypasser
+# Express Naka Exam Bypasser API
 
-This project is a safe exam's bypasser, built on express js with typescript
-as main language, we provide the best experience ever of bypassing the exam.
-
-## Overview
-
-### Service
-
-- User can submit their exam's config and get the result fast as possible
-- Download or Save As feature for better experience of bypassing the exam
-- Redeem code, we want to make sure each user had best experience not for
-  lagging or overload
-
-### Tutorial
-
-- On leading user how to use our tools, we provide video tutorial with
-  simple as possible
-- Many tutorial based on out recommendation 3rd party tools
-
-### Admin Dashboard
-
-- Find registered redeem code based on username
-- Generate redeem code based on username
-- Highly secure auth method with different method from convensional method
+This project focuses on providing a fast and reliable API service for Naka Exam Bypasser application. With this API, users can submit their exam configurations and receive results quickly. The service also includes features for downloading or saving exam bypass configurations, as well as a contact form for feedback and reports.
 
 ## Tech Stack
 
-**Frontend:** EJS
+**Frontend:** -
 
 **Backend:** Express.JS
 
 **Database:** JSON File
 
-**Authentication:** Non Convensional
+**Authentication:** -
 
 ## Run Locally
 
 Clone the project
 
 ```bash
-git clone https://github.com/Sleepy4k/express-typescript-neb.git
+git clone https://github.com/Sleepy4k/express-neb-api.git
 ```
 
 Go to the project directory
 
 ```bash
-cd express-typescript-neb
+cd express-neb-api
 ```
 
 Copy /env.example into .env
@@ -81,8 +59,17 @@ To run this project, you will need to add the following environment variables to
 `APP_ENV`
 `APP_PORT`
 `APP_HOST`
+`APP_MAIL_SYSTEM`
 
 `SESSION_SECRET`
+
+`SMTP_HOST`
+`SMTP_PORT`
+`SMTP_USER`
+`SMTP_PASS`
+
+`WEB3FORMS_FORM_URL`
+`WEB3FORMS_ACCESS_KEY`
 
 ## Feedback
 
