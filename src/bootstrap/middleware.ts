@@ -19,6 +19,7 @@ export default (app: Express, isDevMode: boolean): void => {
       "Permission-Policy",
       "accelerometer=(self), attribution-reporting=*, autoplay=(), bluetooth=(), browsing-topics=*, camera=(), compute-pressure=(self), cross-origin-isolated=(self), display-capture=(self), encrypted-media=(self), fullscreen=(self), gamepad=(self), geolocation=(self), gyroscope=(self), hid=(self), identity-credentials-get=(self), idle-detection=(self), local-fonts=(self), magnetometer=(self), microphone=(), midi=(self), otp-credentials=(), payment=(), picture-in-picture=*, publickey-credentials-create=(self), publickey-credentials-get=(self), screen-wake-lock=(self), serial=(self), storage-access=*, usb=(), web-share=(self), window-management=(self), vibrate=(), xr-spatial-tracking=(self)",
     );
+    res.setHeader("Access-Control-Allow-Origin", isDevMode ? "*" : "neb.benjamin4k.web.id");
     next();
   });
 
@@ -38,9 +39,9 @@ export default (app: Express, isDevMode: boolean): void => {
    */
   app.use(
     cors({
-      allowedHeaders: ["Accept", "Authorization", "Content-Type"],
+      allowedHeaders: ["Accept", "Authorization", "Content-Type", "Origin", "X-Requested-With", "X-Web-Token", "Access-Control-Allow-Origin"],
       credentials: true,
-      exposedHeaders: ["Accept", "Authorization", "Content-Type"],
+      exposedHeaders: ["Accept", "Authorization", "Content-Type", "Origin", "X-Requested-With", "X-Web-Token", "Access-Control-Allow-Origin"],
       maxAge: 86400,
       methods: "GET, POST, DELETE",
       optionsSuccessStatus: 200,

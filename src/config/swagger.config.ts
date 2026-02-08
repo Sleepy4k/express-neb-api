@@ -17,7 +17,7 @@ export const swaggerConfig = {
       },
       {
         prior: "production",
-        url: "https://nach-neb.my.id",
+        url: "https://api-neb.benjamin4k.web.id",
         description: "Production server",
       },
     ],
